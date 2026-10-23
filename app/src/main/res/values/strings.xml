@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">UniClassApp</string>
+    <string name="edu_lens_title">EduLens</string>
+    <string name="edu_lens_subtitle">Quản lý lớp học, điểm danh QR, tài liệu và bài tập</string>
+    <string name="app_version">Phiên bản 1.0.0</string>
+    <string name="login_welcome">Chào mừng trở lại!</string>
+    <string name="login_subtitle">Đăng nhập để tiếp tục học tập cùng EduLens.</string>
+    <string name="email_label">Email</string>
+    <string name="email_hint">Nhập email của bạn</string>
+    <string name="password_label">Password</string>
+    <string name="password_hint">Nhập mật khẩu</string>
+    <string name="forgot_password">Quên mật khẩu?</string>
+    <string name="login_button">Đăng nhập</string>
+    <string name="no_account">Chưa có tài khoản? </string>
+    <string name="register">Đăng ký</string>
+    <string name="desc_email_icon">Biểu tượng email</string>
+    <string name="desc_lock_icon">Biểu tượng khóa</string>
+    <string name="desc_eye_icon">Biểu tượng hiển thị mật khẩu</string>
+    <string name="register_title">Tạo tài khoản</string>
+    <string name="register_subtitle">Chọn vai trò của bạn, sau đó điền thông tin để bắt đầu.</string>
+    <string name="role_label">Bạn là</string>
+    <string name="role_student">Sinh viên</string>
+    <string name="role_student_desc">Điểm danh, nộp bài, xem điểm</string>
+    <string name="role_lecturer">Giảng viên</string>
+    <string name="role_lecturer_desc">Tạo lớp, giao bài, chấm điểm</string>
+    <string name="fullname_label">Họ và tên</string>
+    <string name="fullname_hint">Nhập họ và tên</string>
+    <string name="contact_label">Email hoặc số điện thoại</string>
+    <string name="contact_hint">Nhập email hoặc số điện thoại</string>
+    <string name="password_create_hint">Tạo mật khẩu</string>
+    <string name="password_confirm_label">Xác nhận mật khẩu</string>
+    <string name="password_confirm_hint">Nhập lại mật khẩu</string>
+    <string name="register_button">Đăng ký</string>
+    <string name="has_account">Đã có tài khoản? </string>
+    <string name="login_link">Đăng nhập</string>
+</resources>
