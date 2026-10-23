@@ -1,17 +1,75 @@
+
+# ==============================
+# Gradle
+# ==============================
+.gradle/
+build/
+**/build/
+gradle-app.setting
+!gradle-wrapper.jar
+
+# ==============================
+# Android Studio / IntelliJ IDEA
+# ==============================
+.idea/
 *.iml
-.gradle
-/local.properties
-/.idea/
-.DS_Store
-/build
-/captures
-.externalNativeBuild
-.cxx
+.idea/workspace.xml
+.idea/tasks.xml
+.idea/usage.statistics.xml
+.idea/shelf/
+
+# ==============================
+# Local machine configuration
+# ==============================
 local.properties
-.superpowers/
-app/build/
-.vscode/
-docs/
-skills/
-*.md
-!README.md
+
+# ==============================
+# Compiled files
+# ==============================
+*.class
+*.dex
+*.apk
+*.aab
+*.ap_
+*.aar
+
+# ==============================
+# Native build
+# ==============================
+.cxx/
+.externalNativeBuild/
+obj/
+
+# ==============================
+# Logs
+# ==============================
+*.log
+
+# ==============================
+# OS generated files
+# ==============================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# ==============================
+# Temporary files
+# ==============================
+*.tmp
+*.swp
+*.bak
+*~
+
+# ==============================
+# Signing keys and secrets
+# ==============================
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+
+# ==============================
+# Firebase / Google services
+# ==============================
+# Bỏ comment nếu muốn loại credentials Firebase khỏi Git
+# google-services.json
