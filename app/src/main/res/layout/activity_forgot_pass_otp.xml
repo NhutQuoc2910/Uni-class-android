@@ -73,6 +73,7 @@
             android:textStyle="bold" />
 
         <TextView
+            android:id="@+id/tv_otp_subtitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
@@ -328,7 +329,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
-                    android:layout_toStartOf="@+id/tv_resend_timer"
+                    android:layout_toStartOf="@id/tv_resend_timer"
                     android:text="@string/not_received_code"
                     android:textColor="#64748B"
                     android:textSize="13sp" />
@@ -339,6 +340,7 @@
 
         <!-- Confirm OTP Button -->
         <Button
+            android:id="@+id/btn_confirm_otp"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
@@ -352,6 +354,7 @@
 
         <!-- Back to Previous Step Link -->
         <TextView
+            android:id="@+id/tv_back_to_previous"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
@@ -377,6 +380,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/tv_back_to_login"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/back_to_login"

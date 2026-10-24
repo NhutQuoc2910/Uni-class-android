@@ -108,6 +108,7 @@
                     android:contentDescription="@string/desc_email_icon" />
 
                 <EditText
+                    android:id="@+id/edtEmail"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -147,6 +148,7 @@
                     android:contentDescription="@string/desc_lock_icon" />
 
                 <EditText
+                    android:id="@+id/edtPassword"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -160,6 +162,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
+                    android:id="@+id/ivTogglePassword"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:clickable="true"

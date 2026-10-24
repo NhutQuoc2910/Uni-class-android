@@ -80,6 +80,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_greeting_user"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
@@ -89,6 +90,7 @@
                 android:textStyle="bold" />
 
             <TextView
+                android:id="@+id/tv_greeting_sub"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
@@ -148,6 +150,7 @@
                             android:contentDescription="@string/label_courses" />
 
                         <TextView
+                            android:id="@+id/tv_courses_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -182,6 +185,7 @@
                             android:contentDescription="@string/label_assignments" />
 
                         <TextView
+                            android:id="@+id/tv_assignments_count"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="8dp"
@@ -594,9 +598,12 @@
 
         <!-- Item 4: Cá nhân -->
         <LinearLayout
+            android:id="@+id/nav_item_profile"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
+            android:clickable="true"
+            android:focusable="true"
             android:gravity="center"
             android:orientation="vertical">
 

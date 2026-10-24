@@ -53,15 +53,19 @@
 
             <!-- Student Card (Selected) -->
             <LinearLayout
+                android:id="@+id/card_student"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginEnd="8dp"
                 android:background="@drawable/bg_role_selected"
                 android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp">
 
                 <FrameLayout
+                    android:id="@+id/fl_student_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_rounded_white"
@@ -75,6 +79,7 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/tv_student_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -95,15 +100,19 @@
 
             <!-- Lecturer Card (Unselected) -->
             <LinearLayout
+                android:id="@+id/card_lecturer"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:layout_marginStart="8dp"
                 android:background="@drawable/bg_role_unselected"
                 android:orientation="vertical"
+                android:clickable="true"
+                android:focusable="true"
                 android:padding="16dp">
 
                 <FrameLayout
+                    android:id="@+id/fl_lecturer_icon"
                     android:layout_width="40dp"
                     android:layout_height="40dp"
                     android:background="@drawable/bg_role_unselected"
@@ -117,6 +126,7 @@
                 </FrameLayout>
 
                 <TextView
+                    android:id="@+id/tv_lecturer_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
@@ -154,6 +164,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/edt_full_name"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
@@ -177,6 +188,7 @@
                 android:textStyle="bold" />
 
             <EditText
+                android:id="@+id/edt_contact"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
@@ -209,6 +221,7 @@
                 android:paddingHorizontal="16dp">
 
                 <EditText
+                    android:id="@+id/edt_password"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -221,6 +234,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
+                    android:id="@+id/iv_toggle_password"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:clickable="true"
@@ -249,6 +263,7 @@
                 android:paddingHorizontal="16dp">
 
                 <EditText
+                    android:id="@+id/edt_confirm_password"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_weight="1"
@@ -261,6 +276,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
+                    android:id="@+id/iv_toggle_confirm_password"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:clickable="true"
@@ -273,6 +289,7 @@
 
         <!-- Register Button -->
         <Button
+            android:id="@+id/btn_register"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="28dp"

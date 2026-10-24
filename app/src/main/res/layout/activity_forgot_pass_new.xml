@@ -219,6 +219,7 @@
                     android:contentDescription="@string/desc_lock_icon" />
 
                 <EditText
+                    android:id="@+id/edtNewPassword"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -232,6 +233,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
+                    android:id="@+id/ivToggleNewPassword"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:clickable="true"
@@ -267,6 +269,7 @@
                     android:contentDescription="@string/desc_lock_icon" />
 
                 <EditText
+                    android:id="@+id/edtConfirmPassword"
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
                     android:layout_marginStart="12dp"
@@ -280,6 +283,7 @@
                     android:textSize="14sp" />
 
                 <ImageView
+                    android:id="@+id/ivToggleConfirmPassword"
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:clickable="true"
@@ -350,6 +354,7 @@
 
         <!-- Submit Button ("Đổi mật khẩu") -->
         <Button
+            android:id="@+id/btnResetPassword"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="28dp"
@@ -378,6 +383,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/tvBackToLogin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/back_to_login"

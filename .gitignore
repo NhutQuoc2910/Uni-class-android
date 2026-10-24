@@ -73,3 +73,8 @@ secrets.properties
 # ==============================
 # Bỏ comment nếu muốn loại credentials Firebase khỏi Git
 # google-services.json
+
+# Agents / IDE
+.agents/
+skills/
+skills-lock.json
