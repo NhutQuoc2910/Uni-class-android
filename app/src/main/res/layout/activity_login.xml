@@ -170,6 +170,7 @@
 
             <!-- Forgot Password -->
             <TextView
+                android:id="@+id/tvForgotPassword"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="end"
@@ -183,6 +184,7 @@
 
         <!-- Login Button -->
         <Button
+            android:id="@+id/btnLogin"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="32dp"
@@ -210,6 +212,7 @@
                 android:textSize="14sp" />
 
             <TextView
+                android:id="@+id/tvRegister"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/register"

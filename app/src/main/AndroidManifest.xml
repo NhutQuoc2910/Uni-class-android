@@ -12,6 +12,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.UniClassApp">
         <activity android:name=".LoginActivity"/>
+        <activity android:name=".RegisterActivity"/>
+        <activity android:name=".ForgotPasswordActivity"/>
+        <activity android:name=".HomeActivity"/>
+        <activity android:name=".ForgotPassNewActivity"/>
+        <activity android:name=".ForgotPassOTPActivity"/>
+        <activity android:name=".PassChangedSuccessActivity"/>
+        <activity android:name=".RegisterSuccessActivity"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"
