@@ -114,10 +114,10 @@ public class RegisterActivity extends AppCompatActivity {
         String email = "";
         String phone = "";
         if (Patterns.EMAIL_ADDRESS.matcher(contact).matches()) {
-            email = contact;
+            email = contact.trim().toLowerCase();
         } else if (contact.matches("^[0-9+]{9,15}$")) {
-            phone = contact;
-            email = contact + "@student.edulens.edu.vn";
+            phone = contact.trim();
+            email = phone + ("LECTURER".equalsIgnoreCase(selectedRole) ? "@lecturer.edulens.edu.vn" : "@student.edulens.edu.vn");
         } else {
             binding.edtContact.setError("Email hoặc số điện thoại không hợp lệ");
             binding.edtContact.requestFocus();
@@ -138,7 +138,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         setLoading(true);
 
-        RegisterRequest request = new RegisterRequest(email, password, fullName, phone, selectedRole);
+        String roleToSend = "LECTURER".equalsIgnoreCase(selectedRole) ? "ROLE_LECTURER" : "ROLE_STUDENT";
+        RegisterRequest request = new RegisterRequest(email, password, fullName, phone, roleToSend);
         ApiClient.getAuthApiService(this).register(request).enqueue(new Callback<ApiResponse<UserResponse>>() {
             @Override
             public void onResponse(Call<ApiResponse<UserResponse>> call, Response<ApiResponse<UserResponse>> response) {
