@@ -1,64 +1,66 @@
 # Uni-Class - Android Mobile Application 🎓📱
 
-> Ứng dụng di động quản lý lớp học đại học & điểm danh chống gian lận đa tầng dành cho **Sinh viên** và **Giảng viên** (tham khảo mô hình cổng học tập `courses.uit.edu.vn`).
+> Ứng dụng di động quản lý lớp học đại học & điểm danh chống gian lận đa tầng dành cho **Sinh viên** và **Giảng viên**.
 
 ---
 
-## 📌 1. Giới thiệu tổng quan
+## 1. Giới thiệu tổng quan
 
 **Uni-Class Android** là phân hệ mobile client thuộc hệ sinh thái Uni-Class, phục vụ hai đối tượng người dùng chính: **Giảng viên** và **Sinh viên**. Ứng dụng cung cấp các công cụ quản lý lớp học thực tế như upload/download tài liệu, giao và nộp bài tập file, xem điểm số, và đặc biệt là hệ thống **Điểm danh QR động chống gian lận 3 lớp** kết hợp định vị WiFi BSSID, toạ độ GPS và ràng buộc thiết bị phần cứng.
 
 ---
 
-## 🚀 2. Tính năng nổi bật
+## 2. Tính năng nổi bật
 
-### 👨‍🎓 Dành cho Sinh viên
-* **Ghi danh lớp học:** Tham gia lớp nhanh chóng qua mã mời (invite code) do giảng viên cung cấp.
-* **Điểm danh QR 3 lớp bảo mật:**
-  * Quét mã QR xoay vòng trực tiếp từ màn hình giảng viên.
-  * Tự động thu thập WiFi BSSID (đang kết nối) và tọa độ vị trí GPS hiện tại gửi lên server đối soát.
-  * Xác thực khóa định danh thiết bị (`Android ID`) đảm bảo **1 thiết bị chỉ điểm danh cho 1 tài khoản**.
-* **Học tập & Tài liệu:** Xem danh sách môn học, đọc thông báo lớp, tải slide/tài liệu bài giảng (PDF, Word, PPT).
-* **Nộp bài tập:** Nộp bài làm dạng file (PDF, Word, ZIP, Ảnh) trực tiếp lên Supabase Storage trước deadline.
-* **Theo dõi học tập:** Tra cứu điểm thi, xem nhận xét từ giảng viên, xem lịch sử điểm danh với thanh cảnh báo đỏ khi tỷ lệ vắng vượt ngưỡng $20\%$.
-* **Thông báo tức thời:** Nhận Push Notification qua Firebase Cloud Messaging (FCM) khi có bài tập mới, thông báo dời lịch, nhắc deadline.
+### Dành cho Sinh viên
 
-### 👨‍🏫 Dành cho Giảng viên
-* **Tạo & Cấu hình lớp học:** Thiết lập thông tin môn học, mã lớp, học kỳ, cấp mã mời cho sinh viên.
-* **Phiên điểm danh chống gian lận Live:**
-  * Khởi tạo phiên điểm danh, nhận payload JWT qua WebSocket.
-  * Trình chiếu mã QR động tự làm mới mỗi 30 giây (xoay vòng token, vô hiệu hóa mã cũ chụp ảnh gửi ra ngoài).
-  * **Live Dashboard:** Giám sát danh sách sinh viên quét mã thành công nhảy số theo thời gian thực (Supabase Realtime).
-  * Chốt phiên và tự động tính toán tỷ lệ chuyên cần lưu trữ vào PostgreSQL.
-* **Quản trị học tập:**
-  * Upload bài giảng, slide lên Supabase Storage.
-  * Đăng thông báo khẩn (đổi phòng, dời lịch) tự động kích hoạt FCM Push đến toàn bộ sinh viên.
-  * Tạo đề bài tập kèm hạn chót (deadline).
-  * Tải hàng loạt file nộp bài của sinh viên về máy để chấm.
-  * Nhập điểm thủ công và phản hồi trực tiếp cho từng bài nộp.
-  * Thống kê phổ điểm và danh sách sinh viên có nguy cơ cấm thi (vắng $> 20\%$).
+- **Ghi danh lớp học:** Tham gia lớp nhanh chóng qua mã mời (invite code) do giảng viên cung cấp.
+- **Điểm danh QR 3 lớp bảo mật:**
+  - Quét mã QR xoay vòng trực tiếp từ màn hình giảng viên.
+  - Tự động thu thập WiFi BSSID (đang kết nối) và tọa độ vị trí GPS hiện tại gửi lên server đối soát.
+  - Xác thực khóa định danh thiết bị (`Android ID`) đảm bảo **1 thiết bị chỉ điểm danh cho 1 tài khoản**.
+- **Học tập & Tài liệu:** Xem danh sách môn học, đọc thông báo lớp, tải slide/tài liệu bài giảng (PDF, Word, PPT).
+- **Nộp bài tập:** Nộp bài làm dạng file (PDF, Word, ZIP, Ảnh) trực tiếp lên Supabase Storage trước deadline.
+- **Theo dõi học tập:** Tra cứu điểm thi, xem nhận xét từ giảng viên, xem lịch sử điểm danh với thanh cảnh báo đỏ khi tỷ lệ vắng vượt ngưỡng $20\%$.
+- **Thông báo tức thời:** Nhận Push Notification qua Firebase Cloud Messaging (FCM) khi có bài tập mới, thông báo dời lịch, nhắc deadline.
+
+### Dành cho Giảng viên
+
+- **Tạo & Cấu hình lớp học:** Thiết lập thông tin môn học, mã lớp, học kỳ, cấp mã mời cho sinh viên.
+- **Phiên điểm danh chống gian lận Live:**
+  - Khởi tạo phiên điểm danh, nhận payload JWT qua WebSocket.
+  - Trình chiếu mã QR động tự làm mới mỗi 30 giây (xoay vòng token, vô hiệu hóa mã cũ chụp ảnh gửi ra ngoài).
+  - **Live Dashboard:** Giám sát danh sách sinh viên quét mã thành công nhảy số theo thời gian thực (Supabase Realtime).
+  - Chốt phiên và tự động tính toán tỷ lệ chuyên cần lưu trữ vào PostgreSQL.
+- **Quản trị học tập:**
+  - Upload bài giảng, slide lên Supabase Storage.
+  - Đăng thông báo khẩn (đổi phòng, dời lịch) tự động kích hoạt FCM Push đến toàn bộ sinh viên.
+  - Tạo đề bài tập kèm hạn chót (deadline).
+  - Tải hàng loạt file nộp bài của sinh viên về máy để chấm.
+  - Nhập điểm thủ công và phản hồi trực tiếp cho từng bài nộp.
+  - Thống kê phổ điểm và danh sách sinh viên có nguy cơ cấm thi (vắng $> 20\%$).
 
 ---
 
 ## 🛠 3. Kiến trúc & Công nghệ sử dụng
 
-* **Ngôn ngữ:** Java (tương thích JDK 17).
-* **Kiến trúc phần mềm:** Clean Architecture kết hợp **MVVM (Model - View - ViewModel)**.
-* **Giao diện (UI):** 
-  * XML Layout chuẩn Material Design 3 (Material Components).
-  * Single Activity Architecture phối hợp **Jetpack Navigation Component**.
-  * **ViewBinding** loại bỏ `findViewById`.
-* **Phần cứng & Camera:** CameraX kết hợp ZXing Barcode Scanner để nhận diện QR Code tốc độ cao.
-* **Xử lý nền & Dữ liệu cục bộ:**
-  * Room DB (lưu trữ cache ngoại tuyến lớp học và lịch sử).
-  * WorkManager (đồng bộ ngầm các tác vụ tải tệp, retry nộp bài).
-  * LiveData & ViewModel (quản lý trạng thái và vòng đời Fragment).
-* **Giao tiếp mạng:**
-  * Retrofit 2 + OkHttp 3 (REST API Client).
-  * OkHttp WebSocket Client (nhận token QR động và trạng thái realtime).
-* **Đám mây & Thông báo:**
-  * Supabase Client (Auth Session & Realtime).
-  * Firebase Cloud Messaging (FCM SDK).
+- **Ngôn ngữ:** Java (tương thích JDK 17).
+- **Kiến trúc phần mềm:** Clean Architecture kết hợp **MVVM (Model - View - ViewModel)**.
+- **Giao diện (UI):**
+  - XML Layout chuẩn Material Design 3 (Material Components).
+  - Single Activity Architecture phối hợp **Jetpack Navigation Component**.
+  - **ViewBinding** loại bỏ `findViewById`.
+- **Phần cứng & Camera:** CameraX kết hợp ZXing Barcode Scanner để nhận diện QR Code tốc độ cao.
+- **Xử lý nền & Dữ liệu cục bộ:**
+  - Room DB (lưu trữ cache ngoại tuyến lớp học và lịch sử).
+  - WorkManager (đồng bộ ngầm các tác vụ tải tệp, retry nộp bài).
+  - LiveData & ViewModel (quản lý trạng thái và vòng đời Fragment).
+- **Giao tiếp mạng:**
+  - Retrofit 2 + OkHttp 3 (REST API Client).
+  - OkHttp WebSocket Client (nhận token QR động và trạng thái realtime).
+- **Đám mây & Thông báo:**
+  - Supabase Client (Auth Session & Realtime).
+  - Firebase Cloud Messaging (FCM SDK).
 
 ---
 
@@ -101,34 +103,3 @@ app/src/main/
     └── navigation/
         └── nav_graph.xml     # Navigation Component Graph
 ```
-
----
-
-## ⚙️ 5. Yêu cầu môi trường & Cài đặt
-
-### Yêu cầu tiên quyết
-* Android Studio Iguana / Jellyfish (hoặc mới hơn).
-* Android SDK tối thiểu: `API 26` (Android 8.0 Oreo).
-* Target & Compile SDK: `API 34` (Android 14).
-* JDK: `OpenJDK 17`.
-
-### Cấu hình dự án
-1. Clone mã nguồn về máy:
-   ```bash
-   git clone https://github.com/<your-org>/uit-classroom-android.git
-   cd uit-classroom-android
-   ```
-2. Thêm file cấu hình Firebase:
-   * Tải tệp `google-services.json` từ Firebase Console và đặt vào thư mục `app/`.
-3. Cấu hình biến môi trường cục bộ:
-   * Tạo tệp `local.properties` tại thư mục gốc và khai báo các thông số:
-     ```properties
-     sdk.dir=/path/to/your/android/sdk
-     BASE_URL=https://api.yourdomain.edu.vn/api/v1/
-     WS_URL=wss://api.yourdomain.edu.vn/ws
-     SUPABASE_URL=https://your-project.supabase.co
-     SUPABASE_KEY=your-anon-key
-     ```
-4. Build và cài đặt thử nghiệm:
-   * Mở project bằng **Android Studio**, chọn đồng bộ Gradle (**Sync Project with Gradle Files**).
-   * Chạy ứng dụng trên máy thật (khuyên dùng để thử nghiệm quét CameraX, GPS và WiFi BSSID) hoặc Emulator hỗ trợ Google Play Services.
