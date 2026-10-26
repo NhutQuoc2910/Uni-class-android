@@ -1,10 +1,11 @@
 package com.ppquang06.uniclassapp.utils;
 
 public final class Constants {
-    private Constants() {}
+    private Constants() {
+    }
 
     // Android emulator loops back to localhost via 10.0.2.2
-    public static final String BASE_URL = "http://10.0.2.2:8080/api/v1/";
+    public static final String BASE_URL = "http://70.153.85.133:8080/api/v1/";
 
     // Shared Preferences Keys
     public static final String PREF_NAME = "uniclass_session";

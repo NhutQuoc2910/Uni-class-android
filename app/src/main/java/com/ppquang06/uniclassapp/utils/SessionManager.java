@@ -25,7 +25,7 @@ public class SessionManager {
     public void saveAuth(String token, UserResponse user) {
         editor.putString(Constants.KEY_TOKEN, token);
         if (user != null) {
-            if (user.getId() != null) editor.putLong(Constants.KEY_USER_ID, user.getId());
+            if (user.getId() != null) editor.putString(Constants.KEY_USER_ID, user.getId());
             editor.putString(Constants.KEY_USER_NAME, user.getFullName());
             editor.putString(Constants.KEY_USER_EMAIL, user.getEmail());
             editor.putString(Constants.KEY_USER_ROLE, user.getRole());
@@ -49,8 +49,8 @@ public class SessionManager {
             return null;
         }
         UserResponse user = new UserResponse();
-        long id = pref.getLong(Constants.KEY_USER_ID, -1L);
-        if (id != -1L) {
+        String id = pref.getString(Constants.KEY_USER_ID, null);
+        if (id != null) {
             user.setId(id);
         }
         user.setFullName(pref.getString(Constants.KEY_USER_NAME, ""));

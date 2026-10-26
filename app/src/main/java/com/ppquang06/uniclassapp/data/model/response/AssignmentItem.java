@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class AssignmentItem {
     @SerializedName("id")
-    private Long id;
+    private String id;
 
     @SerializedName("title")
     private String title;
@@ -20,11 +20,11 @@ public class AssignmentItem {
 
     public AssignmentItem() {}
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
