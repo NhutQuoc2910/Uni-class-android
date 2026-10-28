@@ -160,6 +160,10 @@
     <string name="empty_data">Chưa có dữ liệu</string>
     <string name="empty_announcements">Chưa có thông báo nào</string>
     <string name="empty_materials">Chưa có tài liệu nào</string>
+    <string name="empty_materials_filtered">Không có tài liệu nào thuộc loại này</string>
+    <string name="material_filter_pdf">PDF</string>
+    <string name="material_filter_word">Word</string>
+    <string name="material_filter_powerpoint">PowerPoint</string>
     <string name="empty_assignments">Chưa có bài tập nào</string>
     <string name="empty_attendance">Chưa có lịch sử điểm danh</string>
 
