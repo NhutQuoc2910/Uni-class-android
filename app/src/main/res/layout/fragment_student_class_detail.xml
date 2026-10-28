@@ -39,6 +39,23 @@
             android:layout_marginTop="@dimen/space_4"
             android:textColor="@color/text_secondary"
             tools:text="NT118.Q11 · Phòng B1.12 · ThS. Trần Minh Khoa" />
+
+        <!-- Button "Bảng điểm & Nhận xét" -->
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnViewGrades"
+            style="@style/Widget.EduLens.Button.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="36dp"
+            android:layout_marginTop="@dimen/space_8"
+            android:minHeight="36dp"
+            android:paddingHorizontal="@dimen/space_12"
+            android:paddingVertical="0dp"
+            android:text="Bảng điểm &amp; Nhận xét"
+            android:textSize="12sp"
+            app:icon="@drawable/ic_assignment"
+            app:iconPadding="@dimen/space_4"
+            app:iconSize="16dp"
+            app:iconTint="@color/color_primary" />
     </LinearLayout>
 
     <View

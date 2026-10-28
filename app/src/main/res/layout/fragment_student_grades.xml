@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Average Score Card -->
+                <LinearLayout
+                    android:id="@+id/cardAverageScore"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_16"
+                    android:background="@drawable/bg_surface_card"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_16">
+
+                    <!-- Score container -->
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_format_pill"
+                        android:gravity="center"
+                        android:minWidth="76dp"
+                        android:orientation="vertical"
+                        android:paddingHorizontal="@dimen/space_12"
+                        android:paddingVertical="@dimen/space_8">
+
+                        <TextView
+                            android:id="@+id/tvAverageScore"
+                            style="@style/TextAppearance.EduLens.Headline"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_primary"
+                            android:textSize="30sp"
+                            android:textStyle="bold"
+                            tools:text="8.5" />
+
+                        <TextView
+                            android:id="@+id/tvGradingScale"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Thang 10"
+                            android:textColor="@color/text_muted"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <!-- Description container -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_16"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvGradesOverviewTitle"
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Điểm trung bình tích lũy"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvGradesOverviewDesc"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Đã hoàn thành 3 bài tập · 2 bài đã có điểm" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Section header -->
+                <TextView
+                    android:id="@+id/tvSectionGrades"
+                    style="@style/TextAppearance.EduLens.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_8"
+                    android:text="CHI TIẾT ĐIỂM TỪNG BÀI TẬP"
+                    android:textColor="@color/text_muted"
+                    android:textStyle="bold" />
+
+                <!-- RecyclerView for grades list -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvGrades"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_grade_row" />
+
+                <!-- Empty State -->
+                <TextView
+                    android:id="@+id/tvEmptyGrades"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="@dimen/space_24"
+                    android:text="Chưa có dữ liệu bài tập hoặc bảng điểm"
+                    android:textColor="@color/text_muted"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

@@ -125,4 +125,40 @@
             android:defaultValue="" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_student_attendance_history"
+        android:name="com.ppquang06.uniclassapp.ui.student.classes.StudentAttendanceHistoryFragment"
+        android:label="Lịch sử điểm danh"
+        tools:layout="@layout/fragment_student_attendance_history">
+        <argument
+            android:name="classId"
+            app:argType="string" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_student_grades"
+        android:name="com.ppquang06.uniclassapp.ui.student.classes.StudentGradesFragment"
+        android:label="Bảng điểm &amp; Nhận xét"
+        tools:layout="@layout/fragment_student_grades">
+        <argument
+            android:name="classId"
+            app:argType="string" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
 </navigation>

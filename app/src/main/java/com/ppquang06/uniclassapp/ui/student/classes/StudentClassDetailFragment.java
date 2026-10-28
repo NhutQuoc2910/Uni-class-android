@@ -81,6 +81,25 @@ public class StudentClassDetailFragment extends Fragment {
             meta.append(semester);
         }
         binding.tvClassMeta.setText(meta.toString());
+
+        binding.btnViewGrades.setOnClickListener(v -> {
+            Bundle bundle = new Bundle();
+            String cid = classId;
+            String ccode = classCode;
+            String cname = className;
+            if (viewModel != null && viewModel.getClassDetail().getValue() != null) {
+                ClassDetailResponse d = viewModel.getClassDetail().getValue();
+                if (d.getId() != null && !d.getId().isEmpty()) cid = d.getId();
+                if (d.getCode() != null && !d.getCode().isEmpty()) ccode = d.getCode();
+                if (d.getName() != null && !d.getName().isEmpty()) cname = d.getName();
+            }
+            bundle.putString("classId", cid);
+            bundle.putString("classCode", ccode);
+            bundle.putString("className", cname);
+            try {
+                Navigation.findNavController(v).navigate(R.id.nav_student_grades, bundle);
+            } catch (Exception ignored) {}
+        });
     }
 
     private void setupViewPager() {
