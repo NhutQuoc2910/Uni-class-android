@@ -162,4 +162,52 @@
     <string name="empty_materials">Chưa có tài liệu nào</string>
     <string name="empty_assignments">Chưa có bài tập nào</string>
     <string name="empty_attendance">Chưa có lịch sử điểm danh</string>
+
+    <!-- Notifications Filter & Empty -->
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_unread">Chưa đọc</string>
+    <string name="filter_urgent">Khẩn</string>
+    <string name="filter_assignments">Bài tập</string>
+    <string name="filter_grades">Điểm</string>
+    <string name="empty_notifications">Không có thông báo nào</string>
+
+    <!-- Profile & Actions -->
+    <string name="profile_contact_info">THÔNG TIN LIÊN HỆ</string>
+    <string name="profile_fullname_caption">HỌ VÀ TÊN</string>
+    <string name="profile_email_caption">EMAIL</string>
+    <string name="profile_phone_caption">SỐ ĐIỆN THOẠI</string>
+    <string name="profile_not_set">Chưa cập nhật</string>
+    <string name="profile_account_actions">TÀI KHOẢN</string>
+    <string name="action_edit_profile">Chỉnh sửa hồ sơ</string>
+    <string name="action_change_password">Đổi mật khẩu</string>
+    <string name="action_logout">Đăng xuất</string>
+    <string name="logout_confirm_title">Đăng xuất</string>
+    <string name="logout_confirm_message">Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng?</string>
+    <string name="logout_confirm_btn">Đăng xuất</string>
+    <string name="btn_cancel">Hủy</string>
+
+    <!-- Edit Profile BottomSheet -->
+    <string name="edit_profile_title">Chỉnh sửa hồ sơ</string>
+    <string name="edit_profile_desc">Cập nhật họ và tên hoặc số điện thoại của bạn.</string>
+    <string name="edit_profile_fullname_hint">Họ và tên</string>
+    <string name="edit_profile_phone_hint">Số điện thoại</string>
+    <string name="edit_profile_btn_save">Lưu thay đổi</string>
+    <string name="edit_profile_error_name_empty">Vui lòng nhập họ và tên</string>
+    <string name="edit_profile_success">Cập nhật thông tin thành công!</string>
+    <string name="edit_profile_error_generic">Không thể cập nhật thông tin. Vui lòng thử lại sau.</string>
+
+    <!-- Change Password BottomSheet -->
+    <string name="change_pass_title">Đổi mật khẩu</string>
+    <string name="change_pass_desc">Mật khẩu mới phải có tối thiểu 6 ký tự.</string>
+    <string name="change_pass_current_hint">Mật khẩu hiện tại</string>
+    <string name="change_pass_new_hint">Mật khẩu mới</string>
+    <string name="change_pass_confirm_hint">Xác nhận mật khẩu mới</string>
+    <string name="change_pass_btn_submit">Đổi mật khẩu</string>
+    <string name="change_pass_error_current_empty">Vui lòng nhập mật khẩu hiện tại</string>
+    <string name="change_pass_error_new_short">Mật khẩu mới phải có ít nhất 6 ký tự</string>
+    <string name="change_pass_error_confirm_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="change_pass_error_same_as_old">Mật khẩu mới không được trùng với mật khẩu hiện tại</string>
+    <string name="change_pass_error_wrong_current">Mật khẩu hiện tại không chính xác</string>
+    <string name="change_pass_success">Đổi mật khẩu thành công!</string>
+    <string name="change_pass_error_generic">Không thể đổi mật khẩu. Vui lòng thử lại.</string>
 </resources>
