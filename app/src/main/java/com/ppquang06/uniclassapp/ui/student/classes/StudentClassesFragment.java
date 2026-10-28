@@ -9,6 +9,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
@@ -55,9 +57,21 @@ public class StudentClassesFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        adapter = new CourseClassAdapter(item -> {
-            if (getContext() != null) {
-                Toast.makeText(requireContext(), item.getCode() + " - " + item.getName(), Toast.LENGTH_SHORT).show();
+        adapter = new CourseClassAdapter(course -> {
+            if (course == null) return;
+            Bundle bundle = new Bundle();
+            bundle.putString("classId", course.getId());
+            bundle.putString("classCode", course.getCode());
+            bundle.putString("className", course.getName());
+            bundle.putString("semester", course.getSemester());
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_class_detail, bundle);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(StudentClassesFragment.this)
+                            .navigate(R.id.nav_student_class_detail, bundle);
+                } catch (Exception ignored) {}
             }
         });
         binding.rvClasses.setLayoutManager(new LinearLayoutManager(requireContext()));

@@ -35,4 +35,26 @@
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_student_profile" />
 
+    <fragment
+        android:id="@+id/nav_student_class_detail"
+        android:name="com.ppquang06.uniclassapp.ui.student.classes.StudentClassDetailFragment"
+        android:label="@string/nav_classes"
+        tools:layout="@layout/fragment_student_class_detail">
+        <argument
+            android:name="classId"
+            app:argType="string" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="semester"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
 </navigation>

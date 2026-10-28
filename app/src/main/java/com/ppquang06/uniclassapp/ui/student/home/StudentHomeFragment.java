@@ -70,9 +70,21 @@ public class StudentHomeFragment extends Fragment {
     }
 
     private void setupRecyclerViews() {
-        courseAdapter = new CourseClassAdapter(item -> {
-            if (getContext() != null) {
-                Toast.makeText(requireContext(), item.getCode() + " - " + item.getName(), Toast.LENGTH_SHORT).show();
+        courseAdapter = new CourseClassAdapter(course -> {
+            if (course == null) return;
+            Bundle bundle = new Bundle();
+            bundle.putString("classId", course.getId());
+            bundle.putString("classCode", course.getCode());
+            bundle.putString("className", course.getName());
+            bundle.putString("semester", course.getSemester());
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_class_detail, bundle);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(StudentHomeFragment.this)
+                            .navigate(R.id.nav_student_class_detail, bundle);
+                } catch (Exception ignored) {}
             }
         });
         binding.rvMyCourses.setLayoutManager(new LinearLayoutManager(requireContext()));

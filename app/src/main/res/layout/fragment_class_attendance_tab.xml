@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/swipeRefresh"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background">
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/space_16">
+
+            <!-- Card tóm tắt điểm danh (id="@+id/cardAttendanceSummary", bg_surface_card, padding 16dp, marginBottom 16dp) -->
+            <LinearLayout
+                android:id="@+id/cardAttendanceSummary"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_16"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Row: "CHUYÊN CẦN", tvPresentFraction (e.g. "5/5 buổi"), and badge tvAttendanceRateBadge (e.g. "100%") -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/tvAttendanceLabel"
+                        style="@style/TextAppearance.EduLens.Caption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/attendance_diligence"
+                        android:textColor="@color/text_muted"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvPresentFraction"
+                        style="@style/TextAppearance.EduLens.Subtitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_8"
+                        tools:text="5/5 buổi" />
+
+                    <TextView
+                        android:id="@+id/tvAttendanceRateBadge"
+                        style="@style/TextAppearance.EduLens.Badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_pill"
+                        android:paddingHorizontal="@dimen/space_12"
+                        android:paddingVertical="@dimen/space_4"
+                        tools:text="100%" />
+                </LinearLayout>
+
+                <!-- Linear ProgressBar (id="@+id/pbAttendanceProgress", style="?android:attr/progressBarStyleHorizontal", max="100") -->
+                <ProgressBar
+                    android:id="@+id/pbAttendanceProgress"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="8dp"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:max="100"
+                    android:progress="100"
+                    android:progressTint="@color/color_primary" />
+
+                <!-- TextView tvAttendanceNote ("Cần duy trì tối thiểu 80% để đủ điều kiện dự thi") -->
+                <TextView
+                    android:id="@+id/tvAttendanceNote"
+                    style="@style/TextAppearance.EduLens.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_8"
+                    android:text="@string/attendance_note"
+                    android:textColor="@color/text_secondary" />
+            </LinearLayout>
+
+            <!-- Button "Điểm danh ngay bằng mã QR" (id="@+id/btnScanAttendance", icon="@drawable/ic_qr_scan", height 44dp) -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnScanAttendance"
+                style="@style/Widget.EduLens.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginBottom="@dimen/space_16"
+                android:text="@string/btn_scan_attendance"
+                app:icon="@drawable/ic_qr_scan"
+                app:iconGravity="textStart"
+                app:iconPadding="@dimen/space_8"
+                app:iconTint="@color/white" />
+
+            <!-- Header "LỊCH SỬ TỪNG BUỔI" (tvSectionHistory) -->
+            <TextView
+                android:id="@+id/tvSectionHistory"
+                style="@style/TextAppearance.EduLens.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/space_8"
+                android:text="@string/section_attendance_history" />
+
+            <!-- RecyclerView (id="@+id/rvAttendanceRecords", nestedScrollingEnabled=false) -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvAttendanceRecords"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:nestedScrollingEnabled="false"
+                tools:listitem="@layout/item_attendance_row" />
+
+            <!-- TextView (id="@+id/tvEmptyAttendance", visibility GONE) -->
+            <TextView
+                android:id="@+id/tvEmptyAttendance"
+                style="@style/TextAppearance.EduLens.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:padding="@dimen/space_24"
+                android:text="@string/empty_attendance"
+                android:textColor="@color/text_muted"
+                android:visibility="gone" />
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -145,4 +145,21 @@
     <string name="join_class_error_generic">Không thể tham gia lớp học. Vui lòng kiểm tra lại mã.</string>
     <string name="classes_load_error">Không thể tải danh sách lớp học</string>
     <string name="action_retry">Thử lại</string>
+
+    <!-- Student Class Detail Strings -->
+    <string name="class_detail_title">Chi tiết lớp học</string>
+    <string name="tab_announcements">Thông báo</string>
+    <string name="tab_materials">Tài liệu</string>
+    <string name="tab_assignments">Bài tập</string>
+    <string name="tab_attendance">Điểm danh</string>
+    <string name="attendance_diligence">CHUYÊN CẦN</string>
+    <string name="attendance_fraction_format">%1$d/%2$d buổi</string>
+    <string name="attendance_note">Cần duy trì tối thiểu 80% để đủ điều kiện dự thi</string>
+    <string name="btn_scan_attendance">Điểm danh ngay bằng mã QR</string>
+    <string name="section_attendance_history">LỊCH SỬ TỪNG BUỔI</string>
+    <string name="empty_data">Chưa có dữ liệu</string>
+    <string name="empty_announcements">Chưa có thông báo nào</string>
+    <string name="empty_materials">Chưa có tài liệu nào</string>
+    <string name="empty_assignments">Chưa có bài tập nào</string>
+    <string name="empty_attendance">Chưa có lịch sử điểm danh</string>
 </resources>
