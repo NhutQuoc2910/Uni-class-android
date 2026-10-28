@@ -242,4 +242,61 @@
     <string name="file_type_image">Ảnh</string>
     <string name="file_type_image_ext">.jpg, .png</string>
     <string name="pick_demo_file_btn">Dùng tệp mẫu demo (báo cáo.pdf)</string>
+
+    <!-- 3-Layer QR Attendance Scan & Verifying & Result (Task 4) -->
+    <string name="scan_qr_screen_title">Quét mã điểm danh</string>
+    <string name="scan_qr_viewfinder_instruction">Hướng camera về phía mã QR trên màn hình giảng viên</string>
+    <string name="scan_qr_viewfinder_subinstruction">Giữ điện thoại thẳng và ổn định</string>
+    <string name="scan_qr_before_title">Trước khi quét</string>
+    <string name="scan_qr_req_wifi">Đã kết nối WiFi phòng học (hoặc UIT-Student)</string>
+    <string name="scan_qr_req_gps">Đã bật GPS trong bán kính phòng học</string>
+    <string name="scan_qr_req_device">Điểm danh bằng thiết bị chính chủ của bạn</string>
+    <string name="scan_qr_btn_quick">Quét ngay (Phiên hợp lệ)</string>
+    <string name="scan_qr_btn_simulate">Mô phỏng kịch bản lỗi</string>
+    <string name="scan_qr_sim_qr_expired">1. Mã QR hết hạn</string>
+    <string name="scan_qr_sim_wifi_mismatch">2. Sai WiFi phòng học</string>
+    <string name="scan_qr_sim_gps_out">3. Ngoài vùng GPS</string>
+    <string name="scan_qr_sim_device_used">4. Trùng thiết bị</string>
+
+    <string name="verifying_title">Đang xác thực thông tin...</string>
+    <string name="verifying_headline">Đang kiểm tra 3 lớp bảo mật</string>
+    <string name="verifying_subtitle">Vui lòng giữ ứng dụng mở trong giây lát.</string>
+    <string name="verifying_step_1_title">Lớp 1: Mã QR phiên học</string>
+    <string name="verifying_step_2_title">Lớp 2: Mạng WiFi phòng học</string>
+    <string name="verifying_step_3_title">Lớp 3: Vị trí GPS &amp; Thiết bị</string>
+    <string name="verifying_state_checking">Đang kiểm tra...</string>
+    <string name="verifying_state_waiting">Chờ...</string>
+    <string name="verifying_state_passed">Đạt</string>
+    <string name="verifying_state_failed">Lỗi</string>
+
+    <string name="scan_success_headline">Điểm danh thành công!</string>
+    <string name="scan_success_subtitle">Thông tin chuyên cần của bạn đã được ghi nhận.</string>
+    <string name="scan_pill_qr">✓ QR</string>
+    <string name="scan_pill_wifi">✓ WiFi</string>
+    <string name="scan_pill_gps">✓ GPS</string>
+    <string name="scan_detail_course">Môn học</string>
+    <string name="scan_detail_room">Phòng học</string>
+    <string name="scan_detail_lecturer">Giảng viên</string>
+    <string name="scan_detail_time">Thời gian quét</string>
+    <string name="scan_detail_device">Thiết bị</string>
+    <string name="scan_detail_status">Trạng thái</string>
+    <string name="scan_device_default">Thiết bị chính chủ</string>
+    <string name="scan_btn_home">Về trang chủ</string>
+    <string name="scan_btn_rescan">Quét lại</string>
+
+    <string name="error_qr_expired_title">Mã QR đã hết hạn</string>
+    <string name="error_qr_expired_desc">Phiên điểm danh đã kết thúc hoặc giảng viên đã tạo mã mới.</string>
+    <string name="error_qr_expired_advice">Hãy liên hệ giảng viên để được mở lại phiên điểm danh hoặc quét mã mới nhất.</string>
+
+    <string name="error_wifi_mismatch_title">Sai mạng WiFi phòng học</string>
+    <string name="error_wifi_mismatch_desc">Thiết bị chưa kết nối đúng mạng WiFi của phòng học.</string>
+    <string name="error_wifi_mismatch_advice">Vui lòng vào Cài đặt WiFi và kết nối đúng mạng phòng học của trường.</string>
+
+    <string name="error_gps_out_title">Ngoài phạm vi phòng học</string>
+    <string name="error_gps_out_desc">Tọa độ GPS phát hiện bạn đang ở ngoài bán kính cho phép của lớp học.</string>
+    <string name="error_gps_out_advice">Đảm bảo bạn đang ngồi trong phòng học và đã cấp quyền vị trí chính xác.</string>
+
+    <string name="error_device_used_title">Thiết bị đã được sử dụng</string>
+    <string name="error_device_used_desc">Thiết bị này đã được dùng để điểm danh cho tài khoản khác trong phiên này.</string>
+    <string name="error_device_used_advice">Quy định của trường nghiêm cấm điểm danh hộ. Mỗi sinh viên phải dùng thiết bị cá nhân.</string>
 </resources>

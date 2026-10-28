@@ -75,4 +75,54 @@
             android:defaultValue="" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_student_scan_verifying"
+        android:name="com.ppquang06.uniclassapp.ui.student.qr.StudentScanVerifyingFragment"
+        android:label="Xác thực điểm danh"
+        tools:layout="@layout/fragment_student_scan_verifying">
+        <argument
+            android:name="sessionId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="wifiBssid"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="latitude"
+            app:argType="string"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="longitude"
+            app:argType="string"
+            android:defaultValue="0.0" />
+        <argument
+            android:name="deviceId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="simulationMode"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_student_scan_result"
+        android:name="com.ppquang06.uniclassapp.ui.student.qr.StudentScanResultFragment"
+        android:label="Kết quả điểm danh"
+        tools:layout="@layout/fragment_student_scan_result">
+        <argument
+            android:name="isSuccess"
+            app:argType="boolean"
+            android:defaultValue="false" />
+        <argument
+            android:name="errorType"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="resultJson"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
 </navigation>
