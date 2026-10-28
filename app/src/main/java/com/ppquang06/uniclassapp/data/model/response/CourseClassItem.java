@@ -21,6 +21,12 @@ public class CourseClassItem {
     @SerializedName("lecturerName")
     private String lecturerName;
 
+    @SerializedName("inviteCode")
+    private String inviteCode;
+
+    @SerializedName("status")
+    private String status;
+
     @SerializedName("progress")
     private int progress;
 
@@ -28,6 +34,28 @@ public class CourseClassItem {
     private int enrolledCount;
 
     public CourseClassItem() {}
+
+    public CourseClassItem(String id, String code, String name, String semester, int progress, int enrolledCount) {
+        this(id, code, name, semester, null, null, null, "ACTIVE", progress, enrolledCount);
+    }
+
+    public CourseClassItem(String id, String code, String name, String semester, String room, String lecturerName, int progress, int enrolledCount) {
+        this(id, code, name, semester, room, lecturerName, null, "ACTIVE", progress, enrolledCount);
+    }
+
+    public CourseClassItem(String id, String code, String name, String semester, String room, String lecturerName,
+                           String inviteCode, String status, int progress, int enrolledCount) {
+        this.id = id;
+        this.code = code;
+        this.name = name;
+        this.semester = semester;
+        this.room = room;
+        this.lecturerName = lecturerName;
+        this.inviteCode = inviteCode;
+        this.status = status != null ? status : "ACTIVE";
+        this.progress = progress;
+        this.enrolledCount = enrolledCount;
+    }
 
     public String getId() {
         return id;
@@ -75,6 +103,22 @@ public class CourseClassItem {
 
     public void setLecturerName(String lecturerName) {
         this.lecturerName = lecturerName;
+    }
+
+    public String getInviteCode() {
+        return inviteCode;
+    }
+
+    public void setInviteCode(String inviteCode) {
+        this.inviteCode = inviteCode;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public int getProgress() {

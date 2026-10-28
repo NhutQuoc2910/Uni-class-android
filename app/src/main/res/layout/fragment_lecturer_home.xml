@@ -55,6 +55,76 @@
                     android:layout_marginTop="@dimen/space_2"
                     android:text="@string/greeting_sub" />
 
+                <!-- Hero Card (Figma 268:2493 - Lecturer Today Class & Quick Actions) -->
+                <LinearLayout
+                    android:id="@+id/heroCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:background="@drawable/bg_surface_card"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16"
+                    android:visibility="gone">
+
+                    <TextView
+                        android:id="@+id/tvHeroTag"
+                        style="@style/TextAppearance.EduLens.Badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_pill"
+                        android:paddingHorizontal="@dimen/space_8"
+                        android:paddingVertical="2dp"
+                        android:text="@string/hero_lecturer_tag"
+                        android:textColor="@color/color_primary" />
+
+                    <TextView
+                        android:id="@+id/tvHeroCourseName"
+                        style="@style/TextAppearance.EduLens.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        tools:text="Thiết kế giao diện người dùng" />
+
+                    <TextView
+                        android:id="@+id/tvHeroRoomSchedule"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        tools:text="NT118.O21 · Phòng B5.12" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnHeroOpenQr"
+                            style="@style/Widget.EduLens.Button.Filled"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:layout_marginEnd="@dimen/space_8"
+                            android:minHeight="44dp"
+                            android:text="@string/hero_btn_open_qr"
+                            app:icon="@drawable/ic_qr_code"
+                            app:iconGravity="textStart"
+                            app:iconPadding="@dimen/space_8"
+                            app:iconTint="@color/white" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnHeroEnterClass"
+                            style="@style/Widget.EduLens.Button.Outlined"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:minHeight="44dp"
+                            android:text="@string/btn_enter_class" />
+                    </LinearLayout>
+                </LinearLayout>
+
                 <!-- Metrics Row (3 cards: metricCourses, metricAttendance, metricPending) -->
                 <LinearLayout
                     android:layout_width="match_parent"

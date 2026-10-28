@@ -1,4 +1,4 @@
-<resources>
+﻿<resources>
     <string name="app_name">UniClassApp</string>
     <string name="edu_lens_title">EduLens</string>
     <string name="edu_lens_subtitle">Quản lý lớp học, điểm danh QR, tài liệu và bài tập</string>
@@ -299,4 +299,30 @@
     <string name="error_device_used_title">Thiết bị đã được sử dụng</string>
     <string name="error_device_used_desc">Thiết bị này đã được dùng để điểm danh cho tài khoản khác trong phiên này.</string>
     <string name="error_device_used_advice">Quy định của trường nghiêm cấm điểm danh hộ. Mỗi sinh viên phải dùng thiết bị cá nhân.</string>
+
+    <!-- Phase 4: Lecturer Flow Strings -->
+    <string name="lecturer_tab_active">Đang mở</string>
+    <string name="lecturer_tab_archived">Đã lưu trữ</string>
+    <string name="btn_create_class">+ Tạo lớp mới</string>
+    <string name="create_class_title">Tạo lớp học mới</string>
+    <string name="label_class_name">Tên môn học *</string>
+    <string name="hint_class_name">Ví dụ: Thiết kế giao diện người dùng</string>
+    <string name="label_class_code">Mã lớp *</string>
+    <string name="hint_class_code">Ví dụ: NT118.O21</string>
+    <string name="label_semester">Học kỳ *</string>
+    <string name="hint_semester">Ví dụ: HK1 (2026-2027)</string>
+    <string name="label_room">Phòng học</string>
+    <string name="hint_room">Ví dụ: B5.12</string>
+    <string name="btn_submit_create_class">Tạo lớp học</string>
+    <string name="create_class_success_title">Tạo lớp thành công!</string>
+    <string name="create_class_success_subtitle">Chia sẻ mã này với sinh viên để họ tham gia lớp học</string>
+    <string name="btn_copy_code">Sao chép mã</string>
+    <string name="btn_share_code">Chia sẻ</string>
+    <string name="btn_enter_class">Vào lớp học</string>
+    <string name="copied_invite_code">Đã sao chép mã mời</string>
+    <string name="share_code_subject">Mã mời tham gia lớp học</string>
+    <string name="share_code_format">Mã tham gia lớp học %1$s trên EduLens: %2$s</string>
+    <string name="err_required_field">Vui lòng không để trống trường này</string>
+    <string name="hero_lecturer_tag">LỚP ĐANG DẠY HÔM NAY</string>
+    <string name="hero_btn_open_qr">Mở phiên QR</string>
 </resources>

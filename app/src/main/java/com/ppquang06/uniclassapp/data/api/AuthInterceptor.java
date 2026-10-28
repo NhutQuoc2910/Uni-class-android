@@ -30,6 +30,13 @@ public class AuthInterceptor implements Interceptor {
         }
 
         requestBuilder.header("Accept", "application/json");
+
+        String url = original.url().toString();
+        if (url.contains("/api/v1/api/v1/")) {
+            url = url.replace("/api/v1/api/v1/", "/api/v1/");
+            requestBuilder.url(url);
+        }
+
         return chain.proceed(requestBuilder.build());
     }
 }

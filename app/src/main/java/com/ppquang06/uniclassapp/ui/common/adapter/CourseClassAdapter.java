@@ -99,20 +99,28 @@ public class CourseClassAdapter extends RecyclerView.Adapter<CourseClassAdapter.
                 binding.tvLecturerOrCount.setText(item.getEnrolledCount() + " sinh viên");
             }
 
-            int progress = item.getProgress();
-            UiBadgeHelper.Status badgeStatus;
-            if (progress >= 80) {
-                badgeStatus = UiBadgeHelper.Status.PRESENT;
-            } else if (progress >= 60) {
-                badgeStatus = UiBadgeHelper.Status.DUE_SOON;
+            if (item.getInviteCode() != null && !item.getInviteCode().trim().isEmpty()) {
+                UiBadgeHelper.applyBadge(
+                        binding.chipAttendanceOrInvite,
+                        UiBadgeHelper.Status.OPEN,
+                        "Mã: " + item.getInviteCode().trim()
+                );
             } else {
-                badgeStatus = UiBadgeHelper.Status.OVERDUE;
+                int progress = item.getProgress();
+                UiBadgeHelper.Status badgeStatus;
+                if (progress >= 80) {
+                    badgeStatus = UiBadgeHelper.Status.PRESENT;
+                } else if (progress >= 60) {
+                    badgeStatus = UiBadgeHelper.Status.DUE_SOON;
+                } else {
+                    badgeStatus = UiBadgeHelper.Status.OVERDUE;
+                }
+                UiBadgeHelper.applyBadge(
+                        binding.chipAttendanceOrInvite,
+                        badgeStatus,
+                        "Chuyên cần: " + progress + "%"
+                );
             }
-            UiBadgeHelper.applyBadge(
-                    binding.chipAttendanceOrInvite,
-                    badgeStatus,
-                    "Chuyên cần: " + progress + "%"
-            );
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

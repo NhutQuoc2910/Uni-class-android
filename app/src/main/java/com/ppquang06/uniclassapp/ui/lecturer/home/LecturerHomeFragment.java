@@ -35,6 +35,7 @@ public class LecturerHomeFragment extends Fragment {
 
     private FragmentLecturerHomeBinding binding;
     private CourseClassAdapter courseAdapter;
+    private CourseClassItem activeHeroClass;
 
     @Nullable
     @Override
@@ -67,13 +68,29 @@ public class LecturerHomeFragment extends Fragment {
     }
 
     private void setupRecyclerView() {
-        courseAdapter = new CourseClassAdapter(item -> {
+        courseAdapter = new CourseClassAdapter(this::openClassDetail);
+        binding.rvLecturerCourses.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvLecturerCourses.setAdapter(courseAdapter);
+    }
+
+    private void openClassDetail(CourseClassItem item) {
+        if (item == null) return;
+        Bundle args = new Bundle();
+        args.putString("classId", item.getId() != null ? item.getId() : "");
+        args.putString("classCode", item.getCode() != null ? item.getCode() : "");
+        args.putString("className", item.getName() != null ? item.getName() : "");
+        args.putString("semester", item.getSemester() != null ? item.getSemester() : "");
+        args.putString("inviteCode", item.getInviteCode() != null ? item.getInviteCode() : "");
+        args.putString("status", item.getStatus() != null ? item.getStatus() : "ACTIVE");
+
+        try {
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.nav_lecturer_class_detail, args);
+        } catch (Exception e) {
             if (getContext() != null) {
                 Toast.makeText(requireContext(), item.getCode() + " - " + item.getName(), Toast.LENGTH_SHORT).show();
             }
-        });
-        binding.rvLecturerCourses.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.rvLecturerCourses.setAdapter(courseAdapter);
+        }
     }
 
     private void setupListeners() {
@@ -87,6 +104,34 @@ public class LecturerHomeFragment extends Fragment {
             } catch (Exception e) {
                 NavHostFragment.findNavController(LecturerHomeFragment.this)
                         .navigate(R.id.nav_lecturer_classes);
+            }
+        });
+
+        binding.btnHeroOpenQr.setOnClickListener(v -> {
+            if (activeHeroClass != null) {
+                Bundle args = new Bundle();
+                args.putString("classId", activeHeroClass.getId() != null ? activeHeroClass.getId() : "");
+                args.putString("classCode", activeHeroClass.getCode() != null ? activeHeroClass.getCode() : "");
+                args.putString("className", activeHeroClass.getName() != null ? activeHeroClass.getName() : "");
+                args.putString("room", activeHeroClass.getRoom() != null ? activeHeroClass.getRoom() : "");
+                try {
+                    NavHostFragment.findNavController(this)
+                            .navigate(R.id.nav_lecturer_qr_session, args);
+                } catch (Exception e) {
+                    openClassDetail(activeHeroClass);
+                }
+            }
+        });
+
+        binding.btnHeroEnterClass.setOnClickListener(v -> {
+            if (activeHeroClass != null) {
+                openClassDetail(activeHeroClass);
+            }
+        });
+
+        binding.heroCard.setOnClickListener(v -> {
+            if (activeHeroClass != null) {
+                openClassDetail(activeHeroClass);
             }
         });
     }
@@ -134,10 +179,25 @@ public class LecturerHomeFragment extends Fragment {
             courseAdapter.submitList(courses);
             binding.rvLecturerCourses.setVisibility(View.VISIBLE);
             binding.tvEmptyCourses.setVisibility(View.GONE);
+
+            // Bind first active course to Hero Card
+            CourseClassItem firstClass = courses.get(0);
+            activeHeroClass = firstClass;
+            binding.tvHeroCourseName.setText(firstClass.getName());
+            String room = firstClass.getRoom() != null ? firstClass.getRoom().trim() : "";
+            String code = firstClass.getCode() != null ? firstClass.getCode() : "";
+            if (!room.isEmpty()) {
+                binding.tvHeroRoomSchedule.setText(code + " · Phòng " + room);
+            } else {
+                binding.tvHeroRoomSchedule.setText(code);
+            }
+            binding.heroCard.setVisibility(View.VISIBLE);
         } else {
+            activeHeroClass = null;
             courseAdapter.submitList(Collections.emptyList());
             binding.rvLecturerCourses.setVisibility(View.GONE);
             binding.tvEmptyCourses.setVisibility(View.VISIBLE);
+            binding.heroCard.setVisibility(View.GONE);
         }
     }
 

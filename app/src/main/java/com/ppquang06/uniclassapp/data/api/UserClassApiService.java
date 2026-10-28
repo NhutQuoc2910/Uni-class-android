@@ -3,15 +3,24 @@ package com.ppquang06.uniclassapp.data.api;
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.AttendanceCheckInRequest;
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateAssignmentRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
+import com.ppquang06.uniclassapp.data.model.request.GradeSubmissionRequest;
 import com.ppquang06.uniclassapp.data.model.request.JoinClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.OpenQrSessionRequest;
 import com.ppquang06.uniclassapp.data.model.request.SubmitAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse;
 import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
+import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 
@@ -19,6 +28,7 @@ import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
+import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
@@ -63,4 +73,44 @@ public interface UserClassApiService {
 
     @GET("classes/{id}/grades")
     Call<ApiResponse<ClassGradesResponse>> getClassGrades(@Path("id") String classId);
+
+    // ==========================================
+    // Lecturer Management Endpoints (Phase 4)
+    // ==========================================
+
+    @POST("api/v1/classes")
+    Call<ApiResponse<CourseClassItem>> createClass(@Body CreateClassRequest request);
+
+    @PUT("api/v1/classes/{classId}/archive")
+    Call<ApiResponse<CourseClassItem>> archiveClass(@Path("classId") String classId);
+
+    @GET("api/v1/classes/{classId}/members")
+    Call<ApiResponse<List<ClassMemberItemResponse>>> getClassMembers(@Path("classId") String classId);
+
+    @DELETE("api/v1/classes/{classId}/members/{studentId}")
+    Call<ApiResponse<Void>> removeClassMember(@Path("classId") String classId, @Path("studentId") String studentId);
+
+    @POST("api/v1/classes/{classId}/materials")
+    Call<ApiResponse<ClassDetailResponse.MaterialItem>> createMaterial(@Path("classId") String classId, @Body CreateMaterialRequest request);
+
+    @GET("api/v1/classes/{classId}/statistics")
+    Call<ApiResponse<ClassStatisticsResponse>> getClassStatistics(@Path("classId") String classId);
+
+    @POST("api/v1/classes/{classId}/assignments")
+    Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> createAssignment(@Path("classId") String classId, @Body CreateAssignmentRequest request);
+
+    @GET("api/v1/assignments/{assignmentId}/submissions")
+    Call<ApiResponse<AssignmentSubmissionListResponse>> getAssignmentSubmissions(@Path("assignmentId") String assignmentId);
+
+    @PUT("api/v1/assignments/{assignmentId}/submissions/{studentId}/grade")
+    Call<ApiResponse<AssignmentSubmissionListResponse>> gradeSubmission(@Path("assignmentId") String assignmentId, @Path("studentId") String studentId, @Body GradeSubmissionRequest request);
+
+    @POST("api/v1/classes/{classId}/attendance-sessions")
+    Call<ApiResponse<LiveAttendanceSessionResponse>> openQrSession(@Path("classId") String classId, @Body OpenQrSessionRequest request);
+
+    @GET("api/v1/attendance-sessions/{sessionId}/live")
+    Call<ApiResponse<LiveAttendanceSessionResponse>> getLiveAttendanceSession(@Path("sessionId") String sessionId);
+
+    @PUT("api/v1/attendance-sessions/{sessionId}/close")
+    Call<ApiResponse<LiveAttendanceSessionResponse>> closeAttendanceSession(@Path("sessionId") String sessionId);
 }

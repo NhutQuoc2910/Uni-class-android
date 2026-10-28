@@ -9,8 +9,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.tabs.TabLayout;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.api.ApiClient;
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
@@ -19,6 +21,7 @@ import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerClassesBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -30,6 +33,8 @@ public class LecturerClassesFragment extends Fragment {
 
     private FragmentLecturerClassesBinding binding;
     private CourseClassAdapter adapter;
+    private final List<CourseClassItem> allLoadedClasses = new ArrayList<>();
+    private boolean showArchived = false;
 
     @Nullable
     @Override
@@ -43,6 +48,7 @@ public class LecturerClassesFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setupTopBar();
+        setupTabs();
         setupRecyclerView();
         setupEmptyAndErrorViews();
         setupListeners();
@@ -54,14 +60,45 @@ public class LecturerClassesFragment extends Fragment {
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_lecturer);
     }
 
+    private void setupTabs() {
+        binding.tabLayoutClassStatus.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+            @Override
+            public void onTabSelected(TabLayout.Tab tab) {
+                showArchived = (tab.getPosition() == 1);
+                applyFilter();
+            }
+
+            @Override
+            public void onTabUnselected(TabLayout.Tab tab) {}
+
+            @Override
+            public void onTabReselected(TabLayout.Tab tab) {}
+        });
+    }
+
     private void setupRecyclerView() {
-        adapter = new CourseClassAdapter(item -> {
+        adapter = new CourseClassAdapter(this::onClassItemClicked);
+        binding.rvClasses.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvClasses.setAdapter(adapter);
+    }
+
+    private void onClassItemClicked(CourseClassItem item) {
+        Bundle args = new Bundle();
+        args.putString("classId", item.getId() != null ? item.getId() : "");
+        args.putString("classCode", item.getCode() != null ? item.getCode() : "");
+        args.putString("className", item.getName() != null ? item.getName() : "");
+        args.putString("semester", item.getSemester() != null ? item.getSemester() : "");
+        args.putString("inviteCode", item.getInviteCode() != null ? item.getInviteCode() : "");
+        args.putString("status", item.getStatus() != null ? item.getStatus() : "ACTIVE");
+
+        try {
+            NavHostFragment.findNavController(this)
+                    .navigate(R.id.nav_lecturer_class_detail, args);
+        } catch (Exception e) {
             if (getContext() != null) {
                 Toast.makeText(requireContext(), item.getCode() + " - " + item.getName(), Toast.LENGTH_SHORT).show();
             }
-        });
-        binding.rvClasses.setLayoutManager(new LinearLayoutManager(requireContext()));
-        binding.rvClasses.setAdapter(adapter);
+        }
     }
 
     private void setupEmptyAndErrorViews() {
@@ -77,6 +114,17 @@ public class LecturerClassesFragment extends Fragment {
     private void setupListeners() {
         binding.swipeRefresh.setColorSchemeResources(R.color.color_primary);
         binding.swipeRefresh.setOnRefreshListener(this::loadClasses);
+
+        binding.fabCreateClass.setOnClickListener(v -> {
+            try {
+                NavHostFragment.findNavController(this)
+                        .navigate(R.id.nav_lecturer_create_class);
+            } catch (Exception e) {
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Mở tạo lớp", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void loadClasses() {
@@ -142,15 +190,41 @@ public class LecturerClassesFragment extends Fragment {
     }
 
     private void handleClassesResult(List<CourseClassItem> items) {
-        if (items != null && !items.isEmpty()) {
-            int count = items.size();
+        allLoadedClasses.clear();
+        if (items != null) {
+            allLoadedClasses.addAll(items);
+        }
+        applyFilter();
+    }
+
+    public void applyFilter() {
+        List<CourseClassItem> filtered = new ArrayList<>();
+        for (CourseClassItem item : allLoadedClasses) {
+            boolean isArchived = "ARCHIVED".equalsIgnoreCase(item.getStatus());
+            if (showArchived && isArchived) {
+                filtered.add(item);
+            } else if (!showArchived && !isArchived) {
+                filtered.add(item);
+            }
+        }
+
+        int count = filtered.size();
+        if (binding != null) {
             binding.tvClassCount.setText(String.format(getString(R.string.classes_count_format), count));
-            adapter.submitList(items);
-            showContentState();
-        } else {
-            binding.tvClassCount.setText(String.format(getString(R.string.classes_count_format), 0));
-            adapter.submitList(Collections.emptyList());
-            showEmptyState();
+            adapter.submitList(filtered);
+
+            if (count > 0) {
+                showContentState();
+            } else {
+                if (showArchived) {
+                    binding.emptyState.tvEmptyTitle.setText("Chưa có lớp đã lưu trữ");
+                    binding.emptyState.tvEmptyMessage.setText("Các lớp học sau khi kết thúc kỳ và lưu trữ sẽ xuất hiện tại đây.");
+                } else {
+                    binding.emptyState.tvEmptyTitle.setText(R.string.empty_courses_message);
+                    binding.emptyState.tvEmptyMessage.setText(R.string.overview_semester);
+                }
+                showEmptyState();
+            }
         }
     }
 

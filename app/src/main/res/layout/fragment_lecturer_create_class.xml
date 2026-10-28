@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingVertical="@dimen/space_16">
+
+            <TextView
+                style="@style/TextAppearance.EduLens.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_class_title" />
+
+            <TextView
+                style="@style/TextAppearance.EduLens.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:text="Điền thông tin lớp học để bắt đầu quản lý sinh viên, điểm danh và bài tập."
+                android:textColor="@color/text_secondary" />
+
+            <!-- Card containing input fields -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Tên môn học -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilClassName"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/label_class_name"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etClassName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapWords"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Mã lớp -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilClassCode"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:hint="@string/label_class_code"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etClassCode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapCharacters"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Học kỳ -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilSemester"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:hint="@string/label_semester"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etSemester"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:text="HK1 (2026-2027)" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Phòng học -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilRoom"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:hint="@string/label_room"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etRoom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapCharacters"
+                        android:maxLines="1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- Loading indicator -->
+            <ProgressBar
+                android:id="@+id/progressLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/space_16"
+                android:indeterminateTint="@color/color_primary"
+                android:visibility="gone" />
+
+            <!-- Submit Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitCreateClass"
+                style="@style/Widget.EduLens.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:minHeight="48dp"
+                android:text="@string/btn_submit_create_class" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

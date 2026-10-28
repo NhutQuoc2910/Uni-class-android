@@ -29,4 +29,86 @@
         android:label="@string/nav_profile"
         tools:layout="@layout/fragment_lecturer_profile" />
 
+    <!-- Phase 4 Lecturer Flows -->
+    <fragment
+        android:id="@+id/nav_lecturer_create_class"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.classes.LecturerCreateClassFragment"
+        android:label="@string/create_class_title"
+        tools:layout="@layout/fragment_lecturer_create_class" />
+
+    <fragment
+        android:id="@+id/nav_lecturer_class_invite"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.classes.LecturerClassInviteFragment"
+        android:label="@string/create_class_success_title"
+        tools:layout="@layout/fragment_lecturer_class_invite">
+        <argument
+            android:name="classId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="inviteCode"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_lecturer_class_detail"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.classes.LecturerClassDetailFragment"
+        android:label="@string/nav_classes">
+        <argument
+            android:name="classId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="semester"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="inviteCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="status"
+            app:argType="string"
+            android:defaultValue="ACTIVE" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_lecturer_qr_session"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.qr.LecturerQrSessionFragment"
+        android:label="Phiên điểm danh QR">
+        <argument
+            android:name="classId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="room"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
 </navigation>

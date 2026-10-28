@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_20"
+            android:paddingVertical="@dimen/space_24">
+
+            <!-- Success Icon -->
+            <FrameLayout
+                android:layout_width="72dp"
+                android:layout_height="72dp"
+                android:background="@drawable/bg_circle_green_light">
+
+                <ImageView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="center"
+                    android:contentDescription="Thành công"
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="@color/color_success" />
+            </FrameLayout>
+
+            <TextView
+                style="@style/TextAppearance.EduLens.Headline"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:text="@string/create_class_success_title"
+                android:textColor="@color/text_primary" />
+
+            <TextView
+                android:id="@+id/tvClassSubtitle"
+                style="@style/TextAppearance.EduLens.Body"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:gravity="center"
+                android:textColor="@color/text_secondary"
+                tools:text="Thiết kế giao diện người dùng · NT118.O21" />
+
+            <!-- Large Invite Code Card (Figma 74:1142) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_24"
+                android:background="@drawable/bg_surface_card"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:padding="@dimen/space_20">
+
+                <TextView
+                    style="@style/TextAppearance.EduLens.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:letterSpacing="0.08"
+                    android:text="MÃ THAM GIA LỚP HỌC"
+                    android:textColor="@color/text_muted"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvInviteCode"
+                    style="@style/TextAppearance.EduLens.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_8"
+                    android:letterSpacing="0.15"
+                    android:textColor="@color/color_primary"
+                    android:textSize="34sp"
+                    android:textStyle="bold"
+                    tools:text="K7M-2QX" />
+
+                <TextView
+                    style="@style/TextAppearance.EduLens.Caption"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_8"
+                    android:gravity="center"
+                    android:text="@string/create_class_success_subtitle"
+                    android:textColor="@color/text_secondary" />
+
+            </LinearLayout>
+
+            <!-- Actions Row: Sao chép mã & Chia sẻ -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:orientation="horizontal">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnCopyCode"
+                    style="@style/Widget.EduLens.Button.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/space_8"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:text="@string/btn_copy_code"
+                    app:icon="@drawable/ic_content_copy"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/color_primary" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnShareCode"
+                    style="@style/Widget.EduLens.Button.Outlined"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/space_8"
+                    android:layout_weight="1"
+                    android:minHeight="48dp"
+                    android:text="@string/btn_share_code"
+                    app:icon="@drawable/ic_share"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/color_primary" />
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:minHeight="40dp" />
+
+            <!-- Primary Action: Vào lớp học -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnEnterClass"
+                style="@style/Widget.EduLens.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:minHeight="48dp"
+                android:text="@string/btn_enter_class" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
