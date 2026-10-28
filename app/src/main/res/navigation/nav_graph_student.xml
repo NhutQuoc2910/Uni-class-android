@@ -57,4 +57,22 @@
             android:defaultValue="" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_student_assignment_detail"
+        android:name="com.ppquang06.uniclassapp.ui.student.classes.StudentAssignmentDetailFragment"
+        android:label="Chi tiết bài tập"
+        tools:layout="@layout/fragment_student_assignment_detail">
+        <argument
+            android:name="assignmentId"
+            app:argType="string" />
+        <argument
+            android:name="assignmentTitle"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
 </navigation>

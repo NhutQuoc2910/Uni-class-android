@@ -214,4 +214,32 @@
     <string name="change_pass_error_wrong_current">Mật khẩu hiện tại không chính xác</string>
     <string name="change_pass_success">Đổi mật khẩu thành công!</string>
     <string name="change_pass_error_generic">Không thể đổi mật khẩu. Vui lòng thử lại.</string>
+    <!-- Assignment Detail & Submission 5 States -->
+    <string name="assignment_detail_title">Chi tiết bài tập</string>
+    <string name="assignment_due_prefix">Hạn nộp: %1$s</string>
+    <string name="assignment_scale_format">Thang điểm: %1$s</string>
+    <string name="assignment_submission_section">Bài nộp của bạn</string>
+    <string name="assignment_dropzone_title">Nhấn để chọn tệp tải lên</string>
+    <string name="assignment_dropzone_caption">Hỗ trợ PDF, Word, ZIP, Ảnh (tối đa 25MB)</string>
+    <string name="assignment_submitted_at_prefix">Đã nộp lúc %1$s</string>
+    <string name="assignment_grading_pending">Đang chờ giảng viên chấm điểm</string>
+    <string name="assignment_score_format">%1$s / 10</string>
+    <string name="assignment_feedback_prefix">Nhận xét: %1$s</string>
+    <string name="assignment_requirements_title">Yêu cầu bài tập</string>
+    <string name="assignment_attachment_title">Tệp đính kèm của đề bài</string>
+    <string name="btn_submit_assignment">Nộp bài</string>
+    <string name="btn_resubmit_assignment">Nộp lại bài</string>
+    <string name="assignment_warning_due_soon">Bài tập sắp hết hạn!</string>
+    <string name="assignment_warning_overdue">Bài tập đã quá hạn nộp!</string>
+    <string name="assignment_submit_success">Nộp bài tập thành công!</string>
+    <string name="pick_file_type_title">Chọn loại tệp</string>
+    <string name="file_type_pdf">Tệp PDF</string>
+    <string name="file_type_pdf_ext">.pdf</string>
+    <string name="file_type_word">Tài liệu Word</string>
+    <string name="file_type_word_ext">.docx, .doc</string>
+    <string name="file_type_zip">Tệp nén</string>
+    <string name="file_type_zip_ext">.zip, .rar</string>
+    <string name="file_type_image">Ảnh</string>
+    <string name="file_type_image_ext">.jpg, .png</string>
+    <string name="pick_demo_file_btn">Dùng tệp mẫu demo (báo cáo.pdf)</string>
 </resources>
