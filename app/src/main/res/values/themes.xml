@@ -1,8 +1,15 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.UniClassApp" parent="Theme.Material3.DayNight.NoActionBar">
-        <!-- Customize your light theme here. -->
-        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    <style name="Base.Theme.UniClassApp" parent="Theme.Material3.Light.NoActionBar">
+        <item name="colorPrimary">@color/color_primary</item>
+        <item name="colorPrimaryContainer">@color/color_primary_container</item>
+        <item name="colorSecondary">@color/color_secondary</item>
+        <item name="colorSecondaryContainer">@color/color_secondary_container</item>
+        <item name="colorSurface">@color/color_surface</item>
+        <item name="android:colorBackground">@color/color_background</item>
+        <item name="colorError">@color/color_error</item>
+        <item name="android:statusBarColor">@color/color_surface</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">true</item>
     </style>
 
     <style name="Theme.UniClassApp" parent="Base.Theme.UniClassApp" />

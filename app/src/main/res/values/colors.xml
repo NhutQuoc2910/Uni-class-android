@@ -1,14 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Base colors -->
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="primary_blue">#1976D2</color>
+
+    <!-- EduLens Design System Semantic Tokens (Figma 0:1) -->
+    <color name="color_primary">#1976D2</color>
+    <color name="color_primary_dark">#1565C0</color>
+    <color name="color_primary_container">#E3F2FD</color>
+    <color name="color_secondary">#0288D1</color>
+    <color name="color_secondary_container">#E0F2FE</color>
+    <color name="color_surface">#FFFFFF</color>
+    <color name="color_surface_variant">#F1F5F9</color>
+    <color name="color_background">#F8FAFC</color>
+
+    <!-- Status Semantic Colors (Figma 0:1 Swatches) -->
+    <color name="color_error">#DC2626</color>
+    <color name="color_error_container">#FEE2E2</color>
+    <color name="color_success">#16A34A</color>
+    <color name="color_success_container">#DCFCE7</color>
+    <color name="color_warning">#D97706</color>
+    <color name="color_warning_container">#FEF3C7</color>
+    <color name="color_absence">#EA580C</color>
+    <color name="color_absence_container">#FFEDD5</color>
+
+    <!-- Typography & Border Tokens -->
+    <color name="text_primary">#0F172A</color>
+    <color name="text_secondary">#475569</color>
+    <color name="text_muted">#94A3B8</color>
+    <color name="outline_border">#E2E8F0</color>
+    <color name="scrim_overlay">#80000000</color>
+
+    <!-- Legacy aliases for backward compatibility with existing Auth screens -->
+    <color name="primary_blue">@color/color_primary</color>
     <color name="vibrant_blue">#3B82F6</color>
     <color name="subtitle_blue">#E0F7FA</color>
-    <color name="background_light">#F8F9FA</color>
-    <color name="text_primary">#212121</color>
-    <color name="text_secondary">#757575</color>
-    <color name="border_color">#E0E0E0</color>
+    <color name="background_light">@color/color_background</color>
+    <color name="border_color">@color/outline_border</color>
     <color name="step_line_color">#CBD5E1</color>
     <color name="step_text_inactive">#64748B</color>
 </resources>

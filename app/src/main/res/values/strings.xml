@@ -104,4 +104,18 @@
     <string name="nav_qr">Quét QR</string>
     <string name="nav_notifications">Thông báo</string>
     <string name="nav_profile">Cá nhân</string>
+    <!-- Navigation & Role Shell Strings -->
+    <string name="nav_home">Trang chủ</string>
+    <string name="role_badge_student">Sinh viên</string>
+    <string name="role_badge_lecturer">Giảng viên</string>
+    <string name="logout_button">Đăng xuất</string>
+    <string name="desc_back_button">Quay lại</string>
+    <string name="desc_avatar">Ảnh đại diện</string>
+    <string name="status_present">Có mặt</string>
+    <string name="status_absent">Vắng</string>
+    <string name="status_submitted">Đã nộp</string>
+    <string name="status_due_soon">Sắp hết hạn</string>
+    <string name="status_open">Còn hạn</string>
+    <string name="status_overdue">Quá hạn</string>
+    <string name="tag_urgent">Khẩn</string>
 </resources>

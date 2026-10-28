@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- 8dp Grid Spacing -->
+    <dimen name="space_2">2dp</dimen>
+    <dimen name="space_4">4dp</dimen>
+    <dimen name="space_8">8dp</dimen>
+    <dimen name="space_12">12dp</dimen>
+    <dimen name="space_16">16dp</dimen>
+    <dimen name="space_20">20dp</dimen>
+    <dimen name="space_24">24dp</dimen>
+    <dimen name="space_32">32dp</dimen>
+
+    <!-- Corner Radius -->
+    <dimen name="radius_xs">4dp</dimen>
+    <dimen name="radius_sm">8dp</dimen>
+    <dimen name="radius_md">12dp</dimen>
+    <dimen name="radius_lg">16dp</dimen>
+    <dimen name="radius_xl">24dp</dimen>
+    <dimen name="radius_pill">999dp</dimen>
+
+    <!-- Standard Component Dimensions (Figma 360x800 frame) -->
+    <dimen name="top_app_bar_height">64dp</dimen>
+    <dimen name="bottom_nav_height">80dp</dimen>
+    <dimen name="tab_bar_height">44dp</dimen>
+    <dimen name="button_height_md">40dp</dimen>
+    <dimen name="button_height_lg">48dp</dimen>
+    <dimen name="search_bar_height">44dp</dimen>
+    <dimen name="chip_height">28dp</dimen>
+    <dimen name="list_item_height">72dp</dimen>
+</resources>
