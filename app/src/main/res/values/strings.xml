@@ -368,4 +368,59 @@
     <string name="label_file_type">Định dạng tệp</string>
     <string name="btn_post_material">Đăng tài liệu</string>
     <string name="status_not_graded">Chưa chấm</string>
+
+    <!-- Phase 4 Flow B: Lecturer Assignment Creation, Submissions List & Grading -->
+    <string name="create_assignment_title">Tạo bài tập mới</string>
+    <string name="label_assignment_title">Tiêu đề bài tập *</string>
+    <string name="hint_assignment_title">Nhập tiêu đề bài tập...</string>
+    <string name="label_assignment_description">Mô tả yêu cầu bài tập</string>
+    <string name="hint_assignment_description">Nhập hướng dẫn, yêu cầu bài tập...</string>
+    <string name="label_attachment_url">Đường dẫn tệp đính kèm / đề bài</string>
+    <string name="hint_attachment_url">https://... hoặc link drive đề bài</string>
+    <string name="label_due_date">Ngày hạn nộp *</string>
+    <string name="hint_due_date">Chọn ngày (yyyy-MM-dd)</string>
+    <string name="label_due_time">Giờ hạn nộp *</string>
+    <string name="hint_due_time">Chọn giờ (HH:mm)</string>
+    <string name="label_max_score">Thang điểm</string>
+    <string name="hint_max_score">10</string>
+    <string name="switch_notify_students">Gửi thông báo đến sinh viên</string>
+    <string name="desc_notify_students">Thông báo sẽ xuất hiện trên thiết bị sinh viên</string>
+    <string name="switch_allow_late">Cho phép nộp trễ</string>
+    <string name="desc_allow_late">Sinh viên vẫn có thể nộp sau thời hạn</string>
+    <string name="btn_submit_create_assignment">Tạo bài tập</string>
+    <string name="err_empty_assignment_title">Vui lòng nhập tiêu đề bài tập</string>
+    <string name="err_empty_due_date">Vui lòng chọn ngày hạn nộp</string>
+
+    <string name="assignment_submissions_title">Danh sách bài nộp</string>
+    <string name="tab_all_submissions">Tất cả bài nộp</string>
+    <string name="tab_pending_grading">Chưa chấm</string>
+    <string name="status_on_time">Đúng hạn</string>
+    <string name="status_late">Nộp trễ</string>
+    <string name="status_not_submitted">Chưa nộp</string>
+    <string name="status_submitted_on_time">Đã nộp (Đúng hạn)</string>
+    <string name="status_graded_prefix">Đã chấm: </string>
+    <string name="submitted_ratio_format">Đã nộp: %1$d / %2$d</string>
+
+    <string name="grading_title">Chấm điểm bài nộp</string>
+    <string name="btn_prev_student">&lt; Trước</string>
+    <string name="btn_next_student">Sau &gt;</string>
+    <string name="submitted_file_title">Tệp bài nộp của sinh viên</string>
+    <string name="btn_open_file">Xem bài nộp</string>
+    <string name="label_grading_progress">Tiến độ chấm: %1$d/%2$d bài</string>
+    <string name="label_score">Điểm số *</string>
+    <string name="hint_score">0.0 - 10.0</string>
+    <string name="quick_score_title">Chọn điểm nhanh</string>
+    <string name="label_feedback">Nhận xét của giảng viên</string>
+    <string name="hint_feedback">Nhập nhận xét chi tiết cho bài làm...</string>
+    <string name="btn_save_draft">Lưu nháp</string>
+    <string name="btn_publish_grade">Công bố điểm</string>
+    <string name="toast_draft_saved">Đã lưu điểm nháp</string>
+    <string name="toast_grade_published">Điểm đã được công bố cho sinh viên</string>
+    <string name="toast_create_assignment_success">Tạo bài tập thành công!</string>
+    <string name="err_invalid_score">Điểm phải từ 0.0 đến 10.0</string>
+    <string name="dialog_publish_grade_title">Công bố điểm bài tập</string>
+    <string name="rb_publish_current">Chỉ công bố bài này cho sinh viên</string>
+    <string name="rb_publish_all">Công bố toàn bộ các bài đã chấm trong lớp</string>
+    <string name="btn_confirm_publish">Xác nhận công bố</string>
+    <string name="no_file_attached">Sinh viên chưa đính kèm tệp bài làm</string>
 </resources>

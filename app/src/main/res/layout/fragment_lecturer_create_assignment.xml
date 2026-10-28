@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingVertical="@dimen/space_16">
+
+            <TextView
+                style="@style/TextAppearance.EduLens.Headline"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/create_assignment_title" />
+
+            <TextView
+                style="@style/TextAppearance.EduLens.Body"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_4"
+                android:text="Thiết lập tiêu đề, thời hạn nộp bài và các tùy chọn nộp bài cho sinh viên."
+                android:textColor="@color/text_secondary" />
+
+            <!-- Card containing input fields -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_16"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Tiêu đề bài tập -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAssignmentTitle"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="@string/label_assignment_title"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAssignmentTitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textCapSentences"
+                        android:textColor="@color/text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Mô tả yêu cầu bài tập -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAssignmentDescription"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:hint="@string/label_assignment_description"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAssignmentDescription"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="top|start"
+                        android:inputType="textMultiLine"
+                        android:minLines="3"
+                        android:textColor="@color/text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Đường dẫn tệp đính kèm -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilAttachmentUrl"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:hint="@string/label_attachment_url"
+                    app:boxStrokeColor="@color/color_primary"
+                    app:startIconDrawable="@drawable/ic_download"
+                    app:startIconTint="@color/text_secondary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAttachmentUrl"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="textUri"
+                        android:textColor="@color/text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <!-- Row for Due Date & Due Time -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:orientation="horizontal">
+
+                    <!-- Ngày hạn nộp -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDueDate"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_8"
+                        android:layout_weight="1"
+                        android:hint="@string/label_due_date"
+                        app:boxStrokeColor="@color/color_primary"
+                        app:endIconDrawable="@drawable/ic_calendar_check"
+                        app:endIconMode="custom"
+                        app:endIconTint="@color/color_primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDueDate"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:textColor="@color/text_primary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <!-- Giờ hạn nộp -->
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/tilDueTime"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_8"
+                        android:layout_weight="1"
+                        android:hint="@string/label_due_time"
+                        app:boxStrokeColor="@color/color_primary"
+                        app:endIconDrawable="@drawable/ic_clock"
+                        app:endIconMode="custom"
+                        app:endIconTint="@color/color_primary">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/etDueTime"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:cursorVisible="false"
+                            android:focusable="false"
+                            android:inputType="none"
+                            android:text="23:59"
+                            android:textColor="@color/text_primary" />
+                    </com.google.android.material.textfield.TextInputLayout>
+                </LinearLayout>
+
+                <!-- Thang điểm -->
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilMaxScore"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:hint="@string/label_max_score"
+                    app:boxStrokeColor="@color/color_primary">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etMaxScore"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="numberDecimal"
+                        android:text="10"
+                        android:textColor="@color/text_primary" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </LinearLayout>
+
+            <!-- Card containing switches -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_12"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Switch Notify Students -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/switchNotifyStudents"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/switch_notify_students"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/desc_notify_students"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switchNotifyStudents"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:checked="true" />
+                </RelativeLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/space_12"
+                    android:background="@color/outline_border" />
+
+                <!-- Switch Allow Late -->
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_toStartOf="@id/switchAllowLate"
+                        android:orientation="vertical">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/switch_allow_late"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/desc_allow_late"
+                            android:textColor="@color/text_secondary" />
+                    </LinearLayout>
+
+                    <com.google.android.material.materialswitch.MaterialSwitch
+                        android:id="@+id/switchAllowLate"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:checked="true" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <ProgressBar
+                android:id="@+id/pbLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="@dimen/space_16"
+                android:visibility="gone" />
+
+            <!-- Submit Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmitCreateAssignment"
+                style="@style/Widget.EduLens.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="@dimen/button_height_lg"
+                android:layout_marginTop="@dimen/space_24"
+                android:layout_marginBottom="@dimen/space_24"
+                android:text="@string/btn_submit_create_assignment"
+                app:cornerRadius="@dimen/radius_sm" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

@@ -138,7 +138,20 @@ public class LecturerClassDetailFragment extends Fragment {
         binding.rvMaterials.setAdapter(materialAdapter);
 
         // Assignments
-        assignmentAdapter = new AssignmentAdapter();
+        assignmentAdapter = new AssignmentAdapter(item -> {
+            Bundle bundle = new Bundle();
+            bundle.putString("assignmentId", item.getId());
+            bundle.putString("assignmentTitle", item.getTitle());
+            bundle.putString("classCode", classCode);
+            bundle.putString("dueDate", item.getDueDate());
+            try {
+                Navigation.findNavController(requireView()).navigate(R.id.nav_lecturer_assignment_submissions, bundle);
+            } catch (Exception e) {
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Mở danh sách bài nộp: " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         binding.rvAssignments.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvAssignments.setAdapter(assignmentAdapter);
     }

@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:paddingVertical="@dimen/space_16">
+
+                <!-- Header Card: Assignment Info -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_surface_card"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <TextView
+                        android:id="@+id/tvAssignmentTitle"
+                        style="@style/TextAppearance.EduLens.Headline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/text_primary"
+                        tools:text="Bài tập 1: Layouts &amp; Navigation" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            android:id="@+id/tvClassCode"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_gray"
+                            android:paddingHorizontal="@dimen/space_8"
+                            android:paddingVertical="2dp"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            tools:text="NT118.O21" />
+
+                        <TextView
+                            android:id="@+id/tvDueDate"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_8"
+                            android:layout_weight="1"
+                            android:textColor="@color/text_secondary"
+                            tools:text="Hạn nộp: 23:59 · 30/10/2026" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Submissions Progress & Metrics Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:background="@drawable/bg_surface_card"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentStart="true"
+                            android:layout_centerVertical="true"
+                            android:text="Tiến độ nộp bài"
+                            android:textColor="@color/text_primary" />
+
+                        <TextView
+                            android:id="@+id/tvSubmittedRatio"
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:textColor="@color/color_primary"
+                            android:textStyle="bold"
+                            tools:text="Đã nộp: 42 / 45" />
+                    </RelativeLayout>
+
+                    <!-- Visual Progress Bar -->
+                    <ProgressBar
+                        android:id="@+id/progressSubmissions"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:max="100"
+                        android:progress="85"
+                        android:progressTint="@color/color_primary" />
+
+                    <!-- 3 Status Count Chips -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_16"
+                        android:orientation="horizontal">
+
+                        <!-- Đúng hạn -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_pill_green"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="@dimen/space_8">
+
+                            <TextView
+                                android:id="@+id/tvOnTimeCount"
+                                style="@style/TextAppearance.EduLens.Headline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/color_success"
+                                android:textSize="18sp"
+                                tools:text="38" />
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/status_on_time"
+                                android:textColor="@color/color_success" />
+                        </LinearLayout>
+
+                        <!-- Nộp trễ -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_8"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_pill_warning"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="@dimen/space_8">
+
+                            <TextView
+                                android:id="@+id/tvLateCount"
+                                style="@style/TextAppearance.EduLens.Headline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/color_warning"
+                                android:textSize="18sp"
+                                tools:text="4" />
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/status_late"
+                                android:textColor="@color/color_warning" />
+                        </LinearLayout>
+
+                        <!-- Chưa nộp -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_8"
+                            android:layout_weight="1"
+                            android:background="@drawable/bg_pill_gray"
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="@dimen/space_8">
+
+                            <TextView
+                                android:id="@+id/tvNotSubmittedCount"
+                                style="@style/TextAppearance.EduLens.Headline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_secondary"
+                                android:textSize="18sp"
+                                tools:text="3" />
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/status_not_submitted"
+                                android:textColor="@color/text_secondary" />
+                        </LinearLayout>
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Filter Tabs: Tất cả vs Chưa chấm -->
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabFilterSubmissions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:background="@android:color/transparent"
+                    app:tabGravity="fill"
+                    app:tabIndicatorColor="@color/color_primary"
+                    app:tabIndicatorHeight="3dp"
+                    app:tabMode="fixed"
+                    app:tabRippleColor="@color/color_primary_container"
+                    app:tabSelectedTextColor="@color/color_primary"
+                    app:tabTextColor="@color/text_secondary">
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tab_all_submissions" />
+
+                    <com.google.android.material.tabs.TabItem
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/tab_pending_grading" />
+                </com.google.android.material.tabs.TabLayout>
+
+                <ProgressBar
+                    android:id="@+id/pbLoading"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="@dimen/space_24"
+                    android:visibility="gone" />
+
+                <!-- Empty state placeholder -->
+                <TextView
+                    android:id="@+id/tvEmptySubmissions"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_24"
+                    android:gravity="center"
+                    android:text="Chưa có bài nộp nào trong danh mục này."
+                    android:textColor="@color/text_secondary"
+                    android:visibility="gone" />
+
+                <!-- Submissions RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvSubmissions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_lecturer_submission_row" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>
