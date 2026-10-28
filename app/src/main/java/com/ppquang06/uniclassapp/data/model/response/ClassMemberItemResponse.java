@@ -2,9 +2,10 @@ package com.ppquang06.uniclassapp.data.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class ClassMemberItemResponse {
+public class ClassMemberItemResponse implements Serializable {
     @SerializedName("studentId")
     private String studentId;
 
@@ -157,7 +158,7 @@ public class ClassMemberItemResponse {
         this.recentAssignments = recentAssignments;
     }
 
-    public static class MemberAssignmentSummary {
+    public static class MemberAssignmentSummary implements Serializable {
         @SerializedName("assignmentId")
         private String assignmentId;
 

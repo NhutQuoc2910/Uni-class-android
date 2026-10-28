@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_surface_card"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_20"
+    android:paddingTop="@dimen/space_12"
+    android:paddingBottom="@dimen/space_24">
+
+    <!-- Drag handle -->
+    <View
+        android:id="@+id/viewDragHandle"
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Sheet Title -->
+    <TextView
+        android:id="@+id/tvMaterialTitleHeader"
+        style="@style/TextAppearance.EduLens.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="@string/material_upload_title" />
+
+    <!-- Input Title -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilMaterialTitle"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:hint="@string/label_material_title"
+        app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
+        app:boxCornerRadiusBottomStart="@dimen/radius_sm"
+        app:boxCornerRadiusTopEnd="@dimen/radius_sm"
+        app:boxCornerRadiusTopStart="@dimen/radius_sm"
+        app:boxStrokeColor="@color/color_primary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMaterialTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_material_title"
+            android:inputType="textCapSentences"
+            android:maxLines="2"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Input URL -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilMaterialUrl"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_12"
+        android:hint="@string/label_material_url"
+        app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
+        app:boxCornerRadiusBottomStart="@dimen/radius_sm"
+        app:boxCornerRadiusTopEnd="@dimen/radius_sm"
+        app:boxCornerRadiusTopStart="@dimen/radius_sm"
+        app:boxStrokeColor="@color/color_primary">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etMaterialUrl"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/hint_material_url"
+            android:inputType="textUri"
+            android:maxLines="2"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- File Type Selector -->
+    <TextView
+        style="@style/TextAppearance.EduLens.Subtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="@string/label_file_type"
+        android:textColor="@color/text_primary" />
+
+    <com.google.android.material.chip.ChipGroup
+        android:id="@+id/chipGroupFileType"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        app:checkedChip="@id/chipPdf"
+        app:selectionRequired="true"
+        app:singleSelection="true">
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPdf"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="PDF" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipDocx"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="DOCX" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipPptx"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="PPTX" />
+
+        <com.google.android.material.chip.Chip
+            android:id="@+id/chipLink"
+            style="@style/Widget.Material3.Chip.Filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="LINK" />
+    </com.google.android.material.chip.ChipGroup>
+
+    <!-- Progress Indicator -->
+    <ProgressBar
+        android:id="@+id/pbSubmitting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_12"
+        android:visibility="gone" />
+
+    <!-- Submit Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnSubmitMaterial"
+        style="@style/Widget.EduLens.Button.Filled"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/button_height_lg"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="@string/btn_post_material"
+        app:icon="@drawable/ic_upload"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/space_8" />
+</LinearLayout>

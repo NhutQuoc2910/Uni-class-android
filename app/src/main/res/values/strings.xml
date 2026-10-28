@@ -1,4 +1,4 @@
-﻿<resources>
+<resources>
     <string name="app_name">UniClassApp</string>
     <string name="edu_lens_title">EduLens</string>
     <string name="edu_lens_subtitle">Quản lý lớp học, điểm danh QR, tài liệu và bài tập</string>
@@ -325,4 +325,47 @@
     <string name="err_required_field">Vui lòng không để trống trường này</string>
     <string name="hero_lecturer_tag">LỚP ĐANG DẠY HÔM NAY</string>
     <string name="hero_btn_open_qr">Mở phiên QR</string>
+
+    <!-- Phase 4 Flow A2: Lecturer Class Detail & Members -->
+    <string name="lecturer_class_detail_title">Chi tiết lớp học</string>
+    <string name="lecturer_action_members">Sinh viên</string>
+    <string name="lecturer_action_qr">Điểm danh QR</string>
+    <string name="lecturer_action_stats">Thống kê</string>
+    <string name="metric_students">Sinh viên</string>
+    <string name="metric_assignments">Bài tập</string>
+    <string name="metric_attendance">Chuyên cần</string>
+    <string name="section_announcements">Thông báo</string>
+    <string name="btn_create_announcement">+ Tạo thông báo</string>
+    <string name="section_materials">Tài liệu</string>
+    <string name="btn_upload_material">+ Tải tài liệu</string>
+    <string name="section_assignments">Bài tập</string>
+    <string name="btn_create_assignment">+ Tạo bài tập</string>
+    <string name="lecturer_members_title">Danh sách sinh viên</string>
+    <string name="hint_search_members">Tìm theo tên, MSSV, email...</string>
+    <string name="format_member_count">%1$d sinh viên</string>
+    <string name="dialog_remove_member_title">Xác nhận xóa sinh viên?</string>
+    <string name="dialog_remove_member_message">Bạn có chắc chắn muốn xóa sinh viên %1$s khỏi lớp học này?</string>
+    <string name="btn_confirm_remove">Xóa sinh viên</string>
+    <string name="lecturer_profile_title">Hồ sơ sinh viên</string>
+    <string name="metric_submitted">Bài đã nộp</string>
+    <string name="metric_gpa">Điểm TB</string>
+    <string name="format_absence_sessions">Số buổi vắng: %1$d/%2$d buổi</string>
+    <string name="absence_warning_limit">Cảnh báo: Sinh viên đã vắng quá 20% số buổi học!</string>
+    <string name="recent_assignments_title">Bài tập gần đây</string>
+    <string name="announcement_new_title">Tạo thông báo mới</string>
+    <string name="label_announcement_title">Tiêu đề thông báo *</string>
+    <string name="hint_announcement_title">Nhập tiêu đề thông báo...</string>
+    <string name="label_announcement_content">Nội dung chi tiết *</string>
+    <string name="hint_announcement_content">Nhập nội dung thông báo cho sinh viên...</string>
+    <string name="label_urgent_announcement">Thông báo khẩn</string>
+    <string name="desc_urgent_announcement">Gửi thông báo đẩy đến tất cả sinh viên</string>
+    <string name="btn_post_announcement">Đăng thông báo</string>
+    <string name="material_upload_title">Tải lên tài liệu học tập</string>
+    <string name="label_material_title">Tiêu đề tài liệu *</string>
+    <string name="hint_material_title">Ví dụ: Slide Bài giảng Tuần 1</string>
+    <string name="label_material_url">URL hoặc đường dẫn tệp *</string>
+    <string name="hint_material_url">https://drive.google.com/... hoặc đường dẫn</string>
+    <string name="label_file_type">Định dạng tệp</string>
+    <string name="btn_post_material">Đăng tài liệu</string>
+    <string name="status_not_graded">Chưa chấm</string>
 </resources>
