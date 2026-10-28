@@ -10,7 +10,7 @@
     android:paddingHorizontal="@dimen/space_16">
 
     <ImageButton
-        android:id="@+id/btnBack"
+        android:id="@+id/ivBack"
         android:layout_width="36dp"
         android:layout_height="36dp"
         android:layout_marginEnd="@dimen/space_8"

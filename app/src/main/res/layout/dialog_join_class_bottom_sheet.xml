@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_surface_card"
+    android:orientation="vertical"
+    android:paddingHorizontal="@dimen/space_20"
+    android:paddingTop="@dimen/space_12"
+    android:paddingBottom="@dimen/space_24">
+
+    <!-- Drag handle (Figma 54:181) -->
+    <View
+        android:id="@+id/viewDragHandle"
+        android:layout_width="36dp"
+        android:layout_height="4dp"
+        android:layout_gravity="center_horizontal"
+        android:background="@drawable/bg_drag_handle" />
+
+    <!-- Sheet Title -->
+    <TextView
+        android:id="@+id/tvJoinTitle"
+        style="@style/TextAppearance.EduLens.Headline"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="@string/join_class_title" />
+
+    <!-- Description -->
+    <TextView
+        android:id="@+id/tvJoinDesc"
+        style="@style/TextAppearance.EduLens.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_4"
+        android:text="@string/join_class_desc" />
+
+    <!-- Input Invite Code -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilInviteCode"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:hint="@string/join_class_code_hint"
+        app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
+        app:boxCornerRadiusBottomStart="@dimen/radius_sm"
+        app:boxCornerRadiusTopEnd="@dimen/radius_sm"
+        app:boxCornerRadiusTopStart="@dimen/radius_sm"
+        app:boxStrokeColor="@color/color_primary"
+        app:errorEnabled="true">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etInviteCode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textCapCharacters|textNoSuggestions"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Suggestion / Hint -->
+    <TextView
+        android:id="@+id/tvCodeHint"
+        style="@style/TextAppearance.EduLens.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:text="@string/join_class_example_hint"
+        android:textColor="@color/text_muted" />
+
+    <!-- Loading Indicator -->
+    <ProgressBar
+        android:id="@+id/pbJoinLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/space_12"
+        android:indeterminateTint="@color/color_primary"
+        android:visibility="gone" />
+
+    <!-- Action Buttons -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_20"
+        android:orientation="horizontal">
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnCancelJoin"
+            style="@style/Widget.EduLens.Button.Outlined"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginEnd="@dimen/space_8"
+            android:layout_weight="1"
+            android:text="@string/join_class_cancel" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnSubmitJoin"
+            style="@style/Widget.EduLens.Button.Filled"
+            android:layout_width="0dp"
+            android:layout_height="44dp"
+            android:layout_marginStart="@dimen/space_8"
+            android:layout_weight="1"
+            android:text="@string/join_class_submit" />
+    </LinearLayout>
+
+</LinearLayout>

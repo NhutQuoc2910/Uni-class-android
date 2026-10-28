@@ -6,6 +6,8 @@ import com.ppquang06.uniclassapp.R;
 
 import org.junit.Test;
 
+import java.time.Instant;
+
 public class UiBadgeHelperTest {
 
     @Test
@@ -49,5 +51,61 @@ public class UiBadgeHelperTest {
         UiBadgeHelper.BadgeColors open = UiBadgeHelper.resolveColors(UiBadgeHelper.Status.OPEN);
         assertEquals(R.color.color_primary, open.textColorRes);
         assertEquals(R.color.color_primary_container, open.bgColorRes);
+    }
+
+    @Test
+    public void resolveAssignmentStatus_returnsCorrectStatusBySubmissionAndDeadline() {
+        long now = Instant.parse("2026-10-28T10:00:00Z").toEpochMilli();
+
+        // Already submitted always returns SUBMITTED even if overdue
+        assertEquals(
+                UiBadgeHelper.Status.SUBMITTED,
+                UiBadgeHelper.resolveAssignmentStatus(true, "2026-10-20T10:00:00Z", now)
+        );
+
+        // Past due date -> OVERDUE
+        assertEquals(
+                UiBadgeHelper.Status.OVERDUE,
+                UiBadgeHelper.resolveAssignmentStatus(false, "2026-10-28T09:59:59Z", now)
+        );
+
+        // Within 72 hours -> DUE_SOON
+        assertEquals(
+                UiBadgeHelper.Status.DUE_SOON,
+                UiBadgeHelper.resolveAssignmentStatus(false, "2026-10-30T10:00:00Z", now)
+        );
+
+        // More than 72 hours -> OPEN
+        assertEquals(
+                UiBadgeHelper.Status.OPEN,
+                UiBadgeHelper.resolveAssignmentStatus(false, "2026-11-05T10:00:00Z", now)
+        );
+
+        // Null or invalid ISO date -> OPEN
+        assertEquals(
+                UiBadgeHelper.Status.OPEN,
+                UiBadgeHelper.resolveAssignmentStatus(false, null, now)
+        );
+        assertEquals(
+                UiBadgeHelper.Status.OPEN,
+                UiBadgeHelper.resolveAssignmentStatus(false, "invalid-date", now)
+        );
+    }
+
+    @Test
+    public void getAssignmentStatusLabel_returnsVietnameseLabels() {
+        assertEquals("Đã nộp", UiBadgeHelper.getAssignmentStatusLabel(UiBadgeHelper.Status.SUBMITTED));
+        assertEquals("Sắp hết hạn", UiBadgeHelper.getAssignmentStatusLabel(UiBadgeHelper.Status.DUE_SOON));
+        assertEquals("Quá hạn", UiBadgeHelper.getAssignmentStatusLabel(UiBadgeHelper.Status.OVERDUE));
+        assertEquals("Còn hạn", UiBadgeHelper.getAssignmentStatusLabel(UiBadgeHelper.Status.OPEN));
+        assertEquals("Còn hạn", UiBadgeHelper.getAssignmentStatusLabel(null));
+    }
+
+    @Test
+    public void formatIsoDateShort_formatsToHoChiMinhTimezoneOrFallback() {
+        // 2026-10-28T08:30:00Z in Asia/Ho_Chi_Minh (+07:00) is 28/10/2026 · 15:30
+        assertEquals("28/10/2026 · 15:30", UiBadgeHelper.formatIsoDateShort("2026-10-28T08:30:00Z"));
+        assertEquals("12/10/2026", UiBadgeHelper.formatIsoDateShort("12/10/2026"));
+        assertEquals("", UiBadgeHelper.formatIsoDateShort(null));
     }
 }

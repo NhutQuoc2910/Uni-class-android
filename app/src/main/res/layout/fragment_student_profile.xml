@@ -20,29 +20,39 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_24"
-            android:paddingVertical="@dimen/space_24">
+            android:paddingHorizontal="@dimen/space_20"
+            android:paddingVertical="@dimen/space_16">
 
-            <!-- Profile Info Card -->
+            <!-- Header Section (Figma 198:180) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_card"
-                android:gravity="center"
-                android:orientation="vertical"
-                android:padding="@dimen/space_24">
+                android:gravity="center_horizontal"
+                android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/ivAvatarProfile"
-                    android:layout_width="72dp"
-                    android:layout_height="72dp"
-                    android:background="@drawable/bg_circle_aura"
-                    android:contentDescription="@string/desc_avatar"
-                    android:padding="@dimen/space_16"
-                    android:src="@drawable/ic_person_outline"
-                    app:tint="@color/color_primary" />
+                <FrameLayout
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:background="@drawable/bg_circle_aura">
+
+                    <ImageView
+                        android:id="@+id/ivAvatarProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:contentDescription="@string/desc_avatar"
+                        android:visibility="gone" />
+
+                    <TextView
+                        android:id="@+id/tvAvatarInitial"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="S"
+                        android:textColor="@color/color_primary"
+                        android:textSize="32sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
 
                 <TextView
                     android:id="@+id/tvFullName"
@@ -54,20 +64,21 @@
                     android:text="@string/fullname_label" />
 
                 <TextView
-                    android:id="@+id/tvEmail"
+                    android:id="@+id/tvUserSubtitle"
                     style="@style/TextAppearance.EduLens.Body"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_4"
                     android:gravity="center"
-                    android:text="@string/email_label" />
+                    android:text="Sinh viên · student@uit.edu.vn"
+                    android:textColor="@color/text_secondary" />
 
                 <TextView
                     android:id="@+id/tvRoleBadge"
                     style="@style/TextAppearance.EduLens.Badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_12"
+                    android:layout_marginTop="@dimen/space_8"
                     android:background="@drawable/bg_badge_pill"
                     android:paddingHorizontal="@dimen/space_16"
                     android:paddingVertical="@dimen/space_4"
@@ -75,14 +86,223 @@
                     android:textColor="@color/color_primary" />
             </LinearLayout>
 
-            <!-- Logout Button -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnLogout"
-                style="@style/Widget.EduLens.Button.Danger"
+            <!-- Contact Info Card -->
+            <TextView
+                style="@style/TextAppearance.EduLens.Subtitle"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_lg"
-                android:layout_marginTop="@dimen/space_32"
-                android:text="@string/logout_button" />
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:text="@string/profile_contact_info"
+                android:textColor="@color/text_primary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Full Name -->
+                <TextView
+                    style="@style/TextAppearance.EduLens.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_fullname_caption"
+                    android:textColor="@color/text_muted" />
+
+                <TextView
+                    android:id="@+id/tvContactFullName"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:text="@string/fullname_label"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/space_12"
+                    android:background="@color/outline_border" />
+
+                <!-- Email -->
+                <TextView
+                    style="@style/TextAppearance.EduLens.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_email_caption"
+                    android:textColor="@color/text_muted" />
+
+                <TextView
+                    android:id="@+id/tvContactEmail"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:text="@string/email_label"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="@dimen/space_12"
+                    android:background="@color/outline_border" />
+
+                <!-- Phone -->
+                <TextView
+                    style="@style/TextAppearance.EduLens.Caption"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="@string/profile_phone_caption"
+                    android:textColor="@color/text_muted" />
+
+                <TextView
+                    android:id="@+id/tvContactPhone"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:text="@string/profile_not_set"
+                    android:textColor="@color/text_primary"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Account Actions Card -->
+            <TextView
+                style="@style/TextAppearance.EduLens.Subtitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_20"
+                android:text="@string/profile_account_actions"
+                android:textColor="@color/text_primary" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/space_8"
+                android:background="@drawable/bg_surface_card"
+                android:orientation="vertical"
+                android:padding="@dimen/space_8">
+
+                <!-- Row 1: Edit Profile -->
+                <LinearLayout
+                    android:id="@+id/rowEditProfile"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_12">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/color_primary" />
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_12"
+                        android:layout_weight="1"
+                        android:text="@string/action_edit_profile"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/text_muted" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="@dimen/space_8"
+                    android:background="@color/outline_border" />
+
+                <!-- Row 2: Change Password -->
+                <LinearLayout
+                    android:id="@+id/rowChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_12">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_lock"
+                        app:tint="@color/color_primary" />
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_12"
+                        android:layout_weight="1"
+                        android:text="@string/action_change_password"
+                        android:textColor="@color/text_primary"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_chevron_right"
+                        app:tint="@color/text_muted" />
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginHorizontal="@dimen/space_8"
+                    android:background="@color/outline_border" />
+
+                <!-- Row 3: Logout -->
+                <LinearLayout
+                    android:id="@+id/rowLogout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="?attr/selectableItemBackground"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_12">
+
+                    <ImageView
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_logout"
+                        app:tint="@color/color_error" />
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_12"
+                        android:layout_weight="1"
+                        android:text="@string/action_logout"
+                        android:textColor="@color/color_error"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

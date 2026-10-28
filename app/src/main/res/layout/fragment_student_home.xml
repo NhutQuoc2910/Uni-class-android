@@ -11,139 +11,238 @@
         android:id="@+id/topAppBar"
         layout="@layout/view_top_app_bar" />
 
-    <ScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:fillViewport="true">
+        android:layout_weight="1">
 
-        <LinearLayout
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_16">
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:fillViewport="true">
 
-            <TextView
-                android:id="@+id/tvTodayDate"
-                style="@style/TextAppearance.EduLens.Caption"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/today_date"
-                android:textColor="@color/text_muted"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/tvGreetingUser"
-                style="@style/TextAppearance.EduLens.Headline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_4"
-                android:text="@string/greeting_user" />
-
-            <TextView
-                android:id="@+id/tvGreetingSub"
-                style="@style/TextAppearance.EduLens.Body"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_2"
-                android:text="@string/greeting_sub" />
-
-            <!-- Metrics Row (3 cards) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_16"
-                android:orientation="horizontal"
-                android:weightSum="3">
-
-                <include
-                    android:id="@+id/metricCourses"
-                    layout="@layout/view_attendance_metric"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/space_8"
-                    android:layout_weight="1" />
-
-                <include
-                    android:id="@+id/metricAttendance"
-                    layout="@layout/view_attendance_metric"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/space_8"
-                    android:layout_weight="1" />
-
-                <include
-                    android:id="@+id/metricAssignments"
-                    layout="@layout/view_attendance_metric"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1" />
-            </LinearLayout>
-
-            <!-- Assignments Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_20"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/space_16"
+                android:paddingVertical="@dimen/space_16">
 
                 <TextView
-                    style="@style/TextAppearance.EduLens.Subtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/due_soon_title" />
-
-                <TextView
+                    android:id="@+id/tvTodayDate"
                     style="@style/TextAppearance.EduLens.Caption"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/see_all"
-                    android:textColor="@color/color_primary"
+                    android:text="@string/today_date"
+                    android:textColor="@color/text_muted"
                     android:textStyle="bold" />
-            </LinearLayout>
-
-            <include
-                android:id="@+id/sampleAssignmentItem"
-                layout="@layout/item_assignment_row"
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/list_item_height"
-                android:layout_marginTop="@dimen/space_8" />
-
-            <!-- Classes Section -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_16"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.EduLens.Subtitle"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/my_classes_title" />
-
-                <TextView
-                    style="@style/TextAppearance.EduLens.Caption"
+                    android:id="@+id/tvGreetingUser"
+                    style="@style/TextAppearance.EduLens.Headline"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/see_all"
-                    android:textColor="@color/color_primary"
-                    android:textStyle="bold" />
+                    android:layout_marginTop="@dimen/space_4"
+                    android:text="@string/greeting_user" />
+
+                <TextView
+                    android:id="@+id/tvGreetingSub"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_2"
+                    android:text="@string/greeting_sub" />
+
+                <!-- Hero Card (Figma 268:1331 - Today Class & Quick Scan) -->
+                <LinearLayout
+                    android:id="@+id/heroCard"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:background="@drawable/bg_surface_card"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <TextView
+                        android:id="@+id/tvHeroTag"
+                        style="@style/TextAppearance.EduLens.Badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_badge_pill"
+                        android:paddingHorizontal="@dimen/space_8"
+                        android:paddingVertical="2dp"
+                        android:text="@string/hero_today_class_tag"
+                        android:textColor="@color/color_primary" />
+
+                    <TextView
+                        android:id="@+id/tvHeroCourseName"
+                        style="@style/TextAppearance.EduLens.Title"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:text="@string/course_name_1" />
+
+                    <TextView
+                        android:id="@+id/tvHeroRoomSchedule"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        android:text="@string/course_type_1" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnScanHero"
+                        style="@style/Widget.EduLens.Button.Filled"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:minHeight="44dp"
+                        android:text="@string/btn_scan_now"
+                        app:icon="@drawable/ic_qr_code"
+                        app:iconGravity="textStart"
+                        app:iconPadding="@dimen/space_8"
+                        app:iconTint="@color/white" />
+                </LinearLayout>
+
+                <!-- Metrics Row (3 cards) -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:orientation="horizontal"
+                    android:weightSum="3">
+
+                    <include
+                        android:id="@+id/metricCourses"
+                        layout="@layout/view_attendance_metric"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_8"
+                        android:layout_weight="1" />
+
+                    <include
+                        android:id="@+id/metricAttendance"
+                        layout="@layout/view_attendance_metric"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_8"
+                        android:layout_weight="1" />
+
+                    <include
+                        android:id="@+id/metricAssignments"
+                        layout="@layout/view_attendance_metric"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1" />
+                </LinearLayout>
+
+                <!-- Assignments Section -->
+                <LinearLayout
+                    android:id="@+id/sectionAssignments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/due_soon_title" />
+
+                        <TextView
+                            android:id="@+id/tvSeeAllAssignments"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/see_all"
+                            android:textColor="@color/color_primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDueSoonAssignments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyAssignments"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/space_12"
+                        android:text="@string/empty_assignments_message"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- Classes Section -->
+                <LinearLayout
+                    android:id="@+id/sectionCourses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/my_classes_title" />
+
+                        <TextView
+                            android:id="@+id/tvSeeAllCourses"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/see_all"
+                            android:textColor="@color/color_primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvMyCourses"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyCourses"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/space_12"
+                        android:text="@string/empty_courses_message"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
+                </LinearLayout>
+
             </LinearLayout>
-
-            <include
-                android:id="@+id/sampleCourseCard"
-                layout="@layout/item_course_card"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8" />
-
-        </LinearLayout>
-    </ScrollView>
+        </ScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

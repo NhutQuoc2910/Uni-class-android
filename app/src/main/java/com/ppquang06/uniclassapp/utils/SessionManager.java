@@ -35,6 +35,18 @@ public class SessionManager {
         editor.apply();
     }
 
+    public void saveUser(UserResponse user) {
+        if (user != null) {
+            if (user.getId() != null) editor.putString(Constants.KEY_USER_ID, user.getId());
+            if (user.getFullName() != null) editor.putString(Constants.KEY_USER_NAME, user.getFullName());
+            if (user.getEmail() != null) editor.putString(Constants.KEY_USER_EMAIL, user.getEmail());
+            if (user.getRole() != null) editor.putString(Constants.KEY_USER_ROLE, user.getRole());
+            if (user.getAvatarUrl() != null) editor.putString(Constants.KEY_USER_AVATAR, user.getAvatarUrl());
+            if (user.getPhone() != null) editor.putString(Constants.KEY_USER_PHONE, user.getPhone());
+            editor.apply();
+        }
+    }
+
     public String getToken() {
         return pref.getString(Constants.KEY_TOKEN, null);
     }

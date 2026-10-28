@@ -6,6 +6,9 @@ public class ApiResponse<T> {
     @SerializedName("success")
     private boolean success;
 
+    @SerializedName("code")
+    private int code;
+
     @SerializedName("message")
     private String message;
 
@@ -26,6 +29,14 @@ public class ApiResponse<T> {
 
     public void setSuccess(boolean success) {
         this.success = success;
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
     }
 
     public String getMessage() {

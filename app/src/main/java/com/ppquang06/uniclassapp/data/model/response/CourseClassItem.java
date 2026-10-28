@@ -15,6 +15,12 @@ public class CourseClassItem {
     @SerializedName("semester")
     private String semester;
 
+    @SerializedName("room")
+    private String room;
+
+    @SerializedName("lecturerName")
+    private String lecturerName;
+
     @SerializedName("progress")
     private int progress;
 
@@ -53,6 +59,22 @@ public class CourseClassItem {
 
     public void setSemester(String semester) {
         this.semester = semester;
+    }
+
+    public String getRoom() {
+        return room;
+    }
+
+    public void setRoom(String room) {
+        this.room = room;
+    }
+
+    public String getLecturerName() {
+        return lecturerName;
+    }
+
+    public void setLecturerName(String lecturerName) {
+        this.lecturerName = lecturerName;
     }
 
     public int getProgress() {

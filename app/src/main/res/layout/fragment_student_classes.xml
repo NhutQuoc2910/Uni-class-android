@@ -1,54 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
-    android:orientation="vertical">
+    android:background="@color/color_background">
 
-    <include
-        android:id="@+id/topAppBar"
-        layout="@layout/view_top_app_bar" />
-
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:clipToPadding="false"
-        android:fillViewport="true">
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
+        <include
+            android:id="@+id/topAppBar"
+            layout="@layout/view_top_app_bar" />
+
+        <!-- Semester & Class Count Header (Figma 54:52) -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
             android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_16">
+            android:paddingVertical="@dimen/space_12">
 
             <TextView
+                android:id="@+id/tvSemesterHeader"
                 style="@style/TextAppearance.EduLens.Headline"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:text="@string/my_classes_title" />
+                android:layout_weight="1"
+                android:text="@string/classes_semester_header" />
 
             <TextView
-                style="@style/TextAppearance.EduLens.Body"
+                android:id="@+id/tvClassCount"
+                style="@style/TextAppearance.EduLens.Badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_4"
-                android:text="@string/overview_semester" />
+                android:background="@drawable/bg_badge_pill"
+                android:paddingHorizontal="@dimen/space_12"
+                android:paddingVertical="4dp"
+                android:text="0 lớp"
+                android:textColor="@color/color_primary" />
+        </LinearLayout>
 
-            <LinearLayout
+        <!-- Container for 4 states -->
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <!-- 1. Content State: SwipeRefresh + RecyclerView -->
+            <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                android:id="@+id/swipeRefresh"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvClasses"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:clipToPadding="false"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:paddingTop="@dimen/space_4"
+                    android:paddingBottom="88dp" />
+            </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+            <!-- 2. Loading State: ProgressBar -->
+            <ProgressBar
+                android:id="@+id/progressLoading"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/color_primary"
+                android:visibility="gone" />
+
+            <!-- 3. Empty State -->
+            <include
+                android:id="@+id/emptyState"
+                layout="@layout/view_empty_state"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_16"
-                android:orientation="vertical">
+                android:layout_gravity="center"
+                android:visibility="gone" />
 
-                <include
-                    android:id="@+id/sampleCourseCard"
-                    layout="@layout/item_course_card"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
-</LinearLayout>
+            <!-- 4. Error State -->
+            <include
+                android:id="@+id/bannerError"
+                layout="@layout/view_banner_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top"
+                android:layout_marginHorizontal="@dimen/space_16"
+                android:layout_marginTop="@dimen/space_16"
+                android:visibility="gone" />
+
+        </FrameLayout>
+    </LinearLayout>
+
+    <!-- Extended FAB for joining class (Figma 54:157) -->
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        android:id="@+id/fabJoinClass"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_marginEnd="@dimen/space_16"
+        android:layout_marginBottom="@dimen/space_16"
+        android:contentDescription="@string/fab_join_class"
+        android:text="@string/fab_join_class"
+        android:textColor="@color/white"
+        app:backgroundTint="@color/color_primary"
+        app:icon="@drawable/ic_add"
+        app:iconTint="@color/white" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

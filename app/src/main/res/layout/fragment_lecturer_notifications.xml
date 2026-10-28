@@ -10,45 +10,99 @@
         android:id="@+id/topAppBar"
         layout="@layout/view_top_app_bar" />
 
-    <ScrollView
+    <!-- Filter Chips Row (Figma 64:921) -->
+    <HorizontalScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:fillViewport="true">
+        android:paddingHorizontal="@dimen/space_16"
+        android:paddingVertical="@dimen/space_8"
+        android:scrollbars="none">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/chipGroupFilter"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_16">
+            app:selectionRequired="true"
+            app:singleLine="true"
+            app:singleSelection="true">
 
-            <TextView
-                style="@style/TextAppearance.EduLens.Headline"
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAll"
+                style="@style/Widget.Material3.Chip.Filter"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/nav_notifications" />
+                android:checked="true"
+                android:text="@string/filter_all" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipUnread"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_unread" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipUrgent"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_urgent" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipAssignments"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_assignments" />
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/chipGrades"
+                style="@style/Widget.Material3.Chip.Filter"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/filter_grades" />
+        </com.google.android.material.chip.ChipGroup>
+    </HorizontalScrollView>
+
+    <!-- Swipe Refresh Layout with List and Empty/Loading State -->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvNotifications"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:paddingHorizontal="@dimen/space_16"
+                android:paddingTop="@dimen/space_8"
+                android:paddingBottom="@dimen/space_16" />
 
             <TextView
+                android:id="@+id/tvEmptyNotifications"
                 style="@style/TextAppearance.EduLens.Body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_4"
-                android:text="@string/today_date" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:text="@string/empty_notifications"
+                android:textColor="@color/text_muted"
+                android:visibility="gone" />
 
-            <LinearLayout
-                android:layout_width="match_parent"
+            <ProgressBar
+                android:id="@+id/pbLoading"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_16"
-                android:orientation="vertical">
-
-                <include
-                    android:id="@+id/sampleNotification"
-                    layout="@layout/item_notification_row"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </LinearLayout>
-    </ScrollView>
+                android:layout_gravity="center"
+                android:indeterminateTint="@color/color_primary"
+                android:visibility="gone" />
+        </FrameLayout>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 </LinearLayout>

@@ -1,5 +1,6 @@
 package com.ppquang06.uniclassapp.ui.common;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.widget.TextView;
@@ -10,7 +11,14 @@ import androidx.core.view.ViewCompat;
 
 import com.ppquang06.uniclassapp.R;
 
+import java.time.Instant;
+import java.time.ZoneId;
+import java.time.format.DateTimeFormatter;
+import java.util.Locale;
+
 public final class UiBadgeHelper {
+
+    private static final long DUE_SOON_THRESHOLD_MILLIS = 72L * 3600_000L;
 
     public enum Status {
         PRESENT,
@@ -64,5 +72,72 @@ public final class UiBadgeHelper {
                 badgeView,
                 ColorStateList.valueOf(ContextCompat.getColor(context, colors.bgColorRes))
         );
+    }
+
+    @SuppressLint("NewApi")
+    public static Status resolveAssignmentStatus(boolean submitted, String isoDueDate, long nowEpochMillis) {
+        if (submitted) {
+            return Status.SUBMITTED;
+        }
+        if (isoDueDate == null || isoDueDate.trim().isEmpty()) {
+            return Status.OPEN;
+        }
+        try {
+            Instant dueInstant = Instant.parse(isoDueDate.trim());
+            long diffMillis = dueInstant.toEpochMilli() - nowEpochMillis;
+            if (diffMillis < 0) {
+                return Status.OVERDUE;
+            }
+            if (diffMillis <= DUE_SOON_THRESHOLD_MILLIS) {
+                return Status.DUE_SOON;
+            }
+            return Status.OPEN;
+        } catch (Exception e) {
+            return Status.OPEN;
+        }
+    }
+
+    public static Status resolveAssignmentBadgeFromIso(boolean submitted, String isoDueDate, long nowEpochMillis) {
+        return resolveAssignmentStatus(submitted, isoDueDate, nowEpochMillis);
+    }
+
+    public static Status resolveAssignmentBadge(boolean submitted, String isoDueDate, long nowEpochMillis) {
+        return resolveAssignmentStatus(submitted, isoDueDate, nowEpochMillis);
+    }
+
+    public static String getAssignmentStatusLabel(Status status) {
+        if (status == null) {
+            return "Còn hạn";
+        }
+        switch (status) {
+            case SUBMITTED:
+                return "Đã nộp";
+            case DUE_SOON:
+                return "Sắp hết hạn";
+            case OVERDUE:
+                return "Quá hạn";
+            case OPEN:
+            default:
+                return "Còn hạn";
+        }
+    }
+
+    @SuppressLint("NewApi")
+    public static String formatIsoDateShort(String isoDate) {
+        if (isoDate == null) {
+            return "";
+        }
+        String trimmed = isoDate.trim();
+        if (trimmed.isEmpty()) {
+            return "";
+        }
+        try {
+            Instant instant = Instant.parse(trimmed);
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy · HH:mm", Locale.getDefault())
+                    .withZone(ZoneId.of("Asia/Ho_Chi_Minh"));
+            return formatter.format(instant);
+        } catch (Exception e) {
+            return isoDate;
+        }
     }
 }

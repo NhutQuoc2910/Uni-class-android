@@ -123,4 +123,91 @@
     <string name="scan_qr_title">Quét mã QR</string>
     <string name="scan_qr_desc">Đưa camera vào mã QR của giảng viên để ghi nhận chuyên cần.</string>
     <string name="scan_qr_btn_action">Bắt đầu quét</string>
+
+    <!-- Student Home & Classes Strings -->
+    <string name="hero_today_class_tag">LỚP HÔM NAY · THỨ 3</string>
+    <string name="btn_scan_now">Điểm danh ngay</string>
+    <string name="empty_assignments_message">Không có bài tập nào sắp đến hạn</string>
+    <string name="empty_courses_message">Chưa có lớp học nào</string>
+    <string name="classes_semester_header">Học kỳ 1 2026–2027</string>
+    <string name="classes_count_format">%1$d lớp</string>
+    <string name="fab_join_class">Tham gia lớp</string>
+    <string name="join_class_title">Tham gia lớp học</string>
+    <string name="join_class_desc">Nhập mã tham gia được giảng viên cung cấp để vào lớp.</string>
+    <string name="join_class_code_hint">Mã lớp</string>
+    <string name="join_class_example_hint">Ví dụ: NT118DEMO (mã không phân biệt hoa thường)</string>
+    <string name="join_class_submit">Tham gia ngay</string>
+    <string name="join_class_cancel">Hủy</string>
+    <string name="join_class_code_empty">Vui lòng nhập mã lớp</string>
+    <string name="join_class_success">Tham gia lớp học thành công!</string>
+    <string name="join_class_error_already_joined">Bạn đã tham gia lớp học này rồi</string>
+    <string name="join_class_error_not_found">Mã lớp không tồn tại</string>
+    <string name="join_class_error_generic">Không thể tham gia lớp học. Vui lòng kiểm tra lại mã.</string>
+    <string name="classes_load_error">Không thể tải danh sách lớp học</string>
+    <string name="action_retry">Thử lại</string>
+
+    <!-- Student Class Detail Strings -->
+    <string name="class_detail_title">Chi tiết lớp học</string>
+    <string name="tab_announcements">Thông báo</string>
+    <string name="tab_materials">Tài liệu</string>
+    <string name="tab_assignments">Bài tập</string>
+    <string name="tab_attendance">Điểm danh</string>
+    <string name="attendance_diligence">CHUYÊN CẦN</string>
+    <string name="attendance_fraction_format">%1$d/%2$d buổi</string>
+    <string name="attendance_note">Cần duy trì tối thiểu 80% để đủ điều kiện dự thi</string>
+    <string name="btn_scan_attendance">Điểm danh ngay bằng mã QR</string>
+    <string name="section_attendance_history">LỊCH SỬ TỪNG BUỔI</string>
+    <string name="empty_data">Chưa có dữ liệu</string>
+    <string name="empty_announcements">Chưa có thông báo nào</string>
+    <string name="empty_materials">Chưa có tài liệu nào</string>
+    <string name="empty_assignments">Chưa có bài tập nào</string>
+    <string name="empty_attendance">Chưa có lịch sử điểm danh</string>
+
+    <!-- Notifications Filter & Empty -->
+    <string name="filter_all">Tất cả</string>
+    <string name="filter_unread">Chưa đọc</string>
+    <string name="filter_urgent">Khẩn</string>
+    <string name="filter_assignments">Bài tập</string>
+    <string name="filter_grades">Điểm</string>
+    <string name="empty_notifications">Không có thông báo nào</string>
+
+    <!-- Profile & Actions -->
+    <string name="profile_contact_info">THÔNG TIN LIÊN HỆ</string>
+    <string name="profile_fullname_caption">HỌ VÀ TÊN</string>
+    <string name="profile_email_caption">EMAIL</string>
+    <string name="profile_phone_caption">SỐ ĐIỆN THOẠI</string>
+    <string name="profile_not_set">Chưa cập nhật</string>
+    <string name="profile_account_actions">TÀI KHOẢN</string>
+    <string name="action_edit_profile">Chỉnh sửa hồ sơ</string>
+    <string name="action_change_password">Đổi mật khẩu</string>
+    <string name="action_logout">Đăng xuất</string>
+    <string name="logout_confirm_title">Đăng xuất</string>
+    <string name="logout_confirm_message">Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng?</string>
+    <string name="logout_confirm_btn">Đăng xuất</string>
+    <string name="btn_cancel">Hủy</string>
+
+    <!-- Edit Profile BottomSheet -->
+    <string name="edit_profile_title">Chỉnh sửa hồ sơ</string>
+    <string name="edit_profile_desc">Cập nhật họ và tên hoặc số điện thoại của bạn.</string>
+    <string name="edit_profile_fullname_hint">Họ và tên</string>
+    <string name="edit_profile_phone_hint">Số điện thoại</string>
+    <string name="edit_profile_btn_save">Lưu thay đổi</string>
+    <string name="edit_profile_error_name_empty">Vui lòng nhập họ và tên</string>
+    <string name="edit_profile_success">Cập nhật thông tin thành công!</string>
+    <string name="edit_profile_error_generic">Không thể cập nhật thông tin. Vui lòng thử lại sau.</string>
+
+    <!-- Change Password BottomSheet -->
+    <string name="change_pass_title">Đổi mật khẩu</string>
+    <string name="change_pass_desc">Mật khẩu mới phải có tối thiểu 6 ký tự.</string>
+    <string name="change_pass_current_hint">Mật khẩu hiện tại</string>
+    <string name="change_pass_new_hint">Mật khẩu mới</string>
+    <string name="change_pass_confirm_hint">Xác nhận mật khẩu mới</string>
+    <string name="change_pass_btn_submit">Đổi mật khẩu</string>
+    <string name="change_pass_error_current_empty">Vui lòng nhập mật khẩu hiện tại</string>
+    <string name="change_pass_error_new_short">Mật khẩu mới phải có ít nhất 6 ký tự</string>
+    <string name="change_pass_error_confirm_mismatch">Mật khẩu xác nhận không khớp</string>
+    <string name="change_pass_error_same_as_old">Mật khẩu mới không được trùng với mật khẩu hiện tại</string>
+    <string name="change_pass_error_wrong_current">Mật khẩu hiện tại không chính xác</string>
+    <string name="change_pass_success">Đổi mật khẩu thành công!</string>
+    <string name="change_pass_error_generic">Không thể đổi mật khẩu. Vui lòng thử lại.</string>
 </resources>
