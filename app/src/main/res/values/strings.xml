@@ -123,4 +123,26 @@
     <string name="scan_qr_title">Quét mã QR</string>
     <string name="scan_qr_desc">Đưa camera vào mã QR của giảng viên để ghi nhận chuyên cần.</string>
     <string name="scan_qr_btn_action">Bắt đầu quét</string>
+
+    <!-- Student Home & Classes Strings -->
+    <string name="hero_today_class_tag">LỚP HÔM NAY · THỨ 3</string>
+    <string name="btn_scan_now">Điểm danh ngay</string>
+    <string name="empty_assignments_message">Không có bài tập nào sắp đến hạn</string>
+    <string name="empty_courses_message">Chưa có lớp học nào</string>
+    <string name="classes_semester_header">Học kỳ 1 2026–2027</string>
+    <string name="classes_count_format">%1$d lớp</string>
+    <string name="fab_join_class">Tham gia lớp</string>
+    <string name="join_class_title">Tham gia lớp học</string>
+    <string name="join_class_desc">Nhập mã tham gia được giảng viên cung cấp để vào lớp.</string>
+    <string name="join_class_code_hint">Mã lớp</string>
+    <string name="join_class_example_hint">Ví dụ: NT118DEMO (mã không phân biệt hoa thường)</string>
+    <string name="join_class_submit">Tham gia ngay</string>
+    <string name="join_class_cancel">Hủy</string>
+    <string name="join_class_code_empty">Vui lòng nhập mã lớp</string>
+    <string name="join_class_success">Tham gia lớp học thành công!</string>
+    <string name="join_class_error_already_joined">Bạn đã tham gia lớp học này rồi</string>
+    <string name="join_class_error_not_found">Mã lớp không tồn tại</string>
+    <string name="join_class_error_generic">Không thể tham gia lớp học. Vui lòng kiểm tra lại mã.</string>
+    <string name="classes_load_error">Không thể tải danh sách lớp học</string>
+    <string name="action_retry">Thử lại</string>
 </resources>
