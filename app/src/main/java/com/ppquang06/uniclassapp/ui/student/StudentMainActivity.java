@@ -11,7 +11,9 @@ import androidx.navigation.ui.NavigationUI;
 
 import com.ppquang06.uniclassapp.LoginActivity;
 import com.ppquang06.uniclassapp.R;
+import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityStudentMainBinding;
+import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
 public class StudentMainActivity extends AppCompatActivity {
@@ -27,6 +29,12 @@ public class StudentMainActivity extends AppCompatActivity {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
             finish();
+            return;
+        }
+
+        UserResponse user = SessionManager.getInstance(this).getUser();
+        if (user != null && RoleRouter.isLecturerRole(user.getRole())) {
+            RoleRouter.navigateToHomeByRole(this);
             return;
         }
 

@@ -7,7 +7,7 @@ import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.ui.lecturer.LecturerMainActivity;
 import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 
-public class RoleRouter {
+public final class RoleRouter {
 
     private RoleRouter() {
         // Utility class
@@ -29,7 +29,7 @@ public class RoleRouter {
     }
 
     public static void navigateToHomeByRole(Activity activity) {
-        if (activity == null) {
+        if (activity == null || activity.isFinishing() || activity.isDestroyed()) {
             return;
         }
         UserResponse user = SessionManager.getInstance(activity).getUser();
