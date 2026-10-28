@@ -140,4 +140,28 @@ public final class UiBadgeHelper {
             return isoDate;
         }
     }
+
+    public static Status resolveGradeStatus(Double score) {
+        if (score == null) {
+            return Status.DUE_SOON;
+        }
+        if (score >= 8.0) {
+            return Status.PRESENT;
+        }
+        if (score >= 5.0) {
+            return Status.OPEN;
+        }
+        return Status.OVERDUE;
+    }
+
+    public static String resolveGradeLabel(Double score) {
+        if (score == null) {
+            return "Chưa chấm";
+        }
+        return String.format(Locale.getDefault(), "%.1f / 10", score);
+    }
+
+    public static void applyGradeBadge(TextView badgeView, Double score) {
+        applyBadge(badgeView, resolveGradeStatus(score), resolveGradeLabel(score));
+    }
 }

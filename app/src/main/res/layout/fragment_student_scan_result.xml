@@ -1,0 +1,562 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <!-- Top App Bar -->
+    <LinearLayout
+        android:id="@+id/layoutTopBar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/top_app_bar_height"
+        android:background="@color/color_surface"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="@dimen/space_16">
+
+        <TextView
+            android:id="@+id/tvTopTitle"
+            style="@style/TextAppearance.EduLens.Title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Kết quả điểm danh" />
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:fillViewport="true">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <!-- ================= SUCCESS LAYOUT (Figma 56:539) ================= -->
+            <LinearLayout
+                android:id="@+id/layoutSuccess"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/space_20"
+                android:paddingTop="@dimen/space_24"
+                android:paddingBottom="@dimen/space_24"
+                android:visibility="visible">
+
+                <!-- 96dp Aura Green Circle -->
+                <FrameLayout
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:background="@drawable/bg_circle_green_light">
+
+                    <ImageView
+                        android:layout_width="52dp"
+                        android:layout_height="52dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_check"
+                        app:tint="@color/color_success" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvSuccessTitle"
+                    style="@style/TextAppearance.EduLens.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:gravity="center"
+                    android:text="@string/scan_success_headline"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:id="@+id/tvSuccessSubtitle"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:gravity="center"
+                    android:text="@string/scan_success_subtitle"
+                    android:textColor="@color/text_secondary" />
+
+                <!-- 3 Passed Pills Row -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_8"
+                        android:background="@drawable/bg_pill_green"
+                        android:paddingHorizontal="@dimen/space_12"
+                        android:paddingVertical="@dimen/space_4"
+                        android:text="@string/scan_pill_qr"
+                        android:textColor="@color/color_success" />
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginEnd="@dimen/space_8"
+                        android:background="@drawable/bg_pill_green"
+                        android:paddingHorizontal="@dimen/space_12"
+                        android:paddingVertical="@dimen/space_4"
+                        android:text="@string/scan_pill_wifi"
+                        android:textColor="@color/color_success" />
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Badge"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_pill_green"
+                        android:paddingHorizontal="@dimen/space_12"
+                        android:paddingVertical="@dimen/space_4"
+                        android:text="@string/scan_pill_gps"
+                        android:textColor="@color/color_success" />
+                </LinearLayout>
+
+                <!-- Attendance Details Card -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_24"
+                    android:background="@drawable/bg_surface_card"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <!-- Row 1: Course -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/scan_detail_course"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvDetailCourseValue"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="NT118.Q11 · Phát triển ứng dụng di động"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Row 2: Room -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/scan_detail_room"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvDetailRoomValue"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="B1.12"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+
+                    <!-- Row 3: Lecturer -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/scan_detail_lecturer"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvDetailLecturerValue"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="ThS. Trần Minh Khoa"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+
+                    <!-- Row 4: Time -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/scan_detail_time"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvDetailTimeValue"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="21:30 · 28/10/2026"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+
+                    <!-- Row 5: Device -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/scan_detail_device"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            android:id="@+id/tvDetailDeviceValue"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="end"
+                            android:text="@string/scan_device_default"
+                            android:textColor="@color/text_primary" />
+                    </LinearLayout>
+
+                    <!-- Row 6: Status -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="100dp"
+                            android:layout_height="wrap_content"
+                            android:text="@string/scan_detail_status"
+                            android:textColor="@color/text_muted" />
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <TextView
+                            android:id="@+id/tvDetailStatusBadge"
+                            style="@style/TextAppearance.EduLens.Badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_pill_green"
+                            android:paddingHorizontal="@dimen/space_12"
+                            android:paddingVertical="@dimen/space_4"
+                            android:text="@string/status_present"
+                            android:textColor="@color/color_success" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Primary Action: Về trang chủ -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSuccessHome"
+                    style="@style/Widget.EduLens.Button.Filled"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height_lg"
+                    android:layout_marginTop="@dimen/space_24"
+                    android:text="@string/scan_btn_home"
+                    app:icon="@drawable/ic_home"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
+
+            </LinearLayout>
+
+            <!-- ================= ERROR LAYOUT (Figma 56:586, 639, 690, 741) ================= -->
+            <LinearLayout
+                android:id="@+id/layoutError"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:orientation="vertical"
+                android:paddingHorizontal="@dimen/space_20"
+                android:paddingTop="@dimen/space_24"
+                android:paddingBottom="@dimen/space_24"
+                android:visibility="gone">
+
+                <!-- 96dp Error Icon Hero -->
+                <FrameLayout
+                    android:id="@+id/frameErrorHero"
+                    android:layout_width="96dp"
+                    android:layout_height="96dp"
+                    android:background="@drawable/bg_circle_red_light">
+
+                    <ImageView
+                        android:id="@+id/ivErrorHero"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_gravity="center"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_clock"
+                        app:tint="@color/color_error" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvErrorTitle"
+                    style="@style/TextAppearance.EduLens.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:gravity="center"
+                    android:text="@string/error_qr_expired_title"
+                    android:textColor="@color/text_primary" />
+
+                <TextView
+                    android:id="@+id/tvErrorSubtitle"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:gravity="center"
+                    android:text="@string/error_qr_expired_desc"
+                    android:textColor="@color/text_secondary" />
+
+                <!-- 3 Verify Steps Breakdown -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:orientation="vertical">
+
+                    <!-- Step 1 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_8"
+                        android:background="@drawable/bg_surface_card"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/space_12">
+
+                        <ImageView
+                            android:id="@+id/ivErrStep1Icon"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginEnd="@dimen/space_12"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_qr_code"
+                            app:tint="@color/text_secondary" />
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/verifying_step_1_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvErrStep1State"
+                            style="@style/TextAppearance.EduLens.Badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_8"
+                            android:text="@string/verifying_state_failed"
+                            android:textColor="@color/color_error" />
+
+                        <ImageView
+                            android:id="@+id/ivErrStep1Status"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_error_circle" />
+                    </LinearLayout>
+
+                    <!-- Step 2 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_8"
+                        android:background="@drawable/bg_surface_card"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/space_12">
+
+                        <ImageView
+                            android:id="@+id/ivErrStep2Icon"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginEnd="@dimen/space_12"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_wifi"
+                            app:tint="@color/text_secondary" />
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/verifying_step_2_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvErrStep2State"
+                            style="@style/TextAppearance.EduLens.Badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_8"
+                            android:text="@string/verifying_state_waiting"
+                            android:textColor="@color/text_muted" />
+
+                        <ImageView
+                            android:id="@+id/ivErrStep2Status"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_check_circle"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                    <!-- Step 3 -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_8"
+                        android:background="@drawable/bg_surface_card"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:padding="@dimen/space_12">
+
+                        <ImageView
+                            android:id="@+id/ivErrStep3Icon"
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_marginEnd="@dimen/space_12"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_gps"
+                            app:tint="@color/text_secondary" />
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/verifying_step_3_title"
+                            android:textColor="@color/text_primary"
+                            android:textSize="13sp" />
+
+                        <TextView
+                            android:id="@+id/tvErrStep3State"
+                            style="@style/TextAppearance.EduLens.Badge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_8"
+                            android:text="@string/verifying_state_waiting"
+                            android:textColor="@color/text_muted" />
+
+                        <ImageView
+                            android:id="@+id/ivErrStep3Status"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_check_circle"
+                            android:visibility="gone" />
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <!-- Advice Box -->
+                <LinearLayout
+                    android:id="@+id/layoutAdviceBox"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:background="@drawable/bg_advice_card"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_12">
+
+                    <ImageView
+                        android:id="@+id/ivAdviceIcon"
+                        android:layout_width="22dp"
+                        android:layout_height="22dp"
+                        android:layout_marginEnd="@dimen/space_12"
+                        android:contentDescription="@null"
+                        android:src="@drawable/ic_info_outline"
+                        app:tint="@color/color_warning" />
+
+                    <TextView
+                        android:id="@+id/tvAdviceMessage"
+                        style="@style/TextAppearance.EduLens.Caption"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/error_qr_expired_advice"
+                        android:textColor="#92400E"
+                        android:textSize="13sp" />
+                </LinearLayout>
+
+                <!-- Action Buttons: Rescan & Home -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnErrorRescan"
+                    style="@style/Widget.EduLens.Button.Filled"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height_lg"
+                    android:layout_marginTop="@dimen/space_24"
+                    android:layout_marginBottom="@dimen/space_8"
+                    android:text="@string/scan_btn_rescan"
+                    app:icon="@drawable/ic_qr_scan"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/white" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnErrorHome"
+                    style="@style/Widget.EduLens.Button.Outlined"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/button_height_md"
+                    android:text="@string/scan_btn_home"
+                    app:icon="@drawable/ic_home"
+                    app:iconGravity="textStart"
+                    app:iconTint="@color/text_primary" />
+
+            </LinearLayout>
+
+        </FrameLayout>
+    </ScrollView>
+
+</LinearLayout>

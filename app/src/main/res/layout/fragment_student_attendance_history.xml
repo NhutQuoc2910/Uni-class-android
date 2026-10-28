@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipeRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
+
+                <!-- Warning Banner (shown when absentCount >= 2, gone by default) -->
+                <include
+                    android:id="@+id/bannerWarning"
+                    layout="@layout/view_banner_message"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_16"
+                    android:visibility="gone" />
+
+                <!-- Overview Card -->
+                <LinearLayout
+                    android:id="@+id/cardOverview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_16"
+                    android:background="@drawable/bg_surface_card"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <TextView
+                        android:id="@+id/tvClassName"
+                        style="@style/TextAppearance.EduLens.Headline"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        tools:text="Phát triển ứng dụng di động" />
+
+                    <TextView
+                        android:id="@+id/tvCourseProgress"
+                        style="@style/TextAppearance.EduLens.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:textColor="@color/text_secondary"
+                        tools:text="Tiến độ học: Tuần 6 / 15 tuần" />
+
+                    <!-- 3 Stats Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_16"
+                        android:layout_marginBottom="@dimen/space_16"
+                        android:baselineAligned="false"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <!-- Stat 1: Present -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvPresentCount"
+                                style="@style/TextAppearance.EduLens.Headline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/color_success"
+                                android:textSize="24sp"
+                                tools:text="4" />
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Có mặt"
+                                android:textColor="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <!-- Stat 2: Absent -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvAbsentCount"
+                                style="@style/TextAppearance.EduLens.Headline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_primary"
+                                android:textSize="24sp"
+                                tools:text="2" />
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Vắng"
+                                android:textColor="@color/text_secondary" />
+                        </LinearLayout>
+
+                        <!-- Stat 3: Remaining -->
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:gravity="center"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvRemainingCount"
+                                style="@style/TextAppearance.EduLens.Headline"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="@color/text_primary"
+                                android:textSize="24sp"
+                                tools:text="9" />
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Buổi còn lại"
+                                android:textColor="@color/text_secondary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:background="@color/outline_border" />
+
+                    <!-- Absence Progress Track -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="Giới hạn vắng"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvAbsentRatio"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/text_primary"
+                            android:textStyle="bold"
+                            tools:text="2/3 buổi" />
+                    </LinearLayout>
+
+                    <ProgressBar
+                        android:id="@+id/pbAbsentProgress"
+                        style="?android:attr/progressBarStyleHorizontal"
+                        android:layout_width="match_parent"
+                        android:layout_height="8dp"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:max="3"
+                        android:progress="2"
+                        android:progressTint="@color/color_absence" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="0 buổi"
+                            android:textColor="@color/text_muted" />
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Ngưỡng cấm thi: 3 buổi (20%)"
+                            android:textColor="@color/color_error" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- Section Header -->
+                <TextView
+                    style="@style/TextAppearance.EduLens.Subtitle"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="@dimen/space_8"
+                    android:text="DANH SÁCH TỪNG BUỔI HỌC"
+                    android:textColor="@color/text_muted"
+                    android:textStyle="bold" />
+
+                <!-- RecyclerView -->
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAttendanceRecords"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:nestedScrollingEnabled="false"
+                    tools:listitem="@layout/item_attendance_row" />
+
+                <!-- Empty State -->
+                <TextView
+                    android:id="@+id/tvEmptyAttendance"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:padding="@dimen/space_24"
+                    android:text="Chưa có dữ liệu điểm danh"
+                    android:textColor="@color/text_muted"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+</LinearLayout>

@@ -1,0 +1,521 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <!-- Top App Bar -->
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <!-- Content Area & Bottom Action pinned -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <!-- Scrollable Content with Pull-to-refresh -->
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@id/layoutBottomActionBar">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:clipToPadding="false"
+                android:fillViewport="true"
+                android:padding="@dimen/space_16">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <!-- Warning / Overdue Banner -->
+                    <include
+                        android:id="@+id/bannerWarningOrOverdue"
+                        layout="@layout/view_banner_message"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:visibility="gone" />
+
+                    <!-- 1. Assignment Header Card -->
+                    <LinearLayout
+                        android:id="@+id/cardAssignmentHeader"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:background="@drawable/bg_surface_card"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_16">
+
+                        <TextView
+                            android:id="@+id/tvClassName"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/color_primary"
+                            tools:text="NT118.P11 - Phát triển ứng dụng trên thiết bị di động" />
+
+                        <TextView
+                            android:id="@+id/tvAssignmentTitle"
+                            style="@style/TextAppearance.EduLens.Headline"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_4"
+                            tools:text="Bài tập lớn: Thiết kế ứng dụng EduLens" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_12"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvDeadlineBadge"
+                                style="@style/TextAppearance.EduLens.Badge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_badge_pill"
+                                android:paddingHorizontal="@dimen/space_12"
+                                android:paddingVertical="@dimen/space_4"
+                                tools:text="Còn hạn" />
+
+                            <TextView
+                                android:id="@+id/tvDueDateText"
+                                style="@style/TextAppearance.EduLens.Body"
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_12"
+                                android:layout_weight="1"
+                                tools:text="Hạn nộp: 23:59 · 30/10/2026" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvGradingScale"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_8"
+                            android:text="Thang điểm: 10.0"
+                            android:textColor="@color/text_muted" />
+                    </LinearLayout>
+
+                    <!-- 2. Submission Section Card -->
+                    <LinearLayout
+                        android:id="@+id/cardSubmissionSection"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_12"
+                        android:background="@drawable/bg_surface_card"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_16">
+
+                        <TextView
+                            android:id="@+id/tvSubmissionSectionTitle"
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/space_12"
+                            android:text="@string/assignment_submission_section" />
+
+                        <!-- State A: Dropzone Container (visible when not submitted & no file chosen) -->
+                        <LinearLayout
+                            android:id="@+id/layoutDropzone"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_dropzone_dashed"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_horizontal"
+                            android:orientation="vertical"
+                            android:paddingHorizontal="@dimen/space_16"
+                            android:paddingVertical="@dimen/space_24">
+
+                            <ImageView
+                                android:id="@+id/ivDropzoneIcon"
+                                android:layout_width="40dp"
+                                android:layout_height="40dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_upload"
+                                app:tint="@color/color_primary" />
+
+                            <TextView
+                                android:id="@+id/tvDropzoneTitle"
+                                style="@style/TextAppearance.EduLens.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_8"
+                                android:text="@string/assignment_dropzone_title"
+                                android:textColor="@color/color_primary" />
+
+                            <TextView
+                                android:id="@+id/tvDropzoneCaption"
+                                style="@style/TextAppearance.EduLens.Caption"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_4"
+                                android:text="@string/assignment_dropzone_caption"
+                                android:textColor="@color/text_muted" />
+
+                            <!-- 4 Format Pills -->
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_12"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Badge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/space_4"
+                                    android:background="@drawable/bg_format_pill"
+                                    android:paddingHorizontal="@dimen/space_8"
+                                    android:paddingVertical="@dimen/space_4"
+                                    android:text="PDF"
+                                    android:textColor="@color/text_secondary" />
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Badge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/space_4"
+                                    android:background="@drawable/bg_format_pill"
+                                    android:paddingHorizontal="@dimen/space_8"
+                                    android:paddingVertical="@dimen/space_4"
+                                    android:text="Word"
+                                    android:textColor="@color/text_secondary" />
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Badge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="@dimen/space_4"
+                                    android:background="@drawable/bg_format_pill"
+                                    android:paddingHorizontal="@dimen/space_8"
+                                    android:paddingVertical="@dimen/space_4"
+                                    android:text="ZIP"
+                                    android:textColor="@color/text_secondary" />
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Badge"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_format_pill"
+                                    android:paddingHorizontal="@dimen/space_8"
+                                    android:paddingVertical="@dimen/space_4"
+                                    android:text="Ảnh"
+                                    android:textColor="@color/text_secondary" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <!-- State B: Selected File Card (visible when file is chosen but not yet submitted) -->
+                        <LinearLayout
+                            android:id="@+id/layoutSelectedFile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_surface_card"
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_12"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:id="@+id/ivSelectedFileIcon"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_marginEnd="@dimen/space_12"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_file_document" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvSelectedFileName"
+                                        style="@style/TextAppearance.EduLens.Subtitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:ellipsize="middle"
+                                        android:maxLines="1"
+                                        tools:text="bao_cao_nhom_final.pdf" />
+
+                                    <TextView
+                                        android:id="@+id/tvSelectedFileMeta"
+                                        style="@style/TextAppearance.EduLens.Caption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        android:text="Sẵn sàng tải lên"
+                                        android:textColor="@color/color_primary" />
+                                </LinearLayout>
+
+                                <ImageButton
+                                    android:id="@+id/ivRemoveSelectedFile"
+                                    android:layout_width="36dp"
+                                    android:layout_height="36dp"
+                                    android:background="?attr/selectableItemBackgroundBorderless"
+                                    android:contentDescription="Xóa tệp đã chọn"
+                                    android:src="@drawable/ic_close" />
+                            </LinearLayout>
+
+                            <ProgressBar
+                                android:id="@+id/pbUploadProgress"
+                                style="?android:attr/progressBarStyleHorizontal"
+                                android:layout_width="match_parent"
+                                android:layout_height="4dp"
+                                android:layout_marginTop="@dimen/space_8"
+                                android:indeterminate="true"
+                                android:visibility="gone" />
+                        </LinearLayout>
+
+                        <!-- State C: Submitted File Card (visible when submitted == true) -->
+                        <LinearLayout
+                            android:id="@+id/layoutSubmittedFile"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:visibility="gone">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_surface_card"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:padding="@dimen/space_12">
+
+                                <ImageView
+                                    android:id="@+id/ivSubmittedFileIcon"
+                                    android:layout_width="32dp"
+                                    android:layout_height="32dp"
+                                    android:layout_marginEnd="@dimen/space_12"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_file_document" />
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvSubmittedFileName"
+                                        style="@style/TextAppearance.EduLens.Subtitle"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:ellipsize="middle"
+                                        android:maxLines="1"
+                                        tools:text="bao_cao_nhom_final.pdf" />
+
+                                    <TextView
+                                        android:id="@+id/tvSubmittedAt"
+                                        style="@style/TextAppearance.EduLens.Caption"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="2dp"
+                                        tools:text="Đã nộp lúc 10:15 · 28/10/2026" />
+                                </LinearLayout>
+
+                                <ImageView
+                                    android:id="@+id/ivSubmittedCheck"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:contentDescription="@null"
+                                    android:src="@drawable/ic_check"
+                                    app:tint="@color/color_success" />
+                            </LinearLayout>
+
+                            <!-- Grading Result Sub-card -->
+                            <LinearLayout
+                                android:id="@+id/layoutGradingResult"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_12"
+                                android:background="@drawable/bg_surface_card"
+                                android:orientation="vertical"
+                                android:padding="@dimen/space_12">
+
+                                <TextView
+                                    android:id="@+id/tvGradingStatus"
+                                    style="@style/TextAppearance.EduLens.Subtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/assignment_grading_pending"
+                                    android:textColor="@color/text_muted" />
+
+                                <LinearLayout
+                                    android:id="@+id/layoutScoreAndFeedback"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="vertical"
+                                    android:visibility="gone">
+
+                                    <LinearLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:gravity="center_vertical"
+                                        android:orientation="horizontal">
+
+                                        <TextView
+                                            style="@style/TextAppearance.EduLens.Subtitle"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:text="Điểm số: " />
+
+                                        <TextView
+                                            android:id="@+id/tvScoreValue"
+                                            style="@style/TextAppearance.EduLens.Headline"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="@color/color_primary"
+                                            tools:text="8.5 / 10" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/tvLecturerFeedback"
+                                        style="@style/TextAppearance.EduLens.Body"
+                                        android:layout_width="match_parent"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="@dimen/space_4"
+                                        tools:text="Nhận xét: Bài làm tốt, giao diện đúng yêu cầu." />
+                                </LinearLayout>
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <!-- 3. Requirement Card -->
+                    <LinearLayout
+                        android:id="@+id/cardRequirement"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="80dp"
+                        android:background="@drawable/bg_surface_card"
+                        android:orientation="vertical"
+                        android:padding="@dimen/space_16">
+
+                        <TextView
+                            android:id="@+id/tvRequirementTitle"
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginBottom="@dimen/space_8"
+                            android:text="@string/assignment_requirements_title" />
+
+                        <TextView
+                            android:id="@+id/tvAssignmentDescription"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:lineSpacingExtra="4dp"
+                            tools:text="Sinh viên hoàn thành ứng dụng quản lý lớp học bằng Android Java..." />
+
+                        <!-- Attachment row (visible if attachmentUrl non-empty) -->
+                        <LinearLayout
+                            android:id="@+id/layoutAttachment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="@dimen/space_12"
+                            android:background="@drawable/bg_surface_card"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:padding="@dimen/space_12"
+                            android:visibility="gone">
+
+                            <ImageView
+                                android:layout_width="28dp"
+                                android:layout_height="28dp"
+                                android:layout_marginEnd="@dimen/space_12"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_file_document"
+                                app:tint="@color/color_primary" />
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvAttachmentName"
+                                    style="@style/TextAppearance.EduLens.Subtitle"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="middle"
+                                    android:maxLines="1"
+                                    android:text="@string/assignment_attachment_title" />
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Caption"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="Nhấn để mở tài liệu đính kèm"
+                                    android:textColor="@color/text_muted" />
+                            </LinearLayout>
+
+                            <ImageView
+                                android:id="@+id/ivAttachmentDownload"
+                                android:layout_width="24dp"
+                                android:layout_height="24dp"
+                                android:contentDescription="@null"
+                                android:src="@drawable/ic_download"
+                                app:tint="@color/color_primary" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <!-- Bottom Action Bar (pinned) -->
+        <LinearLayout
+            android:id="@+id/layoutBottomActionBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:background="@color/color_surface"
+            android:elevation="8dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_16"
+            android:paddingVertical="@dimen/space_12">
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnSubmit"
+                style="@style/Widget.EduLens.Button.Filled"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:text="@string/btn_submit_assignment" />
+
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnResubmit"
+                style="@style/Widget.EduLens.Button.Outlined"
+                android:layout_width="match_parent"
+                android:layout_height="44dp"
+                android:layout_marginTop="@dimen/space_8"
+                android:text="@string/btn_resubmit_assignment"
+                android:visibility="gone" />
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

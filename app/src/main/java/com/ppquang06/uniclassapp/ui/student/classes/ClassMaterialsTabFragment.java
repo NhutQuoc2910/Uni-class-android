@@ -16,22 +16,32 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
-import com.ppquang06.uniclassapp.databinding.FragmentClassTabListBinding;
+import com.ppquang06.uniclassapp.databinding.FragmentClassMaterialsTabBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.MaterialAdapter;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class ClassMaterialsTabFragment extends Fragment {
 
-    private FragmentClassTabListBinding binding;
+    public enum MaterialFilter {
+        ALL,
+        PDF,
+        WORD,
+        POWERPOINT
+    }
+
+    private FragmentClassMaterialsTabBinding binding;
     private MaterialAdapter adapter;
     private ClassDetailViewModel viewModel;
+    private final List<ClassDetailResponse.MaterialItem> masterMaterials = new ArrayList<>();
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        binding = FragmentClassTabListBinding.inflate(inflater, container, false);
+        binding = FragmentClassMaterialsTabBinding.inflate(inflater, container, false);
         return binding.getRoot();
     }
 
@@ -63,7 +73,6 @@ public class ClassMaterialsTabFragment extends Fragment {
         });
         binding.rvTabItems.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvTabItems.setAdapter(adapter);
-        binding.tvEmptyMessage.setText(R.string.empty_materials);
     }
 
     private void setupListeners() {
@@ -75,19 +84,18 @@ public class ClassMaterialsTabFragment extends Fragment {
                 binding.swipeRefresh.setRefreshing(false);
             }
         });
+
+        binding.chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> applyCurrentFilter());
     }
 
     private void setupViewModel() {
         viewModel = new ViewModelProvider(requireParentFragment()).get(ClassDetailViewModel.class);
         viewModel.getClassDetail().observe(getViewLifecycleOwner(), detail -> {
-            if (detail != null) {
-                List<ClassDetailResponse.MaterialItem> items = detail.getMaterials();
-                adapter.submitList(items);
-                binding.tvEmptyMessage.setVisibility(items.isEmpty() ? View.VISIBLE : View.GONE);
-            } else {
-                adapter.submitList(Collections.emptyList());
-                binding.tvEmptyMessage.setVisibility(View.VISIBLE);
+            masterMaterials.clear();
+            if (detail != null && detail.getMaterials() != null) {
+                masterMaterials.addAll(detail.getMaterials());
             }
+            applyCurrentFilter();
         });
 
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
@@ -95,6 +103,67 @@ public class ClassMaterialsTabFragment extends Fragment {
                 binding.swipeRefresh.setRefreshing(loading);
             }
         });
+    }
+
+    private void applyCurrentFilter() {
+        if (binding == null) return;
+
+        int checkedId = binding.chipGroupFilter.getCheckedChipId();
+        MaterialFilter filter = MaterialFilter.ALL;
+        if (checkedId == R.id.chipPdf) {
+            filter = MaterialFilter.PDF;
+        } else if (checkedId == R.id.chipWord) {
+            filter = MaterialFilter.WORD;
+        } else if (checkedId == R.id.chipPowerPoint) {
+            filter = MaterialFilter.POWERPOINT;
+        }
+
+        List<ClassDetailResponse.MaterialItem> filtered = filterMaterials(masterMaterials, filter);
+        adapter.submitList(filtered);
+
+        if (masterMaterials.isEmpty()) {
+            binding.tvEmptyMessage.setText(R.string.empty_materials);
+            binding.tvEmptyMessage.setVisibility(View.VISIBLE);
+        } else if (filtered.isEmpty()) {
+            binding.tvEmptyMessage.setText(R.string.empty_materials_filtered);
+            binding.tvEmptyMessage.setVisibility(View.VISIBLE);
+        } else {
+            binding.tvEmptyMessage.setVisibility(View.GONE);
+        }
+    }
+
+    public static List<ClassDetailResponse.MaterialItem> filterMaterials(List<ClassDetailResponse.MaterialItem> items, MaterialFilter filter) {
+        if (items == null) {
+            return Collections.emptyList();
+        }
+        if (filter == null || filter == MaterialFilter.ALL) {
+            return new ArrayList<>(items);
+        }
+        List<ClassDetailResponse.MaterialItem> result = new ArrayList<>();
+        for (ClassDetailResponse.MaterialItem item : items) {
+            if (item == null || item.getFileType() == null) {
+                continue;
+            }
+            String lowerType = item.getFileType().trim().toLowerCase(Locale.ROOT);
+            switch (filter) {
+                case PDF:
+                    if (lowerType.contains("pdf")) {
+                        result.add(item);
+                    }
+                    break;
+                case WORD:
+                    if (lowerType.contains("word") || lowerType.contains("doc")) {
+                        result.add(item);
+                    }
+                    break;
+                case POWERPOINT:
+                    if (lowerType.contains("ppt") || lowerType.contains("powerpoint") || lowerType.contains("slide")) {
+                        result.add(item);
+                    }
+                    break;
+            }
+        }
+        return result;
     }
 
     @Override

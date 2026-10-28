@@ -71,6 +71,35 @@ public class ClassAttendanceTabFragment extends Fragment {
                 } catch (Exception ignored) {}
             }
         });
+
+        View.OnClickListener historyClickListener = v -> {
+            Bundle bundle = new Bundle();
+            String classId = viewModel != null ? viewModel.getLastClassId() : "";
+            String classCode = viewModel != null ? viewModel.getLastClassCode() : "";
+            String className = viewModel != null ? viewModel.getLastClassName() : "";
+            if (viewModel != null && viewModel.getClassDetail().getValue() != null) {
+                ClassDetailResponse d = viewModel.getClassDetail().getValue();
+                if (d.getId() != null && !d.getId().isEmpty()) classId = d.getId();
+                if (d.getCode() != null && !d.getCode().isEmpty()) classCode = d.getCode();
+                if (d.getName() != null && !d.getName().isEmpty()) className = d.getName();
+            }
+            bundle.putString("classId", classId);
+            bundle.putString("classCode", classCode);
+            bundle.putString("className", className);
+
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_attendance_history, bundle);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(ClassAttendanceTabFragment.this)
+                            .navigate(R.id.nav_student_attendance_history, bundle);
+                } catch (Exception ignored) {}
+            }
+        };
+
+        binding.cardAttendanceSummary.setOnClickListener(historyClickListener);
+        binding.btnViewFullHistory.setOnClickListener(historyClickListener);
     }
 
     private void setupViewModel() {

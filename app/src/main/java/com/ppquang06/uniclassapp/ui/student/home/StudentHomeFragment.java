@@ -91,8 +91,19 @@ public class StudentHomeFragment extends Fragment {
         binding.rvMyCourses.setAdapter(courseAdapter);
 
         assignmentAdapter = new AssignmentAdapter(item -> {
-            if (getContext() != null) {
-                Toast.makeText(requireContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            if (item == null) return;
+            Bundle bundle = new Bundle();
+            bundle.putString("assignmentId", item.getId());
+            bundle.putString("assignmentTitle", item.getTitle());
+            bundle.putString("className", item.getClassName());
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_assignment_detail, bundle);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(StudentHomeFragment.this)
+                            .navigate(R.id.nav_student_assignment_detail, bundle);
+                } catch (Exception ignored) {}
             }
         });
         binding.rvDueSoonAssignments.setLayoutManager(new LinearLayoutManager(requireContext()));

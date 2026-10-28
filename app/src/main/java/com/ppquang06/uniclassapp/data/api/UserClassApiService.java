@@ -1,10 +1,15 @@
 package com.ppquang06.uniclassapp.data.api;
 
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
+import com.ppquang06.uniclassapp.data.model.request.AttendanceCheckInRequest;
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
 import com.ppquang06.uniclassapp.data.model.request.JoinClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.SubmitAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
+import com.ppquang06.uniclassapp.data.model.response.AssignmentDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
@@ -46,4 +51,16 @@ public interface UserClassApiService {
 
     @GET("notifications")
     Call<ApiResponse<List<NotificationItemResponse>>> getNotifications();
+
+    @GET("assignments/{id}")
+    Call<ApiResponse<AssignmentDetailResponse>> getAssignmentDetail(@Path("id") String id);
+
+    @POST("assignments/{id}/submit")
+    Call<ApiResponse<AssignmentDetailResponse>> submitAssignment(@Path("id") String id, @Body SubmitAssignmentRequest request);
+
+    @POST("attendance/check-in")
+    Call<ApiResponse<AttendanceCheckInResponse>> checkInAttendance(@Body AttendanceCheckInRequest request);
+
+    @GET("classes/{id}/grades")
+    Call<ApiResponse<ClassGradesResponse>> getClassGrades(@Path("id") String classId);
 }

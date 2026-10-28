@@ -43,6 +43,22 @@ public class ClassDetailViewModel extends ViewModel {
         return errorMessage;
     }
 
+    public String getLastClassId() {
+        return lastClassId != null ? lastClassId : "";
+    }
+
+    public String getLastClassCode() {
+        return lastClassCode != null ? lastClassCode : "";
+    }
+
+    public String getLastClassName() {
+        return lastClassName != null ? lastClassName : "";
+    }
+
+    public String getLastSemester() {
+        return lastSemester != null ? lastSemester : "";
+    }
+
     public void setClassDetail(ClassDetailResponse detail) {
         this.classDetail.setValue(detail);
     }

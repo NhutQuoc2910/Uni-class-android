@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.Navigation;
+import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
@@ -45,8 +46,19 @@ public class ClassAssignmentsTabFragment extends Fragment {
 
     private void setupRecyclerView() {
         adapter = new AssignmentAdapter(item -> {
-            if (getContext() != null && item != null) {
-                Toast.makeText(requireContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
+            if (item == null) return;
+            Bundle bundle = new Bundle();
+            bundle.putString("assignmentId", item.getId());
+            bundle.putString("assignmentTitle", item.getTitle());
+            bundle.putString("className", item.getClassName());
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_assignment_detail, bundle);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(ClassAssignmentsTabFragment.this)
+                            .navigate(R.id.nav_student_assignment_detail, bundle);
+                } catch (Exception ignored) {}
             }
         });
         binding.rvTabItems.setLayoutManager(new LinearLayoutManager(requireContext()));
