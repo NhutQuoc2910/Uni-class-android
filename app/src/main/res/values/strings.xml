@@ -423,4 +423,40 @@
     <string name="rb_publish_all">Công bố toàn bộ các bài đã chấm trong lớp</string>
     <string name="btn_confirm_publish">Xác nhận công bố</string>
     <string name="no_file_attached">Sinh viên chưa đính kèm tệp bài làm</string>
+
+    <!-- Phase 4 Flow C: Dynamic QR Session, Live Attendance & Class Statistics -->
+    <string name="qr_session_title">Phiên điểm danh QR</string>
+    <string name="session_status_open">Phiên đang mở</string>
+    <string name="session_status_closed">Phiên đã kết thúc</string>
+    <string name="qr_refresh_countdown_format">Mã phiên tự động làm mới sau: %1$ds</string>
+    <string name="security_layer_title">3 lớp bảo mật chống gian lận</string>
+    <string name="security_layer_wifi">WiFi phòng học</string>
+    <string name="security_layer_wifi_desc">Khớp mạng BSSID phòng học</string>
+    <string name="security_layer_gps">Vị trí GPS phòng học</string>
+    <string name="security_layer_gps_desc">Bán kính tối đa 50m</string>
+    <string name="security_layer_device">Thiết bị duy nhất</string>
+    <string name="security_layer_device_desc">Chống điểm danh hộ, khóa 1 máy / 1 sinh viên</string>
+    <string name="btn_track_live">Theo dõi điểm danh</string>
+    <string name="btn_close_session">Chốt phiên điểm danh</string>
+    <string name="attendance_live_title">Theo dõi trực tiếp</string>
+    <string name="metric_present">Có mặt</string>
+    <string name="metric_absent">Vắng</string>
+    <string name="metric_total">Tổng số</string>
+    <string name="dialog_close_session_title">Chốt phiên điểm danh?</string>
+    <string name="dialog_close_session_msg">Sau khi chốt phiên, sinh viên sẽ không thể quét mã để điểm danh nữa. Tất cả sinh viên chưa quét mã sẽ được tính là VẮNG.</string>
+    <string name="btn_close_session_confirm">Chốt phiên</string>
+    <string name="dialog_cancel">Hủy</string>
+    <string name="class_statistics_title">Thống kê lớp học</string>
+    <string name="status_active_pill">Đang mở</string>
+    <string name="status_archived_pill">Đã lưu trữ</string>
+    <string name="stat_attendance_rate">Chuyên cần</string>
+    <string name="stat_warning_absent">Vắng >20%</string>
+    <string name="stat_average_score">Điểm TB</string>
+    <string name="warning_students_title">Sinh viên vắng vượt ngưỡng (>20%)</string>
+    <string name="score_distribution_title">Phổ điểm tổng kết</string>
+    <string name="btn_archive_class">Lưu trữ lớp cuối kỳ</string>
+    <string name="btn_class_archived">Lớp đã được lưu trữ</string>
+    <string name="dialog_archive_class_title">Lưu trữ lớp học này?</string>
+    <string name="dialog_archive_class_msg">Lớp học sẽ chuyển sang trạng thái Đã lưu trữ (chỉ đọc). Sinh viên và giảng viên vẫn có thể xem lại dữ liệu nhưng không thể chỉnh sửa.</string>
+    <string name="btn_archive_confirm">Lưu trữ lớp</string>
 </resources>

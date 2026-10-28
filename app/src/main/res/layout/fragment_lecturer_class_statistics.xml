@@ -1,0 +1,691 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1">
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefreshStats"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <!-- Class Header & Status Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_16"
+                        app:cardBackgroundColor="@color/color_surface"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/outline_border"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal"
+                            android:paddingHorizontal="@dimen/space_16"
+                            android:paddingVertical="@dimen/space_12">
+
+                            <LinearLayout
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="1"
+                                android:orientation="vertical">
+
+                                <TextView
+                                    android:id="@+id/tvStatClassName"
+                                    style="@style/TextAppearance.EduLens.Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:ellipsize="end"
+                                    android:maxLines="2"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="16sp"
+                                    android:textStyle="bold"
+                                    tools:text="Thiết kế mạng máy tính" />
+
+                                <TextView
+                                    android:id="@+id/tvStatClassCodeSemester"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="13sp"
+                                    tools:text="NT118.Q11 · HK1 (2026-2027)" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:id="@+id/tvStatClassStatus"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_pill_green"
+                                android:paddingHorizontal="@dimen/space_12"
+                                android:paddingVertical="@dimen/space_4"
+                                android:text="@string/status_active_pill"
+                                android:textColor="@color/color_success"
+                                android:textSize="12sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- 3 Summary Metric Cards -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_16"
+                        android:orientation="horizontal">
+
+                        <!-- Metric 1: Chuyên cần -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_4"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/color_surface"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="1dp"
+                            app:strokeColor="@color/outline_border"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/space_12">
+
+                                <TextView
+                                    android:id="@+id/tvOverallAttendanceRate"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/color_success"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    tools:text="88%" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/stat_attendance_rate"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Metric 2: Vắng > 20% -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="@dimen/space_4"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/color_surface"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="1dp"
+                            app:strokeColor="@color/outline_border"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/space_12">
+
+                                <TextView
+                                    android:id="@+id/tvWarningAbsentCount"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/color_absence"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    tools:text="3 SV" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/stat_warning_absent"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Metric 3: Điểm TB -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/space_4"
+                            android:layout_weight="1"
+                            app:cardBackgroundColor="@color/color_surface"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="1dp"
+                            app:strokeColor="@color/outline_border"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="@dimen/space_12">
+
+                                <TextView
+                                    android:id="@+id/tvAverageScore"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/color_primary"
+                                    android:textSize="22sp"
+                                    android:textStyle="bold"
+                                    tools:text="7.8" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="2dp"
+                                    android:text="@string/stat_average_score"
+                                    android:textColor="@color/text_secondary"
+                                    android:textSize="12sp" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
+                    <!-- Attendance Progress Overview Card -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_16"
+                        app:cardBackgroundColor="@color/color_surface"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/outline_border"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_16">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Body"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_weight="1"
+                                    android:text="Tiến độ chuyên cần toàn khóa"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvAttendanceOverviewPercent"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="@color/color_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold"
+                                    tools:text="88%" />
+                            </LinearLayout>
+
+                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                android:id="@+id/progressAttendanceOverview"
+                                android:layout_width="match_parent"
+                                android:layout_height="8dp"
+                                android:layout_marginTop="@dimen/space_10"
+                                android:max="100"
+                                android:progress="88"
+                                app:indicatorColor="@color/color_primary"
+                                app:trackColor="@color/color_surface_variant"
+                                app:trackCornerRadius="4dp" />
+
+                            <TextView
+                                android:id="@+id/tvEnrolledSummary"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="@dimen/space_8"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp"
+                                tools:text="Sĩ số lớp: 42 sinh viên đăng ký" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Warning Section: Absent > 20% -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_16"
+                        app:cardBackgroundColor="@color/color_surface"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/color_warning"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_16">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <ImageView
+                                    android:layout_width="22dp"
+                                    android:layout_height="22dp"
+                                    android:contentDescription="Cảnh báo vắng"
+                                    android:src="@drawable/ic_error_circle"
+                                    app:tint="@color/color_absence" />
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Body"
+                                    android:layout_width="0dp"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="@dimen/space_8"
+                                    android:layout_weight="1"
+                                    android:text="@string/warning_students_title"
+                                    android:textColor="@color/text_primary"
+                                    android:textSize="14sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="4dp"
+                                android:text="Quy chế đào tạo: Sinh viên vắng quá 20% tổng số buổi sẽ không đủ điều kiện dự thi cuối kỳ."
+                                android:textColor="@color/text_secondary"
+                                android:textSize="12sp" />
+
+                            <View
+                                android:layout_width="match_parent"
+                                android:layout_height="1dp"
+                                android:layout_marginVertical="@dimen/space_10"
+                                android:background="@color/outline_border" />
+
+                            <!-- List of Warning Students -->
+                            <LinearLayout
+                                android:id="@+id/layoutWarningStudentsList"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical" />
+
+                            <TextView
+                                android:id="@+id/tvNoWarningStudents"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center"
+                                android:paddingVertical="@dimen/space_8"
+                                android:text="Không có sinh viên nào vắng vượt ngưỡng 20%"
+                                android:textColor="@color/color_success"
+                                android:textSize="13sp"
+                                android:visibility="gone" />
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Score Distribution Section (6-bucket chart) -->
+                    <com.google.android.material.card.MaterialCardView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="@dimen/space_20"
+                        app:cardBackgroundColor="@color/color_surface"
+                        app:cardCornerRadius="14dp"
+                        app:cardElevation="1dp"
+                        app:strokeColor="@color/outline_border"
+                        app:strokeWidth="1dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:padding="@dimen/space_16">
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Body"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/score_distribution_title"
+                                android:textColor="@color/text_primary"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Phân bố điểm tổng kết theo 6 khoảng điểm"
+                                android:textColor="@color/text_muted"
+                                android:textSize="12sp" />
+
+                            <!-- 6-Column Bar Chart -->
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="160dp"
+                                android:layout_marginTop="@dimen/space_16"
+                                android:gravity="bottom"
+                                android:orientation="horizontal">
+
+                                <!-- Bucket 1: 0-2 -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom|center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar02Count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        tools:text="1" />
+
+                                    <View
+                                        android:id="@+id/viewScoreBar02Fill"
+                                        android:layout_width="24dp"
+                                        android:layout_height="15dp"
+                                        android:layout_marginTop="4dp"
+                                        android:background="@drawable/bg_pill_gray" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="0–2"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar02Percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        tools:text="2%" />
+                                </LinearLayout>
+
+                                <!-- Bucket 2: 2-4 -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom|center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar24Count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        tools:text="2" />
+
+                                    <View
+                                        android:id="@+id/viewScoreBar24Fill"
+                                        android:layout_width="24dp"
+                                        android:layout_height="25dp"
+                                        android:layout_marginTop="4dp"
+                                        android:background="@drawable/bg_pill_warning" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="2–4"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar24Percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        tools:text="5%" />
+                                </LinearLayout>
+
+                                <!-- Bucket 3: 4-6 -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom|center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar46Count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        tools:text="7" />
+
+                                    <View
+                                        android:id="@+id/viewScoreBar46Fill"
+                                        android:layout_width="24dp"
+                                        android:layout_height="50dp"
+                                        android:layout_marginTop="4dp"
+                                        android:background="@drawable/bg_pill_warning" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="4–6"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar46Percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        tools:text="17%" />
+                                </LinearLayout>
+
+                                <!-- Bucket 4: 6-8 -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom|center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar68Count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        tools:text="18" />
+
+                                    <View
+                                        android:id="@+id/viewScoreBar68Fill"
+                                        android:layout_width="24dp"
+                                        android:layout_height="100dp"
+                                        android:layout_marginTop="4dp"
+                                        android:background="@drawable/bg_pill_green" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="6–8"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar68Percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        tools:text="43%" />
+                                </LinearLayout>
+
+                                <!-- Bucket 5: 8-9 -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom|center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar89Count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        tools:text="10" />
+
+                                    <View
+                                        android:id="@+id/viewScoreBar89Fill"
+                                        android:layout_width="24dp"
+                                        android:layout_height="65dp"
+                                        android:layout_marginTop="4dp"
+                                        android:background="@drawable/bg_pill_green" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="8–9"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar89Percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        tools:text="24%" />
+                                </LinearLayout>
+
+                                <!-- Bucket 6: 9-10 -->
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="match_parent"
+                                    android:layout_weight="1"
+                                    android:gravity="bottom|center_horizontal"
+                                    android:orientation="vertical">
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar910Count"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold"
+                                        tools:text="4" />
+
+                                    <View
+                                        android:id="@+id/viewScoreBar910Fill"
+                                        android:layout_width="24dp"
+                                        android:layout_height="35dp"
+                                        android:layout_marginTop="4dp"
+                                        android:background="@drawable/bg_pill_green" />
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginTop="4dp"
+                                        android:text="9–10"
+                                        android:textColor="@color/text_secondary"
+                                        android:textSize="11sp"
+                                        android:textStyle="bold" />
+
+                                    <TextView
+                                        android:id="@+id/tvScoreBar910Percent"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/text_muted"
+                                        android:textSize="10sp"
+                                        tools:text="9%" />
+                                </LinearLayout>
+
+                            </LinearLayout>
+                        </LinearLayout>
+                    </com.google.android.material.card.MaterialCardView>
+
+                    <!-- Bottom CTA: Lưu trữ lớp cuối kỳ -->
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnArchiveClass"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginBottom="@dimen/space_16"
+                        android:text="@string/btn_archive_class"
+                        android:textAllCaps="false"
+                        android:textColor="@color/color_primary"
+                        android:textSize="14sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp"
+                        app:icon="@drawable/ic_check_circle"
+                        app:iconGravity="textStart"
+                        app:iconPadding="8dp"
+                        app:iconTint="@color/color_primary"
+                        app:strokeColor="@color/color_primary"
+                        app:strokeWidth="1.5dp" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+        <!-- Loading Indicator -->
+        <ProgressBar
+            android:id="@+id/pbLoadingStats"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center"
+            android:indeterminateTint="@color/color_primary"
+            android:visibility="gone" />
+    </FrameLayout>
+
+</LinearLayout>

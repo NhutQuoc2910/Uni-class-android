@@ -91,8 +91,34 @@
 
     <fragment
         android:id="@+id/nav_lecturer_qr_session"
-        android:name="com.ppquang06.uniclassapp.ui.lecturer.qr.LecturerQrSessionFragment"
-        android:label="Phiên điểm danh QR">
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.attendance.LecturerQrSessionFragment"
+        android:label="@string/qr_session_title">
+        <argument
+            android:name="classId"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="classCode"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="className"
+            app:argType="string"
+            android:defaultValue="" />
+        <argument
+            android:name="room"
+            app:argType="string"
+            android:defaultValue="" />
+    </fragment>
+
+    <fragment
+        android:id="@+id/nav_lecturer_attendance_live"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.attendance.LecturerAttendanceLiveFragment"
+        android:label="@string/attendance_live_title">
+        <argument
+            android:name="sessionId"
+            app:argType="string"
+            android:defaultValue="" />
         <argument
             android:name="classId"
             app:argType="string"
