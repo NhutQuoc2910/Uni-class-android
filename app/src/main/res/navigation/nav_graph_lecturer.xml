@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_lecturer"
+    app:startDestination="@id/nav_lecturer_home">
+
+    <fragment
+        android:id="@+id/nav_lecturer_home"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.home.LecturerHomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_lecturer_home" />
+
+    <fragment
+        android:id="@+id/nav_lecturer_classes"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.classes.LecturerClassesFragment"
+        android:label="@string/nav_classes"
+        tools:layout="@layout/fragment_lecturer_classes" />
+
+    <fragment
+        android:id="@+id/nav_lecturer_notifications"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.notifications.LecturerNotificationsFragment"
+        android:label="@string/nav_notifications"
+        tools:layout="@layout/fragment_lecturer_notifications" />
+
+    <fragment
+        android:id="@+id/nav_lecturer_profile"
+        android:name="com.ppquang06.uniclassapp.ui.lecturer.profile.LecturerProfileFragment"
+        android:label="@string/nav_profile"
+        tools:layout="@layout/fragment_lecturer_profile" />
+
+</navigation>

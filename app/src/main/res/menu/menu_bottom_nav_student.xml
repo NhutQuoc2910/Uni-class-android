@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/nav_student_home"
+        android:icon="@drawable/ic_home"
+        android:title="@string/nav_home" />
+    <item
+        android:id="@+id/nav_student_classes"
+        android:icon="@drawable/ic_book"
+        android:title="@string/nav_classes" />
+    <item
+        android:id="@+id/nav_student_scan_qr"
+        android:icon="@drawable/ic_qr_code"
+        android:title="@string/nav_qr" />
+    <item
+        android:id="@+id/nav_student_notifications"
+        android:icon="@drawable/ic_notification"
+        android:title="@string/nav_notifications" />
+    <item
+        android:id="@+id/nav_student_profile"
+        android:icon="@drawable/ic_person_outline"
+        android:title="@string/nav_profile" />
+</menu>

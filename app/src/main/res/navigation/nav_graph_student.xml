@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph_student"
+    app:startDestination="@id/nav_student_home">
+
+    <fragment
+        android:id="@+id/nav_student_home"
+        android:name="com.ppquang06.uniclassapp.ui.student.home.StudentHomeFragment"
+        android:label="@string/nav_home"
+        tools:layout="@layout/fragment_student_home" />
+
+    <fragment
+        android:id="@+id/nav_student_classes"
+        android:name="com.ppquang06.uniclassapp.ui.student.classes.StudentClassesFragment"
+        android:label="@string/nav_classes"
+        tools:layout="@layout/fragment_student_classes" />
+
+    <fragment
+        android:id="@+id/nav_student_scan_qr"
+        android:name="com.ppquang06.uniclassapp.ui.student.qr.StudentScanQrFragment"
+        android:label="@string/nav_qr"
+        tools:layout="@layout/fragment_student_scan_qr" />
+
+    <fragment
+        android:id="@+id/nav_student_notifications"
+        android:name="com.ppquang06.uniclassapp.ui.student.notifications.StudentNotificationsFragment"
+        android:label="@string/nav_notifications"
+        tools:layout="@layout/fragment_student_notifications" />
+
+    <fragment
+        android:id="@+id/nav_student_profile"
+        android:name="com.ppquang06.uniclassapp.ui.student.profile.StudentProfileFragment"
+        android:label="@string/nav_profile"
+        tools:layout="@layout/fragment_student_profile" />
+
+</navigation>

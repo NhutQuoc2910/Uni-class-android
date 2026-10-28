@@ -14,6 +14,7 @@ import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.LoginRequest;
 import com.ppquang06.uniclassapp.data.model.response.AuthResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityLoginBinding;
+import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
 import org.json.JSONObject;
@@ -90,10 +91,7 @@ public class LoginActivity extends AppCompatActivity {
                         String welcomeName = auth.getUser() != null ? auth.getUser().getFullName() : "";
                         Toast.makeText(LoginActivity.this, "Đăng nhập thành công! " + welcomeName, Toast.LENGTH_SHORT).show();
 
-                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
-                        finish();
+                        RoleRouter.navigateToHomeByRole(LoginActivity.this);
                         return;
                     }
                 }
