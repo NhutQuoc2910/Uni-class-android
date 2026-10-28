@@ -118,4 +118,9 @@
     <string name="status_open">Còn hạn</string>
     <string name="status_overdue">Quá hạn</string>
     <string name="tag_urgent">Khẩn</string>
+    <string name="label_attendance">Chuyên cần</string>
+    <string name="label_pending">Chờ chấm điểm</string>
+    <string name="scan_qr_title">Quét mã QR</string>
+    <string name="scan_qr_desc">Đưa camera vào mã QR của giảng viên để ghi nhận chuyên cần.</string>
+    <string name="scan_qr_btn_action">Bắt đầu quét</string>
 </resources>

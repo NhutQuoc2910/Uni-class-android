@@ -39,4 +39,15 @@ public class UiBadgeHelperTest {
         assertEquals(R.color.color_error, overdue.textColorRes);
         assertEquals(R.color.color_error_container, overdue.bgColorRes);
     }
+
+    @Test
+    public void resolveColors_returnsPrimaryColorsForNullAndOpen() {
+        UiBadgeHelper.BadgeColors nullStatus = UiBadgeHelper.resolveColors(null);
+        assertEquals(R.color.color_primary, nullStatus.textColorRes);
+        assertEquals(R.color.color_primary_container, nullStatus.bgColorRes);
+
+        UiBadgeHelper.BadgeColors open = UiBadgeHelper.resolveColors(UiBadgeHelper.Status.OPEN);
+        assertEquals(R.color.color_primary, open.textColorRes);
+        assertEquals(R.color.color_primary_container, open.bgColorRes);
+    }
 }

@@ -11,6 +11,9 @@ public class HomeSummaryResponse {
     @SerializedName("pendingAssignmentsCount")
     private int pendingAssignmentsCount;
 
+    @SerializedName("attendanceRate")
+    private int attendanceRate;
+
     @SerializedName("courses")
     private List<CourseClassItem> courses = new ArrayList<>();
 
@@ -33,6 +36,14 @@ public class HomeSummaryResponse {
 
     public void setPendingAssignmentsCount(int pendingAssignmentsCount) {
         this.pendingAssignmentsCount = pendingAssignmentsCount;
+    }
+
+    public int getAttendanceRate() {
+        return attendanceRate;
+    }
+
+    public void setAttendanceRate(int attendanceRate) {
+        this.attendanceRate = attendanceRate;
     }
 
     public List<CourseClassItem> getCourses() {

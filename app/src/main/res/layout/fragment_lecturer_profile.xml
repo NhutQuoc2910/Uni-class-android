@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background"
+    android:orientation="vertical">
+
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:orientation="vertical"
+            android:paddingHorizontal="@dimen/space_24"
+            android:paddingVertical="@dimen/space_24">
+
+            <!-- Profile Info Card -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_surface_card"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="@dimen/space_24">
+
+                <ImageView
+                    android:id="@+id/ivAvatarProfile"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
+                    android:background="@drawable/bg_circle_aura"
+                    android:contentDescription="@string/desc_avatar"
+                    android:padding="@dimen/space_16"
+                    android:src="@drawable/ic_person_outline"
+                    app:tint="@color/color_primary" />
+
+                <TextView
+                    android:id="@+id/tvFullName"
+                    style="@style/TextAppearance.EduLens.Headline"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:gravity="center"
+                    android:text="@string/fullname_label" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    style="@style/TextAppearance.EduLens.Body"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_4"
+                    android:gravity="center"
+                    android:text="@string/email_label" />
+
+                <TextView
+                    android:id="@+id/tvRoleBadge"
+                    style="@style/TextAppearance.EduLens.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_12"
+                    android:background="@drawable/bg_badge_pill"
+                    android:paddingHorizontal="@dimen/space_16"
+                    android:paddingVertical="@dimen/space_4"
+                    android:text="@string/role_badge_lecturer"
+                    android:textColor="@color/color_primary" />
+            </LinearLayout>
+
+            <!-- Logout Button -->
+            <com.google.android.material.button.MaterialButton
+                android:id="@+id/btnLogout"
+                style="@style/Widget.EduLens.Button.Danger"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/button_height_lg"
+                android:layout_marginTop="@dimen/space_32"
+                android:text="@string/logout_button" />
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>
