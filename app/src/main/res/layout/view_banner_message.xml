@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cardBanner"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_surface_card"
+    android:gravity="center_vertical"
+    android:minHeight="70dp"
+    android:orientation="horizontal"
+    android:padding="@dimen/space_12">
+
+    <ImageView
+        android:id="@+id/ivBannerIcon"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_info_outline"
+        app:tint="@color/color_primary" />
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_12"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvBannerTitle"
+            style="@style/TextAppearance.EduLens.Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/edu_lens_title" />
+
+        <TextView
+            android:id="@+id/tvBannerSubtitle"
+            style="@style/TextAppearance.EduLens.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="@string/edu_lens_subtitle" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/btnBannerAction"
+        style="@style/TextAppearance.EduLens.Badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/space_8"
+        android:padding="@dimen/space_4"
+        android:text="@string/see_all"
+        android:textColor="@color/color_primary"
+        android:visibility="gone" />
+</LinearLayout>

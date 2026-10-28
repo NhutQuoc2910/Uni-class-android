@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rowDocumentRoot"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/list_item_height"
+    android:layout_marginBottom="@dimen/space_8"
+    android:background="@drawable/bg_surface_card"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_12">
+
+    <FrameLayout
+        android:id="@+id/flFileTypeBadge"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:background="@drawable/bg_badge_pill">
+
+        <TextView
+            android:id="@+id/tvFileTypeExt"
+            style="@style/TextAppearance.EduLens.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="PDF"
+            android:textColor="@color/color_error" />
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/space_12"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvDocumentTitle"
+            style="@style/TextAppearance.EduLens.Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/docs_and_homework" />
+
+        <TextView
+            android:id="@+id/tvDocumentMeta"
+            style="@style/TextAppearance.EduLens.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:text="2.4 MB · PDF" />
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivDownloadStatus"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:contentDescription="@null"
+        android:src="@drawable/ic_download" />
+</LinearLayout>

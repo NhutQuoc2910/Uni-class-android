@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/emptyStateRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:padding="@dimen/space_24">
+
+    <ImageView
+        android:id="@+id/ivEmptyIcon"
+        android:layout_width="56dp"
+        android:layout_height="56dp"
+        android:background="@drawable/bg_circle_aura"
+        android:contentDescription="@null"
+        android:padding="14dp"
+        android:src="@drawable/ic_book"
+        app:tint="@color/color_primary" />
+
+    <TextView
+        android:id="@+id/tvEmptyTitle"
+        style="@style/TextAppearance.EduLens.Subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_12"
+        android:gravity="center"
+        android:text="@string/my_classes_title" />
+
+    <TextView
+        android:id="@+id/tvEmptyMessage"
+        style="@style/TextAppearance.EduLens.Body"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_4"
+        android:gravity="center"
+        android:text="@string/edu_lens_subtitle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnEmptyAction"
+        style="@style/Widget.EduLens.Button.Filled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_16"
+        android:text="@string/see_all"
+        android:visibility="gone" />
+</LinearLayout>

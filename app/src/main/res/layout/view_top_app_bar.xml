@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/topAppBarRoot"
+    android:layout_width="match_parent"
+    android:layout_height="@dimen/top_app_bar_height"
+    android:background="@color/color_surface"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_16">
+
+    <ImageButton
+        android:id="@+id/btnBack"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="@dimen/space_8"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:contentDescription="@string/desc_back_button"
+        android:src="@drawable/ic_arrow_back"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TextAppearance.EduLens.Title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:text="@string/edu_lens_title" />
+
+    <TextView
+        android:id="@+id/tvRoleBadge"
+        style="@style/TextAppearance.EduLens.Badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_8"
+        android:background="@drawable/bg_badge_pill"
+        android:paddingHorizontal="@dimen/space_12"
+        android:paddingVertical="@dimen/space_4"
+        android:text="@string/role_badge_student"
+        android:textColor="@color/color_primary" />
+
+    <ImageView
+        android:id="@+id/ivAvatar"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:background="@drawable/bg_circle_aura"
+        android:contentDescription="@string/desc_avatar"
+        android:padding="6dp"
+        android:src="@drawable/ic_person_outline"
+        app:tint="@color/color_primary" />
+</LinearLayout>

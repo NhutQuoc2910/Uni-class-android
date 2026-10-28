@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/cardCourseRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/space_12"
+    android:background="@drawable/bg_surface_card"
+    android:orientation="vertical"
+    android:padding="@dimen/space_16">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvCourseCode"
+            style="@style/TextAppearance.EduLens.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge_pill"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="2dp"
+            android:text="@string/course_code_1"
+            android:textColor="@color/color_primary" />
+
+        <TextView
+            android:id="@+id/tvSemesterBadge"
+            style="@style/TextAppearance.EduLens.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/space_8"
+            android:layout_weight="1"
+            android:text="@string/overview_semester" />
+
+        <View
+            android:id="@+id/viewUnreadDot"
+            android:layout_width="10dp"
+            android:layout_height="10dp"
+            android:background="@drawable/bg_unread_dot"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvCourseName"
+        style="@style/TextAppearance.EduLens.Title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_8"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:text="@string/course_name_1" />
+
+    <TextView
+        android:id="@+id/tvRoomSchedule"
+        style="@style/TextAppearance.EduLens.Body"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_4"
+        android:text="@string/course_type_1" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_12"
+        android:gravity="center_vertical"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/tvLecturerOrCount"
+            style="@style/TextAppearance.EduLens.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/docs_and_homework" />
+
+        <TextView
+            android:id="@+id/chipAttendanceOrInvite"
+            style="@style/TextAppearance.EduLens.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge_pill"
+            android:paddingHorizontal="@dimen/space_12"
+            android:paddingVertical="4dp"
+            android:text="@string/status_present"
+            android:textColor="@color/color_success" />
+    </LinearLayout>
+</LinearLayout>
