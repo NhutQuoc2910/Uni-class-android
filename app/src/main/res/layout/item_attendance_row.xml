@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/rowAttendanceRoot"
+    android:layout_width="match_parent"
+    android:layout_height="70dp"
+    android:layout_marginBottom="@dimen/space_8"
+    android:background="@drawable/bg_surface_card"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingHorizontal="@dimen/space_16">
+
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/space_12"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tvSessionTitle"
+            style="@style/TextAppearance.EduLens.Subtitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="Buổi 1" />
+
+        <TextView
+            android:id="@+id/tvSessionDate"
+            style="@style/TextAppearance.EduLens.Caption"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="28/10/2026 · 07:30" />
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvAttendanceStatusBadge"
+        style="@style/TextAppearance.EduLens.Badge"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_badge_pill"
+        android:paddingHorizontal="@dimen/space_12"
+        android:paddingVertical="4dp"
+        android:text="@string/status_present"
+        android:textColor="@color/color_success" />
+</LinearLayout>
