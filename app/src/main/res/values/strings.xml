@@ -300,6 +300,10 @@
     <string name="error_device_used_desc">Thiết bị này đã được dùng để điểm danh cho tài khoản khác trong phiên này.</string>
     <string name="error_device_used_advice">Quy định của trường nghiêm cấm điểm danh hộ. Mỗi sinh viên phải dùng thiết bị cá nhân.</string>
 
+    <string name="error_network_title">Lỗi kết nối máy chủ</string>
+    <string name="error_network_desc">Không thể kết nối đến máy chủ hoặc phiên làm việc gián đoạn.</string>
+    <string name="error_network_advice">Vui lòng kiểm tra lại kết nối mạng Internet hoặc WiFi phòng học và thử quét lại.</string>
+
     <!-- Phase 4: Lecturer Flow Strings -->
     <string name="lecturer_tab_active">Đang mở</string>
     <string name="lecturer_tab_archived">Đã lưu trữ</string>

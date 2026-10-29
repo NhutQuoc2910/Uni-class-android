@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,7 @@ import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentGradesBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.GradeAdapter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -89,8 +90,14 @@ public class StudentGradesFragment extends Fragment {
         binding.swipeRefresh.setRefreshing(true);
 
         if (classId == null || classId.trim().isEmpty()) {
-            bindData(buildFallbackGrades());
             binding.swipeRefresh.setRefreshing(false);
+            Toast.makeText(requireContext(), "Mã lớp học không hợp lệ", Toast.LENGTH_SHORT).show();
+            ClassGradesResponse empty = new ClassGradesResponse();
+            empty.setClassId("");
+            empty.setClassCode(classCode);
+            empty.setClassName(className);
+            empty.setGrades(Collections.emptyList());
+            bindData(empty);
             return;
         }
 
@@ -107,7 +114,13 @@ public class StudentGradesFragment extends Fragment {
                                 && response.body().isSuccess() && response.body().getData() != null) {
                             bindData(response.body().getData());
                         } else {
-                            bindData(buildFallbackGrades());
+                            String msg = "Không thể tải bảng điểm";
+                            if (response.body() != null && response.body().getMessage() != null) {
+                                msg = response.body().getMessage();
+                            }
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -115,7 +128,9 @@ public class StudentGradesFragment extends Fragment {
                     public void onFailure(@NonNull Call<ApiResponse<ClassGradesResponse>> call, @NonNull Throwable t) {
                         if (binding == null) return;
                         binding.swipeRefresh.setRefreshing(false);
-                        bindData(buildFallbackGrades());
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -156,57 +171,11 @@ public class StudentGradesFragment extends Fragment {
         binding.tvGradesOverviewTitle.setText("Điểm trung bình tích lũy");
         binding.tvGradesOverviewDesc.setText(buildGradesOverviewDesc(total, gradedCount));
 
-        adapter.submitList(grades);
+        adapter.submitList(grades != null ? grades : Collections.emptyList());
 
         boolean isEmpty = (grades == null || grades.isEmpty());
         binding.rvGrades.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         binding.tvEmptyGrades.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private ClassGradesResponse buildFallbackGrades() {
-        ClassGradesResponse fallback = new ClassGradesResponse();
-        fallback.setClassId(classId != null ? classId : "demo-class-id");
-        fallback.setClassCode(classCode != null && !classCode.isEmpty() ? classCode : "NT118.Q11");
-        fallback.setClassName(className != null && !className.isEmpty() ? className : "Phát triển ứng dụng di động");
-        fallback.setLecturerName("ThS. Trần Minh Khoa");
-        fallback.setAverageScore(8.5);
-        fallback.setGradedCount(2);
-        fallback.setTotalAssignments(3);
-
-        List<ClassGradesResponse.GradeItem> list = new ArrayList<>();
-        list.add(new ClassGradesResponse.GradeItem(
-                "assign-1",
-                "Bài tập 1: Xây dựng Layout XML & Navigation Component",
-                "2026-10-24T14:30:00Z",
-                true,
-                8.5,
-                "Bài làm tốt, cấu trúc rõ ràng và tuân thủ đúng Material Design 3.",
-                "ThS. Trần Minh Khoa",
-                "K"
-        ));
-        list.add(new ClassGradesResponse.GradeItem(
-                "assign-2",
-                "Bài tập 2: Tích hợp Retrofit REST API & Authentication",
-                "2026-10-26T10:15:00Z",
-                true,
-                9.0,
-                "Xử lý lỗi mạng và token interceptor rất chuẩn xác, code sạch.",
-                "ThS. Trần Minh Khoa",
-                "K"
-        ));
-        list.add(new ClassGradesResponse.GradeItem(
-                "assign-3",
-                "Bài tập lớn: Đồ án cuối kỳ - Ứng dụng EduLens",
-                null,
-                false,
-                null,
-                null,
-                "ThS. Trần Minh Khoa",
-                "K"
-        ));
-        fallback.setGrades(list);
-
-        return fallback;
     }
 
     public static String formatAverageScore(double averageScore) {

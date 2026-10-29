@@ -175,6 +175,18 @@ public class StudentScanResultFragment extends Fragment {
                     StudentScanVerifyingFragment.STEP_STATE_PASSED,
                     StudentScanVerifyingFragment.STEP_STATE_FAILED
             );
+        } else if (StudentScanVerifyingFragment.ERROR_NETWORK.equals(errorType)) {
+            return new ErrorConfig(
+                    R.string.error_network_title,
+                    R.string.error_network_desc,
+                    R.string.error_network_advice,
+                    R.drawable.ic_error_circle,
+                    R.color.color_error,
+                    R.drawable.bg_circle_red_light,
+                    StudentScanVerifyingFragment.STEP_STATE_FAILED,
+                    StudentScanVerifyingFragment.STEP_STATE_WAITING,
+                    StudentScanVerifyingFragment.STEP_STATE_WAITING
+            );
         } else {
             // Default QR_EXPIRED
             return new ErrorConfig(

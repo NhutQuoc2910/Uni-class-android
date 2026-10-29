@@ -35,6 +35,7 @@ public class StudentScanVerifyingFragment extends Fragment {
     public static final String ERROR_WIFI_MISMATCH = "WIFI_MISMATCH";
     public static final String ERROR_GPS_OUT_OF_RANGE = "GPS_OUT_OF_RANGE";
     public static final String ERROR_DEVICE_ALREADY_USED = "DEVICE_ALREADY_USED";
+    public static final String ERROR_NETWORK = "NETWORK_ERROR";
 
     public static final int STEP_STATE_WAITING = 0;
     public static final int STEP_STATE_CHECKING = 1;
@@ -115,7 +116,7 @@ public class StudentScanVerifyingFragment extends Fragment {
                                            @NonNull Response<ApiResponse<AttendanceCheckInResponse>> response) {
                         if (!isAdded() || binding == null) return;
 
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             AttendanceCheckInResponse data = response.body().getData();
                             animateVerificationSequence(true, null, data);
                         } else {
@@ -127,7 +128,7 @@ public class StudentScanVerifyingFragment extends Fragment {
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<AttendanceCheckInResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
-                        animateVerificationSequence(false, ERROR_QR_EXPIRED, null);
+                        animateVerificationSequence(false, ERROR_NETWORK, null);
                     }
                 });
     }
@@ -165,6 +166,9 @@ public class StudentScanVerifyingFragment extends Fragment {
         if (apiCode == 40013 || "DEVICE_ALREADY_USED".equalsIgnoreCase(apiErrorCode)) {
             return ERROR_DEVICE_ALREADY_USED;
         }
+        if ("NETWORK_ERROR".equalsIgnoreCase(apiErrorCode)) {
+            return ERROR_NETWORK;
+        }
         return ERROR_QR_EXPIRED;
     }
 
@@ -193,14 +197,26 @@ public class StudentScanVerifyingFragment extends Fragment {
             // Navigate to Result at 2000ms
             handler.postDelayed(() -> {
                 if (!isAdded() || binding == null) return;
-                String json = successData != null ? gson.toJson(successData) : createDefaultSuccessJson();
+                String json = successData != null ? gson.toJson(successData) : "";
                 navigateToResult(true, "", json);
             }, 2000);
 
         } else {
             String err = errorType != null ? errorType : ERROR_QR_EXPIRED;
 
-            if (ERROR_QR_EXPIRED.equals(err)) {
+            if (ERROR_NETWORK.equals(err)) {
+                // Fails on Step 1 at 700ms due to network error
+                handler.postDelayed(() -> {
+                    if (!isAdded() || binding == null) return;
+                    updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_FAILED);
+                }, 700);
+
+                handler.postDelayed(() -> {
+                    if (!isAdded() || binding == null) return;
+                    navigateToResult(false, ERROR_NETWORK, "");
+                }, 1400);
+
+            } else if (ERROR_QR_EXPIRED.equals(err)) {
                 // Fails on Step 1 at 700ms
                 handler.postDelayed(() -> {
                     if (!isAdded() || binding == null) return;
@@ -308,25 +324,6 @@ public class StudentScanVerifyingFragment extends Fragment {
         bundle.putString("errorType", errorType != null ? errorType : "");
         bundle.putString("resultJson", resultJson != null ? resultJson : "");
         return bundle;
-    }
-
-    private String createDefaultSuccessJson() {
-        AttendanceCheckInResponse fallback = new AttendanceCheckInResponse(
-                "rec-" + System.currentTimeMillis(),
-                sessionId,
-                "NT118.Q11",
-                "Phát triển ứng dụng trên thiết bị di động",
-                "B1.12",
-                "ThS. Trần Minh Khoa",
-                "21:30 · 28/10/2026",
-                deviceId,
-                "PRESENT",
-                true,
-                true,
-                true,
-                5.2
-        );
-        return gson.toJson(fallback);
     }
 
     @Override

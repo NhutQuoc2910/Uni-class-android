@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -132,6 +133,12 @@ public class StudentClassDetailFragment extends Fragment {
         viewModel.getIsLoading().observe(getViewLifecycleOwner(), loading -> {
             if (binding != null && loading != null) {
                 binding.pbLoading.setVisibility(loading ? View.VISIBLE : View.GONE);
+            }
+        });
+
+        viewModel.getErrorMessage().observe(getViewLifecycleOwner(), error -> {
+            if (error != null && !error.isEmpty() && getContext() != null) {
+                Toast.makeText(requireContext(), error, Toast.LENGTH_SHORT).show();
             }
         });
 

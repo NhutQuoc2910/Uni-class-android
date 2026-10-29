@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -21,7 +22,7 @@ import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentAttendanceHistoryBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.AttendanceRecordAdapter;
 
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
@@ -96,8 +97,14 @@ public class StudentAttendanceHistoryFragment extends Fragment {
         binding.swipeRefresh.setRefreshing(true);
 
         if (classId == null || classId.trim().isEmpty()) {
-            bindData(buildFallbackDetail());
             binding.swipeRefresh.setRefreshing(false);
+            Toast.makeText(requireContext(), "Mã lớp học không hợp lệ", Toast.LENGTH_SHORT).show();
+            ClassDetailResponse empty = new ClassDetailResponse();
+            empty.setId("");
+            empty.setCode(classCode);
+            empty.setName(className);
+            empty.setAttendanceRecords(Collections.emptyList());
+            bindData(empty);
             return;
         }
 
@@ -114,7 +121,13 @@ public class StudentAttendanceHistoryFragment extends Fragment {
                                 && response.body().isSuccess() && response.body().getData() != null) {
                             bindData(response.body().getData());
                         } else {
-                            bindData(buildFallbackDetail());
+                            String msg = "Không thể tải lịch sử điểm danh";
+                            if (response.body() != null && response.body().getMessage() != null) {
+                                msg = response.body().getMessage();
+                            }
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -122,7 +135,9 @@ public class StudentAttendanceHistoryFragment extends Fragment {
                     public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse>> call, @NonNull Throwable t) {
                         if (binding == null) return;
                         binding.swipeRefresh.setRefreshing(false);
-                        bindData(buildFallbackDetail());
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -202,31 +217,10 @@ public class StudentAttendanceHistoryFragment extends Fragment {
         }
 
         // List
-        adapter.submitList(records);
+        adapter.submitList(records != null ? records : Collections.emptyList());
         boolean isEmpty = (records == null || records.isEmpty());
         binding.rvAttendanceRecords.setVisibility(isEmpty ? View.GONE : View.VISIBLE);
         binding.tvEmptyAttendance.setVisibility(isEmpty ? View.VISIBLE : View.GONE);
-    }
-
-    private ClassDetailResponse buildFallbackDetail() {
-        ClassDetailResponse fallback = new ClassDetailResponse();
-        fallback.setId(classId != null ? classId : "demo-class-id");
-        fallback.setCode(classCode != null && !classCode.isEmpty() ? classCode : "NT118.Q11");
-        fallback.setName(className != null && !className.isEmpty() ? className : "Phát triển ứng dụng di động");
-        fallback.setPresentCount(4);
-        fallback.setAbsentCount(2);
-        fallback.setTotalSessions(6);
-
-        List<ClassDetailResponse.AttendanceSessionRecordItem> list = new ArrayList<>();
-        list.add(new ClassDetailResponse.AttendanceSessionRecordItem("s-6", 6, "2026-10-28T07:30:00Z", "PRESENT", "2026-10-28T07:35:12Z"));
-        list.add(new ClassDetailResponse.AttendanceSessionRecordItem("s-5", 5, "2026-10-21T07:30:00Z", "ABSENT", null));
-        list.add(new ClassDetailResponse.AttendanceSessionRecordItem("s-4", 4, "2026-10-14T07:30:00Z", "PRESENT", "2026-10-14T07:32:44Z"));
-        list.add(new ClassDetailResponse.AttendanceSessionRecordItem("s-3", 3, "2026-10-07T07:30:00Z", "ABSENT", null));
-        list.add(new ClassDetailResponse.AttendanceSessionRecordItem("s-2", 2, "2026-09-30T07:30:00Z", "PRESENT", "2026-09-30T07:31:05Z"));
-        list.add(new ClassDetailResponse.AttendanceSessionRecordItem("s-1", 1, "2026-09-23T07:30:00Z", "PRESENT", "2026-09-23T07:34:50Z"));
-        fallback.setAttendanceRecords(list);
-
-        return fallback;
     }
 
     public static boolean shouldShowAbsenceWarning(int absentCount) {

@@ -21,8 +21,6 @@ import com.ppquang06.uniclassapp.data.model.response.AssignmentDetailResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentAssignmentDetailBinding;
 import com.ppquang06.uniclassapp.ui.common.UiBadgeHelper;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.Locale;
 
 import retrofit2.Call;
@@ -150,9 +148,12 @@ public class StudentAssignmentDetailFragment extends Fragment {
 
     private void loadAssignmentDetail() {
         if (getContext() == null || assignmentId == null || assignmentId.trim().isEmpty()) {
-            currentDetail = buildFallbackDetail();
-            binding.swipeRefresh.setRefreshing(false);
-            renderState();
+            if (binding != null) {
+                binding.swipeRefresh.setRefreshing(false);
+            }
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Mã bài tập không hợp lệ", Toast.LENGTH_SHORT).show();
+            }
             return;
         }
 
@@ -167,18 +168,25 @@ public class StudentAssignmentDetailFragment extends Fragment {
                         binding.swipeRefresh.setRefreshing(false);
                         if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
                             currentDetail = response.body().getData();
+                            renderState();
                         } else {
-                            currentDetail = buildFallbackDetail();
+                            String msg = "Không thể tải chi tiết bài tập";
+                            if (response.body() != null && response.body().getMessage() != null) {
+                                msg = response.body().getMessage();
+                            }
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                        renderState();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<AssignmentDetailResponse>> call, @NonNull Throwable t) {
                         if (binding == null) return;
                         binding.swipeRefresh.setRefreshing(false);
-                        currentDetail = buildFallbackDetail();
-                        renderState();
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
     }
@@ -210,7 +218,12 @@ public class StudentAssignmentDetailFragment extends Fragment {
                             selectedFileUrl = null;
                             renderState();
                         } else {
-                            handleLocalSubmissionSimulation();
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage()
+                                    : "Nộp bài thất bại. Vui lòng thử lại.";
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                            }
                         }
                     }
 
@@ -219,36 +232,11 @@ public class StudentAssignmentDetailFragment extends Fragment {
                         if (binding == null) return;
                         binding.pbUploadProgress.setVisibility(View.GONE);
                         binding.btnSubmit.setEnabled(true);
-                        handleLocalSubmissionSimulation();
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), "Nộp bài thất bại: " + (t.getMessage() != null ? t.getMessage() : "Lỗi kết nối máy chủ"), Toast.LENGTH_SHORT).show();
+                        }
                     }
                 });
-    }
-
-    private void handleLocalSubmissionSimulation() {
-        if (currentDetail == null) {
-            currentDetail = buildFallbackDetail();
-        }
-        currentDetail.setSubmitted(true);
-        currentDetail.setSubmittedFileUrl(selectedFileUrl != null ? selectedFileUrl : "https://example.com/demo.pdf");
-        currentDetail.setSubmittedAt(Instant.now().toString());
-
-        selectedFileName = null;
-        selectedFileUrl = null;
-        if (getContext() != null) {
-            Toast.makeText(requireContext(), R.string.assignment_submit_success, Toast.LENGTH_SHORT).show();
-        }
-        renderState();
-    }
-
-    private AssignmentDetailResponse buildFallbackDetail() {
-        AssignmentDetailResponse detail = new AssignmentDetailResponse();
-        detail.setId(assignmentId);
-        detail.setTitle(assignmentTitle != null && !assignmentTitle.isEmpty() ? assignmentTitle : "Bài tập lớn môn học");
-        detail.setClassName(className != null && !className.isEmpty() ? className : "Học phần EduLens");
-        detail.setDescription("Sinh viên hoàn thành bài tập theo tài liệu đính kèm và nộp báo cáo đúng thời hạn.");
-        detail.setDeadline(Instant.now().plus(Duration.ofDays(2)).toString());
-        detail.setSubmitted(false);
-        return detail;
     }
 
     private void renderState() {

@@ -7,6 +7,7 @@ import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -22,8 +23,8 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
         void onFileSelected(String fileName, String fileUrl);
     }
 
-    private static final String DEMO_FILE_NAME = "bao_cao_bai_tap_nhom.pdf";
-    private static final String DEMO_FILE_URL = "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
+    private static final String SAMPLE_FILE_NAME = "bai_nop_mau.pdf";
+    private static final String SAMPLE_FILE_URL = "content://com.ppquang06.uniclassapp/sample/bai_nop_mau.pdf";
 
     private DialogPickFileTypeBottomSheetBinding binding;
     private OnFileSelectedListener listener;
@@ -64,7 +65,7 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
 
         binding.btnPickDemoFile.setOnClickListener(v -> {
             if (listener != null) {
-                listener.onFileSelected(DEMO_FILE_NAME, DEMO_FILE_URL);
+                listener.onFileSelected(SAMPLE_FILE_NAME, SAMPLE_FILE_URL);
             }
             dismiss();
         });
@@ -74,8 +75,8 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
         try {
             filePickerLauncher.launch(mimeType);
         } catch (Exception e) {
-            if (listener != null) {
-                listener.onFileSelected(DEMO_FILE_NAME, DEMO_FILE_URL);
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Không thể mở bộ chọn tệp", Toast.LENGTH_SHORT).show();
             }
             dismiss();
         }
@@ -93,7 +94,7 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
     }
 
     private String queryFileName(Uri uri) {
-        if (uri == null) return DEMO_FILE_NAME;
+        if (uri == null) return "tep_tin_chon.pdf";
         String result = null;
         if (getContext() != null && "content".equalsIgnoreCase(uri.getScheme())) {
             try (Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null)) {
@@ -114,7 +115,7 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
                 }
             }
         }
-        return (result != null && !result.trim().isEmpty()) ? result : DEMO_FILE_NAME;
+        return (result != null && !result.trim().isEmpty()) ? result : "tep_tin_chon.pdf";
     }
 
     @Override

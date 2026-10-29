@@ -40,6 +40,9 @@ public class AttendanceScanFlowTest {
         assertEquals(StudentScanVerifyingFragment.ERROR_DEVICE_ALREADY_USED,
                 StudentScanVerifyingFragment.classifyError(400, "DEVICE_ALREADY_USED", null));
 
+        assertEquals(StudentScanVerifyingFragment.ERROR_NETWORK,
+                StudentScanVerifyingFragment.classifyError(500, "NETWORK_ERROR", null));
+
         // Simulation mode takes precedence
         assertEquals(StudentScanVerifyingFragment.ERROR_WIFI_MISMATCH,
                 StudentScanVerifyingFragment.classifyError(40010, "QR_EXPIRED", "WIFI_MISMATCH"));
@@ -115,6 +118,23 @@ public class AttendanceScanFlowTest {
         assertEquals(StudentScanVerifyingFragment.STEP_STATE_PASSED, config.step1State);
         assertEquals(StudentScanVerifyingFragment.STEP_STATE_PASSED, config.step2State);
         assertEquals(StudentScanVerifyingFragment.STEP_STATE_FAILED, config.step3State);
+    }
+
+    @Test
+    public void resolveErrorConfig_networkErrorShowsFailedStep1() {
+        StudentScanResultFragment.ErrorConfig config =
+                StudentScanResultFragment.resolveErrorConfig(StudentScanVerifyingFragment.ERROR_NETWORK);
+
+        assertEquals(R.string.error_network_title, config.titleRes);
+        assertEquals(R.string.error_network_desc, config.subtitleRes);
+        assertEquals(R.string.error_network_advice, config.adviceRes);
+        assertEquals(R.drawable.ic_error_circle, config.iconRes);
+        assertEquals(R.color.color_error, config.iconTintRes);
+        assertEquals(R.drawable.bg_circle_red_light, config.heroBgRes);
+
+        assertEquals(StudentScanVerifyingFragment.STEP_STATE_FAILED, config.step1State);
+        assertEquals(StudentScanVerifyingFragment.STEP_STATE_WAITING, config.step2State);
+        assertEquals(StudentScanVerifyingFragment.STEP_STATE_WAITING, config.step3State);
     }
 
     @Test
