@@ -129,9 +129,9 @@ public class LecturerClassStatisticsFragment extends Fragment {
         }
 
         if (TextUtils.isEmpty(classId)) {
-            bindData(buildFallbackStatistics());
             binding.pbLoadingStats.setVisibility(View.GONE);
             binding.swipeRefreshStats.setRefreshing(false);
+            Toast.makeText(requireContext(), "Thiếu thông tin lớp học", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -145,10 +145,12 @@ public class LecturerClassStatisticsFragment extends Fragment {
                         binding.pbLoadingStats.setVisibility(View.GONE);
                         binding.swipeRefreshStats.setRefreshing(false);
 
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             bindData(response.body().getData());
                         } else {
-                            bindData(buildFallbackStatistics());
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Không thể tải thống kê lớp học";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -157,7 +159,7 @@ public class LecturerClassStatisticsFragment extends Fragment {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoadingStats.setVisibility(View.GONE);
                         binding.swipeRefreshStats.setRefreshing(false);
-                        bindData(buildFallbackStatistics());
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -196,7 +198,7 @@ public class LecturerClassStatisticsFragment extends Fragment {
         // Attendance Overview
         binding.progressAttendanceOverview.setProgress(attendanceRate);
         binding.tvAttendanceOverviewPercent.setText(attendanceRate + "%");
-        binding.tvEnrolledSummary.setText("Sĩ số lớp: " + (data.getEnrolledCount() > 0 ? data.getEnrolledCount() : 42) + " sinh viên");
+        binding.tvEnrolledSummary.setText("Sĩ số lớp: " + Math.max(0, data.getEnrolledCount()) + " sinh viên");
 
         // Warning Students List
         renderWarningStudents(data.getWarningStudents());
@@ -298,9 +300,9 @@ public class LecturerClassStatisticsFragment extends Fragment {
     private void renderScoreDistribution(List<ScoreBucket> distribution) {
         if (binding == null) return;
 
-        // Default buckets if null
+        // Default empty buckets if null
         if (distribution == null || distribution.size() < 6) {
-            distribution = buildDefaultScoreBuckets();
+            distribution = buildEmptyScoreBuckets();
         }
 
         int maxCount = 1;
@@ -368,16 +370,21 @@ public class LecturerClassStatisticsFragment extends Fragment {
                                            @NonNull Response<ApiResponse<CourseClassItem>> response) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoadingStats.setVisibility(View.GONE);
-                        markClassArchivedUi();
-                        Toast.makeText(requireContext(), "Đã lưu trữ lớp học thành công", Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            markClassArchivedUi();
+                            Toast.makeText(requireContext(), "Đã lưu trữ lớp học thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Lưu trữ lớp học thất bại";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<CourseClassItem>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoadingStats.setVisibility(View.GONE);
-                        markClassArchivedUi();
-                        Toast.makeText(requireContext(), "Đã lưu trữ lớp học thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -399,35 +406,14 @@ public class LecturerClassStatisticsFragment extends Fragment {
         return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, getResources().getDisplayMetrics());
     }
 
-    private ClassStatisticsResponse buildFallbackStatistics() {
-        List<ClassMemberItemResponse> warnings = new ArrayList<>();
-        warnings.add(new ClassMemberItemResponse("stu-w1", "Phạm Hoàng Đạt", "dat.ph@uit.edu.vn", "21520040", "PD", 67, 5, 15, 2, 4, 5.5, null));
-        warnings.add(new ClassMemberItemResponse("stu-w2", "Vũ Minh Quân", "quan.vm@uit.edu.vn", "21520041", "VQ", 73, 4, 15, 3, 4, 6.0, null));
-        warnings.add(new ClassMemberItemResponse("stu-w3", "Lê Thanh Sơn", "son.lt@uit.edu.vn", "21520042", "LS", 60, 6, 15, 1, 4, 4.2, null));
-
-        return new ClassStatisticsResponse(
-                classId,
-                classCode,
-                className,
-                semester,
-                "ACTIVE",
-                42,
-                88,
-                3,
-                7.8,
-                warnings,
-                buildDefaultScoreBuckets()
-        );
-    }
-
-    private List<ScoreBucket> buildDefaultScoreBuckets() {
+    private List<ScoreBucket> buildEmptyScoreBuckets() {
         List<ScoreBucket> list = new ArrayList<>();
-        list.add(new ScoreBucket("0–2", 1, 2));
-        list.add(new ScoreBucket("2–4", 2, 5));
-        list.add(new ScoreBucket("4–6", 7, 17));
-        list.add(new ScoreBucket("6–8", 18, 43));
-        list.add(new ScoreBucket("8–9", 10, 24));
-        list.add(new ScoreBucket("9–10", 4, 9));
+        list.add(new ScoreBucket("0–2", 0, 0));
+        list.add(new ScoreBucket("2–4", 0, 0));
+        list.add(new ScoreBucket("4–6", 0, 0));
+        list.add(new ScoreBucket("6–8", 0, 0));
+        list.add(new ScoreBucket("8–9", 0, 0));
+        list.add(new ScoreBucket("9–10", 0, 0));
         return list;
     }
 

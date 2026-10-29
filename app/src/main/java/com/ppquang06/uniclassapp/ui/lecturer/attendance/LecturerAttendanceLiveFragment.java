@@ -158,9 +158,9 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         }
 
         if (TextUtils.isEmpty(sessionId)) {
-            bindData(buildFallbackLiveSession());
             binding.pbLoadingLive.setVisibility(View.GONE);
             binding.swipeRefreshLive.setRefreshing(false);
+            Toast.makeText(requireContext(), "Thiếu mã phiên điểm danh", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -174,10 +174,12 @@ public class LecturerAttendanceLiveFragment extends Fragment {
                         binding.pbLoadingLive.setVisibility(View.GONE);
                         binding.swipeRefreshLive.setRefreshing(false);
 
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             bindData(response.body().getData());
                         } else {
-                            bindData(buildFallbackLiveSession());
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Không thể tải phiên điểm danh";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -186,7 +188,7 @@ public class LecturerAttendanceLiveFragment extends Fragment {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoadingLive.setVisibility(View.GONE);
                         binding.swipeRefreshLive.setRefreshing(false);
-                        bindData(buildFallbackLiveSession());
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -203,7 +205,7 @@ public class LecturerAttendanceLiveFragment extends Fragment {
             binding.tvLiveClassCodeRoom.setText(classCode + (!TextUtils.isEmpty(data.getRoom()) ? " · " + data.getRoom() : ""));
         }
 
-        int total = data.getTotalStudents() > 0 ? data.getTotalStudents() : 42;
+        int total = Math.max(0, data.getTotalStudents());
         int present = data.getPresentCount();
         int absent = data.getAbsentCount() > 0 ? data.getAbsentCount() : Math.max(0, total - present);
 
@@ -247,16 +249,21 @@ public class LecturerAttendanceLiveFragment extends Fragment {
                                            @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoadingLive.setVisibility(View.GONE);
-                        markSessionClosedUi();
-                        Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            markSessionClosedUi();
+                            Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Chốt phiên điểm danh thất bại";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoadingLive.setVisibility(View.GONE);
-                        markSessionClosedUi();
-                        Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -271,37 +278,6 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         binding.btnCloseSessionLive.setText("Quay về chi tiết lớp");
         binding.btnCloseSessionLive.setOnClickListener(v -> navigateBackToClassDetail());
         binding.btnCloseSessionLive.setBackgroundTintList(ColorStateList.valueOf(requireContext().getColor(R.color.color_primary)));
-    }
-
-    private LiveAttendanceSessionResponse buildFallbackLiveSession() {
-        List<AttendeeItem> sampleAttendees = new ArrayList<>();
-        sampleAttendees.add(new AttendeeItem("stu-1", "Nguyễn Văn An", "21520001", "NA", "PRESENT", "08:15:22", "dev-01"));
-        sampleAttendees.add(new AttendeeItem("stu-2", "Trần Thị Bích", "21520002", "TB", "PRESENT", "08:16:05", "dev-02"));
-        sampleAttendees.add(new AttendeeItem("stu-3", "Lê Hoàng Cường", "21520003", "LC", "PRESENT", "08:16:40", "dev-03"));
-        sampleAttendees.add(new AttendeeItem("stu-4", "Phạm Đăng Dũng", "21520004", "PD", "PRESENT", "08:17:12", "dev-04"));
-        sampleAttendees.add(new AttendeeItem("stu-5", "Hoàng Mai Em", "21520005", "HE", "PRESENT", "08:18:00", "dev-05"));
-        sampleAttendees.add(new AttendeeItem("stu-6", "Vũ Quốc Gia", "21520006", "VG", "PRESENT", "08:19:15", "dev-06"));
-        sampleAttendees.add(new AttendeeItem("stu-7", "Đỗ Hải Hưng", "21520007", "DH", "PRESENT", "08:20:30", "dev-07"));
-        sampleAttendees.add(new AttendeeItem("stu-8", "Ngô Khánh Linh", "21520008", "NL", "PRESENT", "08:21:02", "dev-08"));
-
-        return new LiveAttendanceSessionResponse(
-                sessionId,
-                classId,
-                classCode,
-                className,
-                room,
-                "INV-123",
-                "OPEN",
-                "00:11:22:33:44:55",
-                10.8700,
-                106.8031,
-                50.0,
-                "2026-10-28 08:00:00",
-                42,
-                38,
-                4,
-                sampleAttendees
-        );
     }
 
     @Override

@@ -12,6 +12,7 @@ import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
 import com.ppquang06.uniclassapp.data.model.request.GradeSubmissionRequest;
 import com.ppquang06.uniclassapp.data.model.request.OpenQrSessionRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
@@ -245,5 +246,39 @@ public class LecturerClassFlowTest {
         String formatted = String.format(shareFormat, className, inviteCode);
 
         assertEquals("Mã tham gia lớp học Thiết kế giao diện người dùng trên EduLens: K7M-2QX", formatted);
+    }
+
+    @Test
+    public void classDetailResponse_emptyListsAndZeroMetrics_deserializesCleanly() {
+        ClassDetailResponse response = new ClassDetailResponse();
+        response.setId("c-empty-001");
+        response.setCode("NT118.NEW");
+        response.setName("Lớp mới tạo");
+        response.setSemester("HK1 (2026-2027)");
+        response.setRoom("B1.01");
+        response.setLecturerName("TS. Nguyễn Văn A");
+        response.setInviteCode("NEW-123");
+        response.setEnrolledCount(0);
+        response.setAttendanceRate(0);
+        response.setPresentCount(0);
+        response.setAbsentCount(0);
+        response.setTotalSessions(15);
+        response.setAnnouncements(Collections.emptyList());
+        response.setMaterials(Collections.emptyList());
+        response.setAssignments(Collections.emptyList());
+
+        String json = gson.toJson(response);
+        ClassDetailResponse deserialized = gson.fromJson(json, ClassDetailResponse.class);
+
+        assertEquals(0, deserialized.getEnrolledCount());
+        assertEquals(0, deserialized.getAttendanceRate());
+        assertEquals(0, deserialized.getPresentCount());
+        assertEquals(0, deserialized.getAbsentCount());
+        assertNotNull(deserialized.getAnnouncements());
+        assertTrue(deserialized.getAnnouncements().isEmpty());
+        assertNotNull(deserialized.getMaterials());
+        assertTrue(deserialized.getMaterials().isEmpty());
+        assertNotNull(deserialized.getAssignments());
+        assertTrue(deserialized.getAssignments().isEmpty());
     }
 }

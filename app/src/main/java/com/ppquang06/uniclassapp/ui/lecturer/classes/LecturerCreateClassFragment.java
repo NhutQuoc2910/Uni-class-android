@@ -20,9 +20,6 @@ import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerCreateClassBinding;
 
-import java.util.Random;
-import java.util.UUID;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -98,8 +95,9 @@ public class LecturerCreateClassFragment extends Fragment {
                             CourseClassItem created = response.body().getData();
                             navigateToInvite(created.getId(), created.getCode(), created.getName(), created.getInviteCode());
                         } else {
-                            // Fallback synthesis for offline / mock testing
-                            synthesizeAndNavigate(name, code, semester, room);
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : getString(R.string.cannot_load_classes);
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -107,41 +105,19 @@ public class LecturerCreateClassFragment extends Fragment {
                     public void onFailure(@NonNull Call<ApiResponse<CourseClassItem>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
                         setLoading(false);
-                        // Fallback synthesis for offline / mock testing
-                        synthesizeAndNavigate(name, code, semester, room);
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
 
-    private void synthesizeAndNavigate(String name, String code, String semester, String room) {
-        String randomInvite = generateFallbackInviteCode();
-        String syntheticId = UUID.randomUUID().toString();
-        if (getContext() != null) {
-            Toast.makeText(requireContext(), "Tạo lớp thành công (chế độ ngoại tuyến)", Toast.LENGTH_SHORT).show();
-        }
-        navigateToInvite(syntheticId, code, name, randomInvite);
-    }
 
-    private String generateFallbackInviteCode() {
-        String chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
-        Random random = new Random();
-        StringBuilder sb = new StringBuilder();
-        for (int i = 0; i < 3; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        sb.append("-");
-        for (int i = 0; i < 3; i++) {
-            sb.append(chars.charAt(random.nextInt(chars.length())));
-        }
-        return sb.toString();
-    }
 
     private void navigateToInvite(String classId, String classCode, String className, String inviteCode) {
         Bundle args = new Bundle();
         args.putString("classId", classId != null ? classId : "");
         args.putString("classCode", classCode != null ? classCode : "");
         args.putString("className", className != null ? className : "");
-        args.putString("inviteCode", inviteCode != null ? inviteCode : generateFallbackInviteCode());
+        args.putString("inviteCode", inviteCode != null ? inviteCode : "");
 
         NavOptions navOptions = new NavOptions.Builder()
                 .setPopUpTo(R.id.nav_lecturer_create_class, true)

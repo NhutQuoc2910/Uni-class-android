@@ -127,6 +127,18 @@ public class LecturerGradingFlowTest {
     }
 
     @Test
+    public void submissionsFilter_emptyList_returnsEmpty() {
+        List<SubmissionItem> emptyList = new ArrayList<>();
+        List<SubmissionItem> all = filterSubmissions(emptyList, 0);
+        assertNotNull(all);
+        assertTrue(all.isEmpty());
+
+        List<SubmissionItem> pending = filterSubmissions(emptyList, 1);
+        assertNotNull(pending);
+        assertTrue(pending.isEmpty());
+    }
+
+    @Test
     public void nextPreviousStudentNavigation_indexBoundsCheck() {
         int listSize = sampleSubmissions.size(); // 5
         int currentIndex = 0;

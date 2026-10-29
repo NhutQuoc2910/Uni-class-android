@@ -111,6 +111,18 @@ public class LecturerMemberFlowTest {
     }
 
     @Test
+    public void filterMembers_emptyList_returnsEmpty() {
+        List<ClassMemberItemResponse> emptyMembers = Collections.emptyList();
+        List<ClassMemberItemResponse> results = filterMembers(emptyMembers, "");
+        assertNotNull(results);
+        assertTrue(results.isEmpty());
+
+        List<ClassMemberItemResponse> searchResults = filterMembers(emptyMembers, "An");
+        assertNotNull(searchResults);
+        assertTrue(searchResults.isEmpty());
+    }
+
+    @Test
     public void absenceRateCalculation_andThresholdWarning() {
         // Safe attendance (<= 20% absence, <= 3 sessions)
         int absent1 = 1;

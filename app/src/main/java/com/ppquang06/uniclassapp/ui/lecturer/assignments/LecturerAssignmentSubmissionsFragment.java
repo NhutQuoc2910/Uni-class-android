@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -150,10 +151,12 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
 
                         if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             currentData = response.body().getData();
+                            bindData(currentData);
                         } else {
-                            currentData = buildFallbackData();
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Không thể tải danh sách bài nộp";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
-                        bindData(currentData);
                     }
 
                     @Override
@@ -161,9 +164,7 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
                         binding.swipeRefresh.setRefreshing(false);
-
-                        currentData = buildFallbackData();
-                        bindData(currentData);
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -184,7 +185,7 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
             binding.tvDueDate.setText("Hạn nộp: " + dueDate);
         }
 
-        int total = data.getTotalStudents() > 0 ? data.getTotalStudents() : 45;
+        int total = Math.max(0, data.getTotalStudents());
         int submitted = data.getSubmittedCount();
         binding.tvSubmittedRatio.setText(getString(R.string.submitted_ratio_format, submitted, total));
 
@@ -226,31 +227,6 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
             binding.tvEmptySubmissions.setVisibility(View.GONE);
             binding.rvSubmissions.setVisibility(View.VISIBLE);
         }
-    }
-
-    private AssignmentSubmissionListResponse buildFallbackData() {
-        AssignmentSubmissionListResponse fallback = new AssignmentSubmissionListResponse();
-        fallback.setAssignmentId(assignmentId != null && !assignmentId.isEmpty() ? assignmentId : "assign-mock-001");
-        fallback.setAssignmentTitle(assignmentTitle != null && !assignmentTitle.isEmpty() ? assignmentTitle : "Bài tập 1: Layouts & Navigation");
-        fallback.setClassCode(classCode != null && !classCode.isEmpty() ? classCode : "NT118.O21");
-        fallback.setDeadline(dueDate != null && !dueDate.isEmpty() ? dueDate : "2026-10-30 23:59");
-        fallback.setTotalStudents(45);
-        fallback.setSubmittedCount(42);
-        fallback.setGradedCount(20);
-        fallback.setOnTimeCount(38);
-        fallback.setLateCount(4);
-        fallback.setNotSubmittedCount(3);
-
-        List<SubmissionItem> list = new ArrayList<>();
-        list.add(new SubmissionItem("sub-1", "stu-1", "Nguyễn Văn An", "21520001", "NA", true, false, "2026-10-28 20:30", "https://storage.uniclass.edu.vn/sub/21520001_bt1.pdf", 9.0, "Bài làm rất tốt, giao diện đúng chuẩn Figma"));
-        list.add(new SubmissionItem("sub-2", "stu-2", "Trần Thị Bích", "21520002", "TB", true, false, "2026-10-28 21:15", "https://storage.uniclass.edu.vn/sub/21520002_bt1.pdf", 8.5, "Đầy đủ các màn hình, cần tối ưu padding"));
-        list.add(new SubmissionItem("sub-3", "stu-3", "Lê Hoàng Cường", "21520003", "LC", true, true, "2026-10-29 08:45", "https://storage.uniclass.edu.vn/sub/21520003_bt1.docx", null, null));
-        list.add(new SubmissionItem("sub-4", "stu-4", "Phạm Đăng Dũng", "21520004", "PD", true, false, "2026-10-28 22:10", "https://storage.uniclass.edu.vn/sub/21520004_bt1.zip", null, null));
-        list.add(new SubmissionItem("sub-5", "stu-5", "Hoàng Mai Em", "21520005", "HE", false, false, null, null, null, null));
-        list.add(new SubmissionItem("sub-6", "stu-6", "Võ Quốc Giang", "21520006", "VG", true, true, "2026-10-29 10:20", "https://storage.uniclass.edu.vn/sub/21520006_bt1.pdf", 7.0, "Nộp trễ 10 tiếng, trừ 1 điểm quy chế"));
-
-        fallback.setSubmissions(list);
-        return fallback;
     }
 
     @Override

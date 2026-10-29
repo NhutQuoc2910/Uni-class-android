@@ -234,6 +234,18 @@ public class LecturerAttendanceAndStatsFlowTest {
     }
 
     @Test
+    public void testEmptyScoreDistribution_allBucketsZero() {
+        List<Double> emptyScores = new ArrayList<>();
+        List<ScoreBucket> buckets = computeScoreDistribution(emptyScores);
+        assertEquals(6, buckets.size());
+
+        for (ScoreBucket b : buckets) {
+            assertEquals(0, b.getCount());
+            assertEquals(0, b.getPercentage());
+        }
+    }
+
+    @Test
     public void testAverageScoreCalculation() {
         List<Double> scores = Arrays.asList(8.0, 7.0, 9.0, 8.0);
         double avg = calculateAverage(scores);

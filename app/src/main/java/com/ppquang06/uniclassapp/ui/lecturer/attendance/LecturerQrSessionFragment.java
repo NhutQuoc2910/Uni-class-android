@@ -125,7 +125,9 @@ public class LecturerQrSessionFragment extends Fragment {
 
     private void openOrInitializeSession() {
         if (getContext() == null || TextUtils.isEmpty(classId)) {
-            fallbackInitializeSession();
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Thiếu thông tin lớp học", Toast.LENGTH_SHORT).show();
+            }
             return;
         }
 
@@ -142,34 +144,28 @@ public class LecturerQrSessionFragment extends Fragment {
                         if (!isAdded() || binding == null) return;
                         binding.pbQrLoading.setVisibility(View.GONE);
 
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             LiveAttendanceSessionResponse data = response.body().getData();
-                            sessionId = data.getSessionId() != null ? data.getSessionId() : "SESSION-" + System.currentTimeMillis();
+                            sessionId = data.getSessionId() != null ? data.getSessionId() : "";
                             if (data.getWifiBssid() != null) wifiBssid = data.getWifiBssid();
                             if (data.getLatitude() != null) latitude = data.getLatitude();
                             if (data.getLongitude() != null) longitude = data.getLongitude();
                             setupHeader();
+                            startDynamicQrRotation();
                         } else {
-                            fallbackInitializeSession();
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Không thể khởi tạo phiên điểm danh";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
-
-                        startDynamicQrRotation();
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
                         binding.pbQrLoading.setVisibility(View.GONE);
-                        fallbackInitializeSession();
-                        startDynamicQrRotation();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void fallbackInitializeSession() {
-        if (TextUtils.isEmpty(sessionId)) {
-            sessionId = "SES-" + (classCode.replaceAll("[^A-Za-z0-9]", "") + "-" + System.currentTimeMillis() % 10000);
-        }
     }
 
     private void startDynamicQrRotation() {
@@ -178,7 +174,7 @@ public class LecturerQrSessionFragment extends Fragment {
     }
 
     private void refreshDynamicQr() {
-        if (!isAdded() || binding == null || !isSessionOpen) return;
+        if (!isAdded() || binding == null || !isSessionOpen || TextUtils.isEmpty(sessionId)) return;
 
         // Dynamic payload rotates based on sessionId and current rotation count/time
         String payload = "UNICLASS:" + (TextUtils.isEmpty(classCode) ? "CLASS" : classCode)
@@ -241,15 +237,20 @@ public class LecturerQrSessionFragment extends Fragment {
                     public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
                                            @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
                         if (!isAdded() || binding == null) return;
-                        markSessionClosedUi();
-                        Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            markSessionClosedUi();
+                            Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                        } else {
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Chốt phiên điểm danh thất bại";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
-                        markSessionClosedUi();
-                        Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

@@ -459,4 +459,6 @@
     <string name="dialog_archive_class_title">Lưu trữ lớp học này?</string>
     <string name="dialog_archive_class_msg">Lớp học sẽ chuyển sang trạng thái Đã lưu trữ (chỉ đọc). Sinh viên và giảng viên vẫn có thể xem lại dữ liệu nhưng không thể chỉnh sửa.</string>
     <string name="btn_archive_confirm">Lưu trữ lớp</string>
+    <string name="network_error">Lỗi kết nối mạng. Vui lòng thử lại sau.</string>
+    <string name="cannot_load_classes">Không thể tải thông tin lớp học</string>
 </resources>

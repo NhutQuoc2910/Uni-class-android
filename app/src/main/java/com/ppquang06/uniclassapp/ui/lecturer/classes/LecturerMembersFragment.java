@@ -128,10 +128,12 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
                         binding.pbLoading.setVisibility(View.GONE);
                         binding.swipeRefresh.setRefreshing(false);
 
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null && !response.body().getData().isEmpty()) {
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             setMembersList(response.body().getData());
                         } else {
-                            synthesizeFallbackMembers();
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Không thể tải danh sách sinh viên";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
                     }
 
@@ -140,69 +142,9 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
                         if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
                         binding.swipeRefresh.setRefreshing(false);
-                        synthesizeFallbackMembers();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    private void synthesizeFallbackMembers() {
-        List<ClassMemberItemResponse> mocks = new ArrayList<>();
-
-        mocks.add(new ClassMemberItemResponse(
-                "stu-001", "Nguyễn Văn An", "an.nv@uit.edu.vn", "21520001",
-                "NA", 95, 1, 15, 4, 4, 8.8,
-                Arrays.asList(
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts", "2026-10-15", true, "2026-10-14 20:30", 9.0),
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit", "2026-10-22", true, "2026-10-21 18:15", 8.5)
-                )
-        ));
-
-        mocks.add(new ClassMemberItemResponse(
-                "stu-002", "Trần Thị Bích", "bich.tt@uit.edu.vn", "21520002",
-                "TB", 100, 0, 15, 4, 4, 9.2,
-                Arrays.asList(
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts", "2026-10-15", true, "2026-10-14 15:00", 9.5),
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit", "2026-10-22", true, "2026-10-22 10:00", 9.0)
-                )
-        ));
-
-        mocks.add(new ClassMemberItemResponse(
-                "stu-003", "Lê Hoàng Cường", "cuong.lh@uit.edu.vn", "21520003",
-                "LC", 87, 2, 15, 3, 4, 7.5,
-                Arrays.asList(
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts", "2026-10-15", true, "2026-10-15 22:45", 7.5),
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit", "2026-10-22", false, null, null)
-                )
-        ));
-
-        mocks.add(new ClassMemberItemResponse(
-                "stu-004", "Phạm Minh Duy", "duy.pm@uit.edu.vn", "21520004",
-                "PD", 73, 4, 15, 2, 4, 6.5,
-                Arrays.asList(
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts", "2026-10-15", true, "2026-10-15 23:50", 6.5),
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit", "2026-10-22", false, null, null)
-                )
-        ));
-
-        mocks.add(new ClassMemberItemResponse(
-                "stu-005", "Đặng Thu Hà", "ha.dt@uit.edu.vn", "21520005",
-                "DH", 93, 1, 15, 4, 4, 8.5,
-                Arrays.asList(
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts", "2026-10-15", true, "2026-10-14 21:00", 8.5),
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit", "2026-10-22", true, "2026-10-22 16:30", 8.5)
-                )
-        ));
-
-        mocks.add(new ClassMemberItemResponse(
-                "stu-006", "Vũ Quốc Huy", "huy.vq@uit.edu.vn", "21520006",
-                "VH", 60, 6, 15, 1, 4, 5.0,
-                Arrays.asList(
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts", "2026-10-15", true, "2026-10-16 08:00", 5.0),
-                        new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit", "2026-10-22", false, null, null)
-                )
-        ));
-
-        setMembersList(mocks);
     }
 
     private void setMembersList(List<ClassMemberItemResponse> list) {

@@ -84,7 +84,7 @@ public class LecturerClassInviteFragment extends Fragment {
         if (!className.isEmpty() || !classCode.isEmpty()) {
             binding.tvClassSubtitle.setText(className + (!classCode.isEmpty() ? (" · " + classCode) : ""));
         }
-        binding.tvInviteCode.setText(!inviteCode.isEmpty() ? inviteCode : "K7M-2QX");
+        binding.tvInviteCode.setText(!inviteCode.isEmpty() ? inviteCode : "");
     }
 
     private void setupListeners() {
@@ -95,7 +95,11 @@ public class LecturerClassInviteFragment extends Fragment {
 
     public void copyInviteCode() {
         if (getContext() == null) return;
-        String codeToCopy = !inviteCode.isEmpty() ? inviteCode : binding.tvInviteCode.getText().toString();
+        if (inviteCode.isEmpty()) {
+            Toast.makeText(requireContext(), "Chưa có mã mời", Toast.LENGTH_SHORT).show();
+            return;
+        }
+        String codeToCopy = inviteCode;
         ClipboardManager clipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard != null) {
             ClipData clip = ClipData.newPlainText("EduLens Invite Code", codeToCopy);
@@ -105,7 +109,13 @@ public class LecturerClassInviteFragment extends Fragment {
     }
 
     public void shareInviteCode() {
-        String codeToShare = !inviteCode.isEmpty() ? inviteCode : binding.tvInviteCode.getText().toString();
+        if (inviteCode.isEmpty()) {
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Chưa có mã mời", Toast.LENGTH_SHORT).show();
+            }
+            return;
+        }
+        String codeToShare = inviteCode;
         String shareBody = String.format(getString(R.string.share_code_format),
                 !className.isEmpty() ? className : classCode,
                 codeToShare);

@@ -61,6 +61,12 @@ public class LecturerGradingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         parseArguments();
+        if (submissions.isEmpty()) {
+            Toast.makeText(requireContext(), "Không có bài nộp nào để chấm", Toast.LENGTH_SHORT).show();
+            NavHostFragment.findNavController(this).popBackStack();
+            return;
+        }
+
         setupTopBar();
         setupQuickScoreChips();
         setupStudentSwitcher();
@@ -89,20 +95,18 @@ public class LecturerGradingFragment extends Fragment {
             } catch (Exception ignored) {}
         }
 
-        if (submissions.isEmpty()) {
-            submissions = buildFallbackSubmissions();
-        }
-
         // Clamp index
-        if (initialIndex >= 0 && initialIndex < submissions.size()) {
-            currentIndex = initialIndex;
-        } else {
-            currentIndex = 0;
-            // Try matching studentId
-            for (int i = 0; i < submissions.size(); i++) {
-                if (submissions.get(i).getStudentId().equals(studentId)) {
-                    currentIndex = i;
-                    break;
+        if (!submissions.isEmpty()) {
+            if (initialIndex >= 0 && initialIndex < submissions.size()) {
+                currentIndex = initialIndex;
+            } else {
+                currentIndex = 0;
+                // Try matching studentId
+                for (int i = 0; i < submissions.size(); i++) {
+                    if (submissions.get(i).getStudentId().equals(studentId)) {
+                        currentIndex = i;
+                        break;
+                    }
                 }
             }
         }
@@ -324,14 +328,20 @@ public class LecturerGradingFragment extends Fragment {
                                            @NonNull Response<ApiResponse<AssignmentSubmissionListResponse>> response) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.toast_draft_saved, Toast.LENGTH_SHORT).show();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            Toast.makeText(requireContext(), R.string.toast_draft_saved, Toast.LENGTH_SHORT).show();
+                        } else {
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Lưu bản nháp thất bại";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.toast_draft_saved, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -371,15 +381,20 @@ public class LecturerGradingFragment extends Fragment {
                                            @NonNull Response<ApiResponse<AssignmentSubmissionListResponse>> response) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
-                        onGradePublishedSuccess();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            onGradePublishedSuccess();
+                        } else {
+                            String msg = (response.body() != null && response.body().getMessage() != null)
+                                    ? response.body().getMessage() : "Chấm điểm thất bại";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
-                        // Graceful offline fallback
-                        onGradePublishedSuccess();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -414,17 +429,6 @@ public class LecturerGradingFragment extends Fragment {
             return url.substring(lastSlash + 1);
         }
         return url;
-    }
-
-    private List<SubmissionItem> buildFallbackSubmissions() {
-        List<SubmissionItem> list = new ArrayList<>();
-        list.add(new SubmissionItem("sub-1", "stu-1", "Nguyễn Văn An", "21520001", "NA", true, false, "2026-10-28 20:30", "https://storage.uniclass.edu.vn/sub/21520001_bt1.pdf", 9.0, "Bài làm rất tốt, giao diện đúng chuẩn Figma"));
-        list.add(new SubmissionItem("sub-2", "stu-2", "Trần Thị Bích", "21520002", "TB", true, false, "2026-10-28 21:15", "https://storage.uniclass.edu.vn/sub/21520002_bt1.pdf", 8.5, "Đầy đủ các màn hình, cần tối ưu padding"));
-        list.add(new SubmissionItem("sub-3", "stu-3", "Lê Hoàng Cường", "21520003", "LC", true, true, "2026-10-29 08:45", "https://storage.uniclass.edu.vn/sub/21520003_bt1.docx", null, null));
-        list.add(new SubmissionItem("sub-4", "stu-4", "Phạm Đăng Dũng", "21520004", "PD", true, false, "2026-10-28 22:10", "https://storage.uniclass.edu.vn/sub/21520004_bt1.zip", null, null));
-        list.add(new SubmissionItem("sub-5", "stu-5", "Hoàng Mai Em", "21520005", "HE", false, false, null, null, null, null));
-        list.add(new SubmissionItem("sub-6", "stu-6", "Võ Quốc Giang", "21520006", "VG", true, true, "2026-10-29 10:20", "https://storage.uniclass.edu.vn/sub/21520006_bt1.pdf", 7.0, "Nộp trễ 10 tiếng, trừ 1 điểm quy chế"));
-        return list;
     }
 
     @Override
