@@ -14,6 +14,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.google.gson.Gson;
@@ -289,10 +290,15 @@ public class StudentScanVerifyingFragment extends Fragment {
 
     private void navigateToResult(boolean isSuccess, String errorType, String resultJson) {
         Bundle bundle = createResultBundle(isSuccess, errorType, resultJson);
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.nav_student_scan_verifying, true)
+                .build();
         try {
-            Navigation.findNavController(requireView()).navigate(R.id.nav_student_scan_result, bundle);
+            Navigation.findNavController(requireView()).navigate(R.id.nav_student_scan_result, bundle, navOptions);
         } catch (Exception e) {
-            Toast.makeText(requireContext(), "Lỗi hiển thị kết quả", Toast.LENGTH_SHORT).show();
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Lỗi hiển thị kết quả", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 

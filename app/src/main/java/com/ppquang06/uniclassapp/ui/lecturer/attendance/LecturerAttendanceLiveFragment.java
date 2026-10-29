@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -74,7 +75,33 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         binding.topAppBar.tvRoleBadge.setVisibility(View.GONE);
         binding.topAppBar.ivAvatar.setVisibility(View.GONE);
         binding.topAppBar.ivBack.setVisibility(View.VISIBLE);
-        binding.topAppBar.ivBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
+        binding.topAppBar.ivBack.setOnClickListener(v -> handleBackNavigation());
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                handleBackNavigation();
+            }
+        });
+    }
+
+    private void handleBackNavigation() {
+        if (isSessionClosed) {
+            navigateBackToClassDetail();
+        } else {
+            NavHostFragment.findNavController(this).popBackStack();
+        }
+    }
+
+    private void navigateBackToClassDetail() {
+        try {
+            boolean popped = NavHostFragment.findNavController(this).popBackStack(R.id.nav_lecturer_class_detail, false);
+            if (!popped) {
+                NavHostFragment.findNavController(this).popBackStack();
+            }
+        } catch (Exception e) {
+            NavHostFragment.findNavController(this).popBackStack();
+        }
     }
 
     private void setupHeader() {
@@ -240,9 +267,10 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         binding.tvLiveSessionStatus.setBackgroundResource(R.drawable.bg_pill_gray);
         binding.tvLiveSessionStatus.setTextColor(requireContext().getColor(R.color.text_secondary));
 
-        binding.btnCloseSessionLive.setEnabled(false);
-        binding.btnCloseSessionLive.setText("Phiên đã chốt");
-        binding.btnCloseSessionLive.setBackgroundTintList(ColorStateList.valueOf(requireContext().getColor(R.color.outline_border)));
+        binding.btnCloseSessionLive.setEnabled(true);
+        binding.btnCloseSessionLive.setText("Quay về chi tiết lớp");
+        binding.btnCloseSessionLive.setOnClickListener(v -> navigateBackToClassDetail());
+        binding.btnCloseSessionLive.setBackgroundTintList(ColorStateList.valueOf(requireContext().getColor(R.color.color_primary)));
     }
 
     private LiveAttendanceSessionResponse buildFallbackLiveSession() {

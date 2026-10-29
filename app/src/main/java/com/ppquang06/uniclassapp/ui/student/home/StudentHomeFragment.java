@@ -24,6 +24,7 @@ import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentHomeBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
+import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
 import java.util.Collections;
@@ -115,30 +116,27 @@ public class StudentHomeFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(this::loadHomeSummary);
 
         binding.tvSeeAllCourses.setOnClickListener(v -> {
-            try {
-                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
-                        .navigate(R.id.nav_student_classes);
-            } catch (Exception e) {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_classes);
+            } else {
                 NavHostFragment.findNavController(StudentHomeFragment.this)
                         .navigate(R.id.nav_student_classes);
             }
         });
 
         binding.tvSeeAllAssignments.setOnClickListener(v -> {
-            try {
-                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
-                        .navigate(R.id.nav_student_notifications);
-            } catch (Exception e) {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_notifications);
+            } else {
                 NavHostFragment.findNavController(StudentHomeFragment.this)
                         .navigate(R.id.nav_student_notifications);
             }
         });
 
         binding.btnScanHero.setOnClickListener(v -> {
-            try {
-                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
-                        .navigate(R.id.nav_student_scan_qr);
-            } catch (Exception e) {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_scan_qr);
+            } else {
                 NavHostFragment.findNavController(StudentHomeFragment.this)
                         .navigate(R.id.nav_student_scan_qr);
             }

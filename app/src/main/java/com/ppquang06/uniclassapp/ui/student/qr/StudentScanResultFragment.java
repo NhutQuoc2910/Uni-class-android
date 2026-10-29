@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -18,6 +19,7 @@ import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentScanResultBinding;
+import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 
 public class StudentScanResultFragment extends Fragment {
 
@@ -208,22 +210,62 @@ public class StudentScanResultFragment extends Fragment {
     }
 
     private void setupButtons() {
-        binding.btnSuccessHome.setOnClickListener(v -> {
+        View.OnClickListener goHomeListener = v -> {
             try {
-                Navigation.findNavController(v).navigate(R.id.nav_student_home);
+                Navigation.findNavController(v).popBackStack(R.id.nav_student_scan_qr, true);
             } catch (Exception ignored) {}
-        });
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_home);
+            } else {
+                try {
+                    boolean popped = Navigation.findNavController(v).popBackStack(R.id.nav_student_home, false);
+                    if (!popped) {
+                        Navigation.findNavController(v).navigate(R.id.nav_student_home);
+                    }
+                } catch (Exception ignored) {}
+            }
+        };
+
+        binding.btnSuccessHome.setOnClickListener(goHomeListener);
+        binding.btnErrorHome.setOnClickListener(goHomeListener);
 
         binding.btnErrorRescan.setOnClickListener(v -> {
             try {
-                Navigation.findNavController(v).navigate(R.id.nav_student_scan_qr);
-            } catch (Exception ignored) {}
+                boolean popped = Navigation.findNavController(v).popBackStack(R.id.nav_student_scan_qr, false);
+                if (!popped) {
+                    Navigation.findNavController(v).navigate(R.id.nav_student_scan_qr);
+                }
+            } catch (Exception ignored) {
+                try {
+                    Navigation.findNavController(v).navigate(R.id.nav_student_scan_qr);
+                } catch (Exception ignored2) {}
+            }
         });
 
-        binding.btnErrorHome.setOnClickListener(v -> {
+        View.OnClickListener backListener = v -> {
             try {
-                Navigation.findNavController(v).navigate(R.id.nav_student_home);
-            } catch (Exception ignored) {}
+                if (isSuccess) {
+                    goHomeListener.onClick(v);
+                } else {
+                    boolean popped = Navigation.findNavController(v).popBackStack(R.id.nav_student_scan_qr, false);
+                    if (!popped) {
+                        goHomeListener.onClick(v);
+                    }
+                }
+            } catch (Exception e) {
+                goHomeListener.onClick(v);
+            }
+        };
+
+        if (binding.ivBack != null) {
+            binding.ivBack.setOnClickListener(backListener);
+        }
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                backListener.onClick(binding.getRoot());
+            }
         });
     }
 

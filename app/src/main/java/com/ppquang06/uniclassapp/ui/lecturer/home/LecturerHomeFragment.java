@@ -10,7 +10,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
@@ -22,6 +21,7 @@ import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerHomeBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
+import com.ppquang06.uniclassapp.ui.lecturer.LecturerMainActivity;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
 import java.util.Collections;
@@ -98,12 +98,10 @@ public class LecturerHomeFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(this::loadHomeSummary);
 
         binding.tvSeeAllCourses.setOnClickListener(v -> {
-            try {
-                Navigation.findNavController(requireActivity(), R.id.nav_host_lecturer)
-                        .navigate(R.id.nav_lecturer_classes);
-            } catch (Exception e) {
-                NavHostFragment.findNavController(LecturerHomeFragment.this)
-                        .navigate(R.id.nav_lecturer_classes);
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_classes);
+            } else {
+                NavHostFragment.findNavController(LecturerHomeFragment.this).navigate(R.id.nav_lecturer_classes);
             }
         });
 

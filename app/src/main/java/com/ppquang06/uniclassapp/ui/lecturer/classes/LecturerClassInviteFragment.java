@@ -10,9 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.ppquang06.uniclassapp.R;
@@ -57,13 +59,25 @@ public class LecturerClassInviteFragment extends Fragment {
         binding.topAppBar.tvRoleBadge.setVisibility(View.GONE);
         binding.topAppBar.ivAvatar.setVisibility(View.GONE);
         binding.topAppBar.ivBack.setVisibility(View.VISIBLE);
-        binding.topAppBar.ivBack.setOnClickListener(v -> {
-            try {
-                NavHostFragment.findNavController(this).popBackStack(R.id.nav_lecturer_classes, false);
-            } catch (Exception e) {
-                NavHostFragment.findNavController(this).popBackStack();
+        binding.topAppBar.ivBack.setOnClickListener(v -> navigateBackToClasses());
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                navigateBackToClasses();
             }
         });
+    }
+
+    private void navigateBackToClasses() {
+        try {
+            boolean popped = NavHostFragment.findNavController(this).popBackStack(R.id.nav_lecturer_classes, false);
+            if (!popped) {
+                NavHostFragment.findNavController(this).popBackStack();
+            }
+        } catch (Exception e) {
+            NavHostFragment.findNavController(this).popBackStack();
+        }
     }
 
     private void bindData() {
@@ -111,9 +125,13 @@ public class LecturerClassInviteFragment extends Fragment {
         args.putString("inviteCode", inviteCode);
         args.putString("status", "ACTIVE");
 
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.nav_lecturer_class_invite, true)
+                .build();
+
         try {
             NavHostFragment.findNavController(this)
-                    .navigate(R.id.nav_lecturer_class_detail, args);
+                    .navigate(R.id.nav_lecturer_class_detail, args, navOptions);
         } catch (Exception e) {
             try {
                 NavHostFragment.findNavController(this).popBackStack(R.id.nav_lecturer_classes, false);

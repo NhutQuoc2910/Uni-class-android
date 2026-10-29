@@ -17,11 +17,21 @@
         android:orientation="horizontal"
         android:paddingHorizontal="@dimen/space_16">
 
+        <ImageButton
+            android:id="@+id/ivBack"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_marginEnd="@dimen/space_8"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@string/desc_back_button"
+            android:src="@drawable/ic_arrow_back" />
+
         <TextView
             android:id="@+id/tvTopTitle"
             style="@style/TextAppearance.EduLens.Title"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             android:text="Kết quả điểm danh" />
     </LinearLayout>
 

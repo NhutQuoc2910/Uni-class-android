@@ -10,6 +10,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.ppquang06.uniclassapp.R;
@@ -142,9 +143,13 @@ public class LecturerCreateClassFragment extends Fragment {
         args.putString("className", className != null ? className : "");
         args.putString("inviteCode", inviteCode != null ? inviteCode : generateFallbackInviteCode());
 
+        NavOptions navOptions = new NavOptions.Builder()
+                .setPopUpTo(R.id.nav_lecturer_create_class, true)
+                .build();
+
         try {
             NavHostFragment.findNavController(this)
-                    .navigate(R.id.nav_lecturer_class_invite, args);
+                    .navigate(R.id.nav_lecturer_class_invite, args, navOptions);
         } catch (Exception e) {
             if (getContext() != null) {
                 Toast.makeText(requireContext(), "Mã mời: " + inviteCode, Toast.LENGTH_LONG).show();

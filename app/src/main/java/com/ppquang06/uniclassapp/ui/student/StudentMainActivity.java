@@ -44,12 +44,21 @@ public class StudentMainActivity extends AppCompatActivity {
         setupNavigation();
     }
 
+    public void switchToTab(int menuItemId) {
+        if (binding != null && binding.bottomNavStudent != null) {
+            binding.bottomNavStudent.setSelectedItemId(menuItemId);
+        }
+    }
+
     private void setupNavigation() {
         NavHostFragment navHostFragment = (NavHostFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.nav_host_student);
         if (navHostFragment != null) {
             NavController navController = navHostFragment.getNavController();
             NavigationUI.setupWithNavController(binding.bottomNavStudent, navController);
+            binding.bottomNavStudent.setOnItemReselectedListener(item -> {
+                navController.popBackStack(item.getItemId(), false);
+            });
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 int id = destination.getId();
                 if (id == R.id.nav_student_home
