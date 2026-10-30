@@ -9,6 +9,8 @@ import com.ppquang06.uniclassapp.data.model.request.VerifyOtpRequest;
 import com.ppquang06.uniclassapp.data.model.response.AuthResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.POST;
@@ -24,7 +26,7 @@ public interface AuthApiService {
     Call<ApiResponse<String>> forgotPassword(@Body ForgotPasswordRequest request);
 
     @POST("auth/verify-otp")
-    Call<ApiResponse<String>> verifyOtp(@Body VerifyOtpRequest request);
+    Call<ApiResponse<Map<String, Object>>> verifyOtp(@Body VerifyOtpRequest request);
 
     @POST("auth/reset-password")
     Call<ApiResponse<String>> resetPassword(@Body ResetPasswordRequest request);

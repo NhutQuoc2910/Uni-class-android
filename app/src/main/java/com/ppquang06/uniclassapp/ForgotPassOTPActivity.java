@@ -21,6 +21,8 @@ import com.ppquang06.uniclassapp.utils.Constants;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -174,9 +176,9 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
         setLoading(true);
 
         VerifyOtpRequest request = new VerifyOtpRequest(email, otp);
-        ApiClient.getAuthApiService(this).verifyOtp(request).enqueue(new Callback<ApiResponse<String>>() {
+        ApiClient.getAuthApiService(this).verifyOtp(request).enqueue(new Callback<ApiResponse<Map<String, Object>>>() {
             @Override
-            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
+            public void onResponse(Call<ApiResponse<Map<String, Object>>> call, Response<ApiResponse<Map<String, Object>>> response) {
                 setLoading(false);
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     Toast.makeText(ForgotPassOTPActivity.this, "Xác thực OTP thành công!", Toast.LENGTH_SHORT).show();
@@ -201,7 +203,7 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
+            public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {
                 setLoading(false);
                 Toast.makeText(ForgotPassOTPActivity.this, "Lỗi kết nối máy chủ: " + t.getMessage(), Toast.LENGTH_LONG).show();
             }

@@ -78,39 +78,39 @@ public interface UserClassApiService {
     // Lecturer Management Endpoints (Phase 4)
     // ==========================================
 
-    @POST("api/v1/classes")
+    @POST("classes")
     Call<ApiResponse<CourseClassItem>> createClass(@Body CreateClassRequest request);
 
-    @PUT("api/v1/classes/{classId}/archive")
+    @PUT("classes/{classId}/archive")
     Call<ApiResponse<CourseClassItem>> archiveClass(@Path("classId") String classId);
 
-    @GET("api/v1/classes/{classId}/members")
+    @GET("classes/{classId}/members")
     Call<ApiResponse<List<ClassMemberItemResponse>>> getClassMembers(@Path("classId") String classId);
 
-    @DELETE("api/v1/classes/{classId}/members/{studentId}")
+    @DELETE("classes/{classId}/members/{studentId}")
     Call<ApiResponse<Void>> removeClassMember(@Path("classId") String classId, @Path("studentId") String studentId);
 
-    @POST("api/v1/classes/{classId}/materials")
+    @POST("classes/{classId}/materials")
     Call<ApiResponse<ClassDetailResponse.MaterialItem>> createMaterial(@Path("classId") String classId, @Body CreateMaterialRequest request);
 
-    @GET("api/v1/classes/{classId}/statistics")
+    @GET("classes/{classId}/statistics")
     Call<ApiResponse<ClassStatisticsResponse>> getClassStatistics(@Path("classId") String classId);
 
-    @POST("api/v1/classes/{classId}/assignments")
+    @POST("classes/{classId}/assignments")
     Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> createAssignment(@Path("classId") String classId, @Body CreateAssignmentRequest request);
 
-    @GET("api/v1/assignments/{assignmentId}/submissions")
+    @GET("assignments/{assignmentId}/submissions")
     Call<ApiResponse<AssignmentSubmissionListResponse>> getAssignmentSubmissions(@Path("assignmentId") String assignmentId);
 
-    @PUT("api/v1/assignments/{assignmentId}/submissions/{studentId}/grade")
+    @PUT("assignments/{assignmentId}/submissions/{studentId}/grade")
     Call<ApiResponse<AssignmentSubmissionListResponse>> gradeSubmission(@Path("assignmentId") String assignmentId, @Path("studentId") String studentId, @Body GradeSubmissionRequest request);
 
-    @POST("api/v1/classes/{classId}/attendance-sessions")
+    @POST("classes/{classId}/attendance-sessions")
     Call<ApiResponse<LiveAttendanceSessionResponse>> openQrSession(@Path("classId") String classId, @Body OpenQrSessionRequest request);
 
-    @GET("api/v1/attendance-sessions/{sessionId}/live")
+    @GET("attendance-sessions/{sessionId}/live")
     Call<ApiResponse<LiveAttendanceSessionResponse>> getLiveAttendanceSession(@Path("sessionId") String sessionId);
 
-    @PUT("api/v1/attendance-sessions/{sessionId}/close")
+    @PUT("attendance-sessions/{sessionId}/close")
     Call<ApiResponse<LiveAttendanceSessionResponse>> closeAttendanceSession(@Path("sessionId") String sessionId);
 }
