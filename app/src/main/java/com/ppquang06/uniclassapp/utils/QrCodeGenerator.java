@@ -1,70 +1,80 @@
 package com.ppquang06.uniclassapp.utils;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.util.Log;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.EncodeHintType;
+import com.google.zxing.WriterException;
+import com.google.zxing.common.BitMatrix;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Utility for generating crisp dynamic QR code matrix bitmaps for EduLens attendance sessions.
+ * Utility for generating real ISO/IEC 18004 QR code bitmaps using ZXing for attendance sessions.
  */
 public final class QrCodeGenerator {
 
-    private static final int MATRIX_SIZE = 29; // Standard Version 3 QR grid size (29x29)
+    private static final String TAG = "QrCodeGenerator";
+    private static final int MATRIX_SIZE = 29;
 
     private QrCodeGenerator() {}
 
     /**
-     * Generates a 2D Bitmap representing a QR code matrix for the given content payload.
+     * Generates a real 2D QR Code Bitmap using ZXing QRCodeWriter for the given content payload.
+     * Any standard barcode reader can decode the resulting QR code.
      *
-     * @param content Dynamic payload (e.g., session ID + dynamic rotation nonce).
+     * @param content Dynamic payload (e.g., UNICLASS:<classCode>:<sessionId>:<timestamp>).
      * @param dimensionPx Width and height of the resulting Bitmap in pixels.
-     * @return Generated Bitmap with quiet zone margin and corner finder patterns.
+     * @return Generated Bitmap with quiet zone margin and valid QR structure.
      */
     public static Bitmap generateQrBitmap(String content, int dimensionPx) {
         if (dimensionPx <= 0) {
             dimensionPx = 512;
         }
-
-        boolean[][] matrix = generateMatrix(content != null ? content : "UNICLASS");
-        Bitmap bitmap = Bitmap.createBitmap(dimensionPx, dimensionPx, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-
-        // Fill background white
-        Paint bgPaint = new Paint();
-        bgPaint.setColor(Color.WHITE);
-        bgPaint.setStyle(Paint.Style.FILL);
-        canvas.drawRect(0, 0, dimensionPx, dimensionPx, bgPaint);
-
-        // Dark color for modules (Dark Slate #0F172A matching EduLens text_primary)
-        Paint darkPaint = new Paint();
-        darkPaint.setColor(0xFF0F172A);
-        darkPaint.setStyle(Paint.Style.FILL);
-
-        int quietZone = 2; // 2-module border
-        int totalModules = MATRIX_SIZE + (quietZone * 2);
-        float moduleSize = (float) dimensionPx / totalModules;
-
-        for (int r = 0; r < MATRIX_SIZE; r++) {
-            for (int c = 0; c < MATRIX_SIZE; c++) {
-                if (matrix[r][c]) {
-                    float left = (c + quietZone) * moduleSize;
-                    float top = (r + quietZone) * moduleSize;
-                    float right = left + moduleSize;
-                    float bottom = top + moduleSize;
-                    canvas.drawRect(left, top, right, bottom, darkPaint);
-                }
-            }
+        if (content == null || content.isEmpty()) {
+            content = "UNICLASS";
         }
 
-        return bitmap;
+        try {
+            QRCodeWriter writer = new QRCodeWriter();
+            Map<EncodeHintType, Object> hints = new HashMap<>();
+            hints.put(EncodeHintType.CHARACTER_SET, "UTF-8");
+            hints.put(EncodeHintType.MARGIN, 1);
+
+            BitMatrix bitMatrix = writer.encode(content, BarcodeFormat.QR_CODE, dimensionPx, dimensionPx, hints);
+            int width = bitMatrix.getWidth();
+            int height = bitMatrix.getHeight();
+
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            int[] pixels = new int[width * height];
+            int darkColor = 0xFF0F172A; // Dark Slate #0F172A matching EduLens text_primary
+            int lightColor = Color.WHITE;
+
+            for (int y = 0; y < height; y++) {
+                int offset = y * width;
+                for (int x = 0; x < width; x++) {
+                    pixels[offset + x] = bitMatrix.get(x, y) ? darkColor : lightColor;
+                }
+            }
+            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+            return bitmap;
+        } catch (WriterException e) {
+            Log.e(TAG, "Error encoding QR code with ZXing", e);
+            Bitmap fallback = Bitmap.createBitmap(dimensionPx, dimensionPx, Bitmap.Config.ARGB_8888);
+            fallback.eraseColor(Color.WHITE);
+            return fallback;
+        }
     }
 
     /**
      * Constructs a 29x29 QR matrix with standard finder patterns and payload-derived data cells.
+     * Retained for backward-compatible deterministic unit testing.
      */
     public static boolean[][] generateMatrix(String content) {
         boolean[][] grid = new boolean[MATRIX_SIZE][MATRIX_SIZE];
@@ -87,7 +97,7 @@ public final class QrCodeGenerator {
         placeAlignmentPattern(grid, reserved, MATRIX_SIZE - 9, MATRIX_SIZE - 9);
 
         // 4. Populate remaining modules deterministically using hash of content
-        byte[] hash = computeHash(content);
+        byte[] hash = computeHash(content != null ? content : "UNICLASS");
         int bitIndex = 0;
 
         for (int col = MATRIX_SIZE - 1; col >= 0; col--) {
@@ -143,7 +153,6 @@ public final class QrCodeGenerator {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             return digest.digest(text.getBytes(StandardCharsets.UTF_8));
         } catch (Exception e) {
-            // Fallback: simple byte expansion
             byte[] bytes = new byte[32];
             byte[] src = text.getBytes(StandardCharsets.UTF_8);
             for (int i = 0; i < 32; i++) {

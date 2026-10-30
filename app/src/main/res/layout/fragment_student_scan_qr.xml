@@ -66,6 +66,12 @@
                 android:layout_marginTop="@dimen/space_8"
                 android:background="@drawable/bg_qr_frame">
 
+                <!-- Real CameraX Live Preview -->
+                <androidx.camera.view.PreviewView
+                    android:id="@+id/previewView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" />
+
                 <!-- Center QR Placeholder Icon -->
                 <ImageView
                     android:id="@+id/ivQrCenter"

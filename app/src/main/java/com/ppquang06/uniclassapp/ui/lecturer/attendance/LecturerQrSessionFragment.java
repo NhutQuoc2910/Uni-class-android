@@ -1,5 +1,7 @@
 package com.ppquang06.uniclassapp.ui.lecturer.attendance;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.text.TextUtils;
@@ -8,8 +10,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.fragment.NavHostFragment;
 
@@ -20,6 +25,7 @@ import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.OpenQrSessionRequest;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerQrSessionBinding;
+import com.ppquang06.uniclassapp.utils.HardwareSensorAttendanceHelper;
 import com.ppquang06.uniclassapp.utils.QrCodeGenerator;
 
 import retrofit2.Call;
@@ -37,14 +43,19 @@ public class LecturerQrSessionFragment extends Fragment {
 
     private String sessionId = "";
     private boolean isSessionOpen = true;
-    private String wifiBssid = "00:11:22:33:44:55";
-    private double latitude = 10.8700;
-    private double longitude = 106.8031;
+    private String wifiBssid = HardwareSensorAttendanceHelper.DEFAULT_FALLBACK_BSSID;
+    private double latitude = HardwareSensorAttendanceHelper.DEFAULT_FALLBACK_LAT;
+    private double longitude = HardwareSensorAttendanceHelper.DEFAULT_FALLBACK_LNG;
     private double radiusMeters = 50.0;
 
     private CountDownTimer countDownTimer;
     private int rotationCount = 1;
     private static final int COUNTDOWN_SECONDS = 30;
+
+    private final ActivityResultLauncher<String[]> locationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
+                fetchTelemetryAndOpenSession();
+            });
 
     @Nullable
     @Override
@@ -131,41 +142,66 @@ public class LecturerQrSessionFragment extends Fragment {
             return;
         }
 
+        boolean fineGranted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+        if (!fineGranted) {
+            locationPermissionLauncher.launch(new String[]{
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+            });
+        } else {
+            fetchTelemetryAndOpenSession();
+        }
+    }
+
+    private void fetchTelemetryAndOpenSession() {
+        if (getContext() == null || TextUtils.isEmpty(classId)) {
+            return;
+        }
+
         binding.pbQrLoading.setVisibility(View.VISIBLE);
 
-        OpenQrSessionRequest request = new OpenQrSessionRequest(wifiBssid, latitude, longitude, radiusMeters);
+        wifiBssid = HardwareSensorAttendanceHelper.getBssid(requireContext());
 
-        ApiClient.getUserClassApiService(requireContext())
-                .openQrSession(classId, request)
-                .enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
-                                           @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbQrLoading.setVisibility(View.GONE);
+        HardwareSensorAttendanceHelper.getCurrentLocation(requireContext(), (lat, lng) -> {
+            if (!isAdded() || binding == null) return;
+            latitude = lat;
+            longitude = lng;
+            setupHeader();
 
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            LiveAttendanceSessionResponse data = response.body().getData();
-                            sessionId = data.getSessionId() != null ? data.getSessionId() : "";
-                            if (data.getWifiBssid() != null) wifiBssid = data.getWifiBssid();
-                            if (data.getLatitude() != null) latitude = data.getLatitude();
-                            if (data.getLongitude() != null) longitude = data.getLongitude();
-                            setupHeader();
-                            startDynamicQrRotation();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Không thể khởi tạo phiên điểm danh";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+            OpenQrSessionRequest request = new OpenQrSessionRequest(wifiBssid, latitude, longitude, radiusMeters);
+
+            ApiClient.getUserClassApiService(requireContext())
+                    .openQrSession(classId, request)
+                    .enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
+                                               @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
+                            if (!isAdded() || binding == null) return;
+                            binding.pbQrLoading.setVisibility(View.GONE);
+
+                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
+                                LiveAttendanceSessionResponse data = response.body().getData();
+                                sessionId = data.getSessionId() != null ? data.getSessionId() : "";
+                                if (data.getWifiBssid() != null) wifiBssid = data.getWifiBssid();
+                                if (data.getLatitude() != null) latitude = data.getLatitude();
+                                if (data.getLongitude() != null) longitude = data.getLongitude();
+                                setupHeader();
+                                startDynamicQrRotation();
+                            } else {
+                                String msg = (response.body() != null && response.body().getMessage() != null)
+                                        ? response.body().getMessage() : "Không thể khởi tạo phiên điểm danh";
+                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbQrLoading.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
+                            if (!isAdded() || binding == null) return;
+                            binding.pbQrLoading.setVisibility(View.GONE);
+                            Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+        });
     }
 
     private void startDynamicQrRotation() {

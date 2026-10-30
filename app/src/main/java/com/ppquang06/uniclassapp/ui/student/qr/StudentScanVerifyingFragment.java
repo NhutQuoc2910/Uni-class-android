@@ -3,6 +3,7 @@ package com.ppquang06.uniclassapp.ui.student.qr;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,7 @@ import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.AttendanceCheckInRequest;
 import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentScanVerifyingBinding;
+import com.ppquang06.uniclassapp.utils.HardwareSensorAttendanceHelper;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -46,6 +48,7 @@ public class StudentScanVerifyingFragment extends Fragment {
     private final Handler handler = new Handler(Looper.getMainLooper());
 
     private String sessionId;
+    private String qrPayload;
     private String wifiBssid;
     private String latitudeStr;
     private String longitudeStr;
@@ -66,49 +69,117 @@ public class StudentScanVerifyingFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         readArguments();
-        startVerificationFlow();
+        startSequentialHardwareVerification();
     }
 
     private void readArguments() {
         Bundle args = getArguments();
         if (args != null) {
-            sessionId = args.getString(StudentScanQrFragment.ARG_SESSION_ID, "DEMO_OPEN");
-            wifiBssid = args.getString(StudentScanQrFragment.ARG_WIFI_BSSID, "00:11:22:33:44:55");
-            latitudeStr = args.getString(StudentScanQrFragment.ARG_LATITUDE, "10.8700");
-            longitudeStr = args.getString(StudentScanQrFragment.ARG_LONGITUDE, "106.8031");
-            deviceId = args.getString(StudentScanQrFragment.ARG_DEVICE_ID, "android-student-device-01");
+            sessionId = args.getString(StudentScanQrFragment.ARG_SESSION_ID, "");
+            qrPayload = args.getString("qrPayload", "");
+            wifiBssid = args.getString(StudentScanQrFragment.ARG_WIFI_BSSID, "");
+            latitudeStr = args.getString(StudentScanQrFragment.ARG_LATITUDE, "");
+            longitudeStr = args.getString(StudentScanQrFragment.ARG_LONGITUDE, "");
+            deviceId = args.getString(StudentScanQrFragment.ARG_DEVICE_ID, "");
             simulationMode = args.getString(StudentScanQrFragment.ARG_SIMULATION_MODE, "");
+
+            if (TextUtils.isEmpty(sessionId) && !TextUtils.isEmpty(qrPayload)) {
+                String[] parts = qrPayload.split(":");
+                if (parts.length >= 3) {
+                    sessionId = parts[2];
+                } else {
+                    sessionId = qrPayload;
+                }
+            }
         }
     }
 
-    private void startVerificationFlow() {
-        // Initial visual states
+    private void startSequentialHardwareVerification() {
+        // Step 1: Check QR Session Payload
         updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_CHECKING);
         updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_WAITING);
         updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_WAITING);
 
-        Double lat = 10.8700;
-        Double lng = 106.8031;
-        try {
-            lat = Double.parseDouble(latitudeStr);
-            lng = Double.parseDouble(longitudeStr);
-        } catch (Exception ignored) {}
-
-        AttendanceCheckInRequest request = new AttendanceCheckInRequest(
-                sessionId,
-                wifiBssid,
-                lat,
-                lng,
-                deviceId
-        );
-
-        if (simulationMode != null && !simulationMode.isEmpty()) {
-            // Direct simulation mode
-            animateVerificationSequence(false, simulationMode, null);
+        if (TextUtils.isEmpty(sessionId) || StudentScanQrFragment.SIM_MODE_QR_EXPIRED.equals(simulationMode)) {
+            applyErrorToStepViews(ERROR_QR_EXPIRED);
+            handler.postDelayed(() -> {
+                if (!isAdded() || binding == null) return;
+                navigateToResult(false, ERROR_QR_EXPIRED, "");
+            }, 300);
             return;
         }
 
-        // Call real backend API
+        updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_PASSED);
+
+        // Step 2: Acquire WiFi BSSID
+        updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_CHECKING);
+        if (TextUtils.isEmpty(wifiBssid)) {
+            wifiBssid = HardwareSensorAttendanceHelper.getBssid(requireContext());
+        }
+
+        if (StudentScanQrFragment.SIM_MODE_WIFI_MISMATCH.equals(simulationMode)) {
+            applyErrorToStepViews(ERROR_WIFI_MISMATCH);
+            handler.postDelayed(() -> {
+                if (!isAdded() || binding == null) return;
+                navigateToResult(false, ERROR_WIFI_MISMATCH, "");
+            }, 300);
+            return;
+        }
+
+        updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_PASSED);
+
+        // Step 3: Acquire Hardware Device ID & Real GPS
+        updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_CHECKING);
+        if (TextUtils.isEmpty(deviceId)) {
+            deviceId = HardwareSensorAttendanceHelper.getDeviceId(requireContext());
+        }
+
+        if (StudentScanQrFragment.SIM_MODE_GPS_OUT_OF_RANGE.equals(simulationMode)) {
+            applyErrorToStepViews(ERROR_GPS_OUT_OF_RANGE);
+            handler.postDelayed(() -> {
+                if (!isAdded() || binding == null) return;
+                navigateToResult(false, ERROR_GPS_OUT_OF_RANGE, "");
+            }, 300);
+            return;
+        }
+
+        if (StudentScanQrFragment.SIM_MODE_DEVICE_ALREADY_USED.equals(simulationMode)) {
+            applyErrorToStepViews(ERROR_DEVICE_ALREADY_USED);
+            handler.postDelayed(() -> {
+                if (!isAdded() || binding == null) return;
+                navigateToResult(false, ERROR_DEVICE_ALREADY_USED, "");
+            }, 300);
+            return;
+        }
+
+        Double parsedLat = null;
+        Double parsedLng = null;
+        try {
+            if (!TextUtils.isEmpty(latitudeStr)) parsedLat = Double.parseDouble(latitudeStr);
+            if (!TextUtils.isEmpty(longitudeStr)) parsedLng = Double.parseDouble(longitudeStr);
+        } catch (Exception ignored) {}
+
+        if (parsedLat != null && parsedLng != null) {
+            callCheckInApi(sessionId, wifiBssid, parsedLat, parsedLng, deviceId);
+        } else {
+            HardwareSensorAttendanceHelper.getCurrentLocation(requireContext(), (lat, lng) -> {
+                if (!isAdded() || binding == null) return;
+                callCheckInApi(sessionId, wifiBssid, lat, lng, deviceId);
+            });
+        }
+    }
+
+    private void callCheckInApi(String sId, String bssid, double lat, double lng, String devId) {
+        if (!isAdded() || binding == null || getContext() == null) return;
+
+        AttendanceCheckInRequest request = new AttendanceCheckInRequest(
+                sId,
+                bssid,
+                lat,
+                lng,
+                devId
+        );
+
         ApiClient.getUserClassApiService(requireContext()).checkInAttendance(request)
                 .enqueue(new Callback<ApiResponse<AttendanceCheckInResponse>>() {
                     @Override
@@ -118,19 +189,49 @@ public class StudentScanVerifyingFragment extends Fragment {
 
                         if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             AttendanceCheckInResponse data = response.body().getData();
-                            animateVerificationSequence(true, null, data);
+                            updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_PASSED);
+                            handler.postDelayed(() -> {
+                                if (!isAdded() || binding == null) return;
+                                navigateToResult(true, "", gson.toJson(data));
+                            }, 300);
                         } else {
                             String classifiedError = resolveErrorFromResponse(response);
-                            animateVerificationSequence(false, classifiedError, null);
+                            applyErrorToStepViews(classifiedError);
+                            handler.postDelayed(() -> {
+                                if (!isAdded() || binding == null) return;
+                                navigateToResult(false, classifiedError, "");
+                            }, 300);
                         }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<AttendanceCheckInResponse>> call, @NonNull Throwable t) {
                         if (!isAdded() || binding == null) return;
-                        animateVerificationSequence(false, ERROR_NETWORK, null);
+                        applyErrorToStepViews(ERROR_NETWORK);
+                        handler.postDelayed(() -> {
+                            if (!isAdded() || binding == null) return;
+                            navigateToResult(false, ERROR_NETWORK, "");
+                        }, 300);
                     }
                 });
+    }
+
+    private void applyErrorToStepViews(String errorType) {
+        if (binding == null) return;
+        if (ERROR_QR_EXPIRED.equals(errorType) || ERROR_NETWORK.equals(errorType)) {
+            updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_FAILED);
+            updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_WAITING);
+            updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_WAITING);
+        } else if (ERROR_WIFI_MISMATCH.equals(errorType)) {
+            updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_PASSED);
+            updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_FAILED);
+            updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_WAITING);
+        } else {
+            // ERROR_GPS_OUT_OF_RANGE or ERROR_DEVICE_ALREADY_USED
+            updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_PASSED);
+            updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_PASSED);
+            updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_FAILED);
+        }
     }
 
     private String resolveErrorFromResponse(Response<ApiResponse<AttendanceCheckInResponse>> response) {
@@ -172,111 +273,8 @@ public class StudentScanVerifyingFragment extends Fragment {
         return ERROR_QR_EXPIRED;
     }
 
-    private void animateVerificationSequence(boolean isSuccess, @Nullable String errorType, @Nullable AttendanceCheckInResponse successData) {
-        if (isSuccess) {
-            // Step 1 pass at 500ms
-            handler.postDelayed(() -> {
-                if (!isAdded() || binding == null) return;
-                updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_PASSED);
-                updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_CHECKING);
-            }, 500);
-
-            // Step 2 pass at 1000ms
-            handler.postDelayed(() -> {
-                if (!isAdded() || binding == null) return;
-                updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_PASSED);
-                updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_CHECKING);
-            }, 1000);
-
-            // Step 3 pass at 1500ms
-            handler.postDelayed(() -> {
-                if (!isAdded() || binding == null) return;
-                updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_PASSED);
-            }, 1500);
-
-            // Navigate to Result at 2000ms
-            handler.postDelayed(() -> {
-                if (!isAdded() || binding == null) return;
-                String json = successData != null ? gson.toJson(successData) : "";
-                navigateToResult(true, "", json);
-            }, 2000);
-
-        } else {
-            String err = errorType != null ? errorType : ERROR_QR_EXPIRED;
-
-            if (ERROR_NETWORK.equals(err)) {
-                // Fails on Step 1 at 700ms due to network error
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_FAILED);
-                }, 700);
-
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    navigateToResult(false, ERROR_NETWORK, "");
-                }, 1400);
-
-            } else if (ERROR_QR_EXPIRED.equals(err)) {
-                // Fails on Step 1 at 700ms
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_FAILED);
-                }, 700);
-
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    navigateToResult(false, ERROR_QR_EXPIRED, "");
-                }, 1400);
-
-            } else if (ERROR_WIFI_MISMATCH.equals(err)) {
-                // Step 1 passes at 500ms, Step 2 checking
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_PASSED);
-                    updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_CHECKING);
-                }, 500);
-
-                // Step 2 fails at 1100ms
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_FAILED);
-                }, 1100);
-
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    navigateToResult(false, ERROR_WIFI_MISMATCH, "");
-                }, 1800);
-
-            } else {
-                // Step 1 passes at 500ms
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep1State, binding.ivStep1Status, STEP_STATE_PASSED);
-                    updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_CHECKING);
-                }, 500);
-
-                // Step 2 passes at 1000ms
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_PASSED);
-                    updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_CHECKING);
-                }, 1000);
-
-                // Step 3 fails at 1500ms
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_FAILED);
-                }, 1500);
-
-                handler.postDelayed(() -> {
-                    if (!isAdded() || binding == null) return;
-                    navigateToResult(false, err, "");
-                }, 2200);
-            }
-        }
-    }
-
     private void updateStepView(TextView tvState, ImageView ivStatus, int state) {
+        if (getContext() == null || tvState == null || ivStatus == null) return;
         switch (state) {
             case STEP_STATE_CHECKING:
                 tvState.setText(R.string.verifying_state_checking);
@@ -305,6 +303,7 @@ public class StudentScanVerifyingFragment extends Fragment {
     }
 
     private void navigateToResult(boolean isSuccess, String errorType, String resultJson) {
+        if (getView() == null || getContext() == null) return;
         Bundle bundle = createResultBundle(isSuccess, errorType, resultJson);
         NavOptions navOptions = new NavOptions.Builder()
                 .setPopUpTo(R.id.nav_student_scan_verifying, true)
