@@ -63,6 +63,7 @@ public class StudentScanQrFragment extends Fragment {
     private ExecutorService cameraExecutor;
     private ProcessCameraProvider cameraProvider;
     private Camera camera;
+    private BarcodeScanner barcodeScanner;
     private final AtomicBoolean isScanned = new AtomicBoolean(false);
 
     private final ActivityResultLauncher<String> cameraPermissionLauncher =
@@ -104,6 +105,8 @@ public class StudentScanQrFragment extends Fragment {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             if (cameraProvider == null) {
                 startCamera();
+            } else {
+                bindCameraUseCases();
             }
         }
     }
@@ -133,14 +136,17 @@ public class StudentScanQrFragment extends Fragment {
         BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
                 .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
                 .build();
-        BarcodeScanner barcodeScanner = BarcodeScanning.getClient(options);
+        if (barcodeScanner == null) {
+            barcodeScanner = BarcodeScanning.getClient(options);
+        }
 
         ImageAnalysis imageAnalysis = new ImageAnalysis.Builder()
                 .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
                 .build();
 
         imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
-            @androidx.annotation.OptIn(markerClass = androidx.camera.core.ExperimentalGetImage.class)
+            try {
+                @androidx.annotation.OptIn(markerClass = androidx.camera.core.ExperimentalGetImage.class)
             android.media.Image mediaImage = imageProxy.getImage();
             if (mediaImage != null && !isScanned.get()) {
                 InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
@@ -159,6 +165,10 @@ public class StudentScanQrFragment extends Fragment {
                         .addOnFailureListener(e -> Log.e(TAG, "Error processing barcode image", e))
                         .addOnCompleteListener(task -> imageProxy.close());
             } else {
+                imageProxy.close();
+            }
+            } catch (Exception e) {
+                Log.e(TAG, "Error analyzing image", e);
                 imageProxy.close();
             }
         });
@@ -310,6 +320,10 @@ public class StudentScanQrFragment extends Fragment {
         if (scanLineAnimator != null) {
             scanLineAnimator.cancel();
             scanLineAnimator = null;
+        }
+        if (barcodeScanner != null) {
+            barcodeScanner.close();
+            barcodeScanner = null;
         }
         if (cameraExecutor != null) {
             cameraExecutor.shutdown();

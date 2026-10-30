@@ -28,6 +28,8 @@ import com.ppquang06.uniclassapp.databinding.FragmentLecturerQrSessionBinding;
 import com.ppquang06.uniclassapp.utils.HardwareSensorAttendanceHelper;
 import com.ppquang06.uniclassapp.utils.QrCodeGenerator;
 
+import java.util.Locale;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -52,6 +54,9 @@ public class LecturerQrSessionFragment extends Fragment {
     private int rotationCount = 1;
     private static final int COUNTDOWN_SECONDS = 30;
 
+    private Call<ApiResponse<LiveAttendanceSessionResponse>> activeOpenCall;
+    private Call<ApiResponse<LiveAttendanceSessionResponse>> activeCloseCall;
+
     private final ActivityResultLauncher<String[]> locationPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestMultiplePermissions(), result -> {
                 fetchTelemetryAndOpenSession();
@@ -68,32 +73,28 @@ public class LecturerQrSessionFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null) {
-            classId = getArguments().getString("classId", "");
-            classCode = getArguments().getString("classCode", "");
-            className = getArguments().getString("className", "");
-            room = getArguments().getString("room", "");
-        }
-
-        setupTopBar();
+        readArguments();
         setupHeader();
         setupActions();
+
         openOrInitializeSession();
     }
 
-    private void setupTopBar() {
-        binding.topAppBar.tvTitle.setText(R.string.qr_session_title);
-        binding.topAppBar.tvRoleBadge.setVisibility(View.GONE);
-        binding.topAppBar.ivAvatar.setVisibility(View.GONE);
-        binding.topAppBar.ivBack.setVisibility(View.VISIBLE);
-        binding.topAppBar.ivBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
+    private void readArguments() {
+        Bundle args = getArguments();
+        if (args != null) {
+            classId = args.getString("classId", "");
+            classCode = args.getString("classCode", "");
+            className = args.getString("className", "");
+            room = args.getString("room", "");
+            sessionId = args.getString("sessionId", "");
+        }
     }
 
     private void setupHeader() {
+        if (binding == null) return;
         if (!TextUtils.isEmpty(className)) {
             binding.tvClassName.setText(className);
-        } else {
-            binding.tvClassName.setText("Lớp học");
         }
 
         StringBuilder roomInfo = new StringBuilder();
@@ -109,7 +110,8 @@ public class LecturerQrSessionFragment extends Fragment {
         }
 
         binding.tvWifiInfo.setText("BSSID: " + wifiBssid + " · Khớp mạng phòng học");
-        binding.tvGpsInfo.setText("Tọa độ: " + latitude + ", " + longitude + " · Bán kính " + (int) radiusMeters + "m");
+        String formattedGps = String.format(Locale.US, "%.4f, %.4f", latitude, longitude);
+        binding.tvGpsInfo.setText("Tọa độ: " + formattedGps + " · Bán kính " + (int) radiusMeters + "m");
     }
 
     private void setupActions() {
@@ -135,15 +137,12 @@ public class LecturerQrSessionFragment extends Fragment {
     }
 
     private void openOrInitializeSession() {
-        if (getContext() == null || TextUtils.isEmpty(classId)) {
-            if (getContext() != null) {
-                Toast.makeText(requireContext(), "Thiếu thông tin lớp học", Toast.LENGTH_SHORT).show();
-            }
-            return;
-        }
+        if (getContext() == null) return;
 
         boolean fineGranted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED;
-        if (!fineGranted) {
+        boolean coarseGranted = ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED;
+
+        if (!fineGranted && !coarseGranted) {
             locationPermissionLauncher.launch(new String[]{
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
@@ -158,6 +157,10 @@ public class LecturerQrSessionFragment extends Fragment {
             return;
         }
 
+        if (activeOpenCall != null && !activeOpenCall.isCanceled()) {
+            activeOpenCall.cancel();
+        }
+
         binding.pbQrLoading.setVisibility(View.VISIBLE);
 
         wifiBssid = HardwareSensorAttendanceHelper.getBssid(requireContext());
@@ -170,37 +173,42 @@ public class LecturerQrSessionFragment extends Fragment {
 
             OpenQrSessionRequest request = new OpenQrSessionRequest(wifiBssid, latitude, longitude, radiusMeters);
 
-            ApiClient.getUserClassApiService(requireContext())
-                    .openQrSession(classId, request)
-                    .enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
-                                               @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
-                            if (!isAdded() || binding == null) return;
-                            binding.pbQrLoading.setVisibility(View.GONE);
+            activeOpenCall = ApiClient.getUserClassApiService(requireContext())
+                    .openQrSession(classId, request);
 
-                            if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                                LiveAttendanceSessionResponse data = response.body().getData();
-                                sessionId = data.getSessionId() != null ? data.getSessionId() : "";
-                                if (data.getWifiBssid() != null) wifiBssid = data.getWifiBssid();
-                                if (data.getLatitude() != null) latitude = data.getLatitude();
-                                if (data.getLongitude() != null) longitude = data.getLongitude();
-                                setupHeader();
-                                startDynamicQrRotation();
-                            } else {
-                                String msg = (response.body() != null && response.body().getMessage() != null)
-                                        ? response.body().getMessage() : "Không thể khởi tạo phiên điểm danh";
-                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
+            activeOpenCall.enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
+                @Override
+                public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
+                                       @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
+                    if (call.isCanceled() || !isAdded() || binding == null) return;
+                    binding.pbQrLoading.setVisibility(View.GONE);
 
-                        @Override
-                        public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
-                            if (!isAdded() || binding == null) return;
-                            binding.pbQrLoading.setVisibility(View.GONE);
-                            Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                    if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
+                        LiveAttendanceSessionResponse data = response.body().getData();
+                        sessionId = data.getSessionId() != null ? data.getSessionId() : "";
+                        if (data.getWifiBssid() != null) wifiBssid = data.getWifiBssid();
+                        if (data.getLatitude() != null) latitude = data.getLatitude();
+                        if (data.getLongitude() != null) longitude = data.getLongitude();
+                        setupHeader();
+                        startDynamicQrRotation();
+                    } else {
+                        String msg = (response.body() != null && response.body().getMessage() != null)
+                                ? response.body().getMessage() : "Không thể khởi tạo phiên điểm danh";
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
+                    if (call.isCanceled() || !isAdded() || binding == null) return;
+                    binding.pbQrLoading.setVisibility(View.GONE);
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         });
     }
 
@@ -266,29 +274,40 @@ public class LecturerQrSessionFragment extends Fragment {
             return;
         }
 
-        ApiClient.getUserClassApiService(requireContext())
-                .closeAttendanceSession(sessionId)
-                .enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
-                                           @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            markSessionClosedUi();
-                            Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Chốt phiên điểm danh thất bại";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
+        if (activeCloseCall != null && !activeCloseCall.isCanceled()) {
+            activeCloseCall.cancel();
+        }
 
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+        activeCloseCall = ApiClient.getUserClassApiService(requireContext())
+                .closeAttendanceSession(sessionId);
+
+        activeCloseCall.enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
+                                   @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
+                if (call.isCanceled() || !isAdded() || binding == null) return;
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    markSessionClosedUi();
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
                     }
-                });
+                } else {
+                    String msg = (response.body() != null && response.body().getMessage() != null)
+                            ? response.body().getMessage() : "Chốt phiên điểm danh thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
+                if (call.isCanceled() || !isAdded() || binding == null) return;
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void markSessionClosedUi() {
@@ -314,6 +333,12 @@ public class LecturerQrSessionFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (activeOpenCall != null && !activeOpenCall.isCanceled()) {
+            activeOpenCall.cancel();
+        }
+        if (activeCloseCall != null && !activeCloseCall.isCanceled()) {
+            activeCloseCall.cancel();
+        }
         if (countDownTimer != null) {
             countDownTimer.cancel();
             countDownTimer = null;

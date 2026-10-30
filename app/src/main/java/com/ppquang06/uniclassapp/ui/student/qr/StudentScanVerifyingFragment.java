@@ -54,6 +54,7 @@ public class StudentScanVerifyingFragment extends Fragment {
     private String longitudeStr;
     private String deviceId;
     private String simulationMode;
+    private Call<ApiResponse<AttendanceCheckInResponse>> activeCheckInCall;
 
     private final Gson gson = new Gson();
 
@@ -180,12 +181,15 @@ public class StudentScanVerifyingFragment extends Fragment {
                 devId
         );
 
-        ApiClient.getUserClassApiService(requireContext()).checkInAttendance(request)
-                .enqueue(new Callback<ApiResponse<AttendanceCheckInResponse>>() {
+        if (activeCheckInCall != null && !activeCheckInCall.isCanceled()) {
+            activeCheckInCall.cancel();
+        }
+        activeCheckInCall = ApiClient.getUserClassApiService(requireContext()).checkInAttendance(request);
+        activeCheckInCall.enqueue(new Callback<ApiResponse<AttendanceCheckInResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<AttendanceCheckInResponse>> call,
                                            @NonNull Response<ApiResponse<AttendanceCheckInResponse>> response) {
-                        if (!isAdded() || binding == null) return;
+                        if (call.isCanceled() || !isAdded() || binding == null) return;
 
                         if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
                             AttendanceCheckInResponse data = response.body().getData();
@@ -206,7 +210,7 @@ public class StudentScanVerifyingFragment extends Fragment {
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<AttendanceCheckInResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
+                        if (call.isCanceled() || !isAdded() || binding == null) return;
                         applyErrorToStepViews(ERROR_NETWORK);
                         handler.postDelayed(() -> {
                             if (!isAdded() || binding == null) return;
@@ -327,6 +331,9 @@ public class StudentScanVerifyingFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
+        if (activeCheckInCall != null && !activeCheckInCall.isCanceled()) {
+            activeCheckInCall.cancel();
+        }
         handler.removeCallbacksAndMessages(null);
         super.onDestroyView();
         binding = null;
