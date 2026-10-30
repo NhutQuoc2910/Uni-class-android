@@ -1,9 +1,7 @@
 package com.ppquang06.uniclassapp.ui.student.classes;
 
-import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.OpenableColumns;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,26 +14,33 @@ import androidx.annotation.Nullable;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.databinding.DialogPickFileTypeBottomSheetBinding;
+import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
-    public interface OnFileSelectedListener {
-        void onFileSelected(String fileName, String fileUrl);
+    public interface OnFilePickedListener {
+        void onFilePicked(@NonNull Uri uri, @NonNull String fileName);
     }
 
-    private static final String SAMPLE_FILE_NAME = "bai_nop_mau.pdf";
-    private static final String SAMPLE_FILE_URL = "content://com.ppquang06.uniclassapp/sample/bai_nop_mau.pdf";
+    public interface OnFileSelectedListener {
+        void onFileSelected(@NonNull String fileName, @NonNull String fileUrl);
+    }
 
     private DialogPickFileTypeBottomSheetBinding binding;
-    private OnFileSelectedListener listener;
+    private OnFilePickedListener pickedListener;
+    private OnFileSelectedListener selectedListener;
     private ActivityResultLauncher<String> filePickerLauncher;
 
     public static PickFileTypeBottomSheetDialogFragment newInstance() {
         return new PickFileTypeBottomSheetDialogFragment();
     }
 
-    public void setOnFileSelectedListener(OnFileSelectedListener listener) {
-        this.listener = listener;
+    public void setOnFilePickedListener(@Nullable OnFilePickedListener listener) {
+        this.pickedListener = listener;
+    }
+
+    public void setOnFileSelectedListener(@Nullable OnFileSelectedListener listener) {
+        this.selectedListener = listener;
     }
 
     @Override
@@ -58,17 +63,13 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // Hide demo mock file button in real picker flow
+        binding.btnPickDemoFile.setVisibility(View.GONE);
+
         binding.optPdf.setOnClickListener(v -> launchPicker("application/pdf"));
         binding.optWord.setOnClickListener(v -> launchPicker("*/*"));
         binding.optZip.setOnClickListener(v -> launchPicker("*/*"));
         binding.optImage.setOnClickListener(v -> launchPicker("image/*"));
-
-        binding.btnPickDemoFile.setOnClickListener(v -> {
-            if (listener != null) {
-                listener.onFileSelected(SAMPLE_FILE_NAME, SAMPLE_FILE_URL);
-            }
-            dismiss();
-        });
     }
 
     private void launchPicker(String mimeType) {
@@ -84,38 +85,17 @@ public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFrag
 
     private void handleFileUriSelected(Uri uri) {
         if (uri != null) {
-            String fileName = queryFileName(uri);
+            String fileName = UriFileMultipartHelper.getFileName(getContext(), uri);
             String fileUrl = uri.toString();
-            if (listener != null) {
-                listener.onFileSelected(fileName, fileUrl);
+
+            if (pickedListener != null) {
+                pickedListener.onFilePicked(uri, fileName);
+            }
+            if (selectedListener != null) {
+                selectedListener.onFileSelected(fileName, fileUrl);
             }
             dismiss();
         }
-    }
-
-    private String queryFileName(Uri uri) {
-        if (uri == null) return "tep_tin_chon.pdf";
-        String result = null;
-        if (getContext() != null && "content".equalsIgnoreCase(uri.getScheme())) {
-            try (Cursor cursor = requireContext().getContentResolver().query(uri, null, null, null, null)) {
-                if (cursor != null && cursor.moveToFirst()) {
-                    int colIndex = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
-                    if (colIndex != -1) {
-                        result = cursor.getString(colIndex);
-                    }
-                }
-            } catch (Exception ignored) {}
-        }
-        if (result == null) {
-            result = uri.getLastPathSegment();
-            if (result != null) {
-                int cut = result.lastIndexOf('/');
-                if (cut != -1) {
-                    result = result.substring(cut + 1);
-                }
-            }
-        }
-        return (result != null && !result.trim().isEmpty()) ? result : "tep_tin_chon.pdf";
     }
 
     @Override

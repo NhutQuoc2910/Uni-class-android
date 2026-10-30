@@ -1,5 +1,6 @@
 package com.ppquang06.uniclassapp.ui.lecturer.classes;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,8 +16,13 @@ import com.ppquang06.uniclassapp.data.api.ApiClient;
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.DialogUploadMaterialBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.student.classes.PickFileTypeBottomSheetDialogFragment;
+import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -61,6 +67,99 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
         }
 
         binding.btnSubmitMaterial.setOnClickListener(v -> submitMaterial());
+        binding.btnPickMaterialFile.setOnClickListener(v -> openFilePicker());
+        binding.tilMaterialUrl.setEndIconOnClickListener(v -> openFilePicker());
+    }
+
+    private void openFilePicker() {
+        PickFileTypeBottomSheetDialogFragment sheet = PickFileTypeBottomSheetDialogFragment.newInstance();
+        sheet.setOnFilePickedListener(this::uploadMaterialFile);
+        sheet.show(getChildFragmentManager(), "PickMaterialFileTypeSheet");
+    }
+
+    private void uploadMaterialFile(@NonNull Uri uri, @NonNull String fileName) {
+        if (!isAdded() || getContext() == null || binding == null) return;
+
+        binding.pbSubmitting.setVisibility(View.VISIBLE);
+        binding.btnSubmitMaterial.setEnabled(false);
+        binding.btnPickMaterialFile.setEnabled(false);
+        binding.tvUploadedFileName.setVisibility(View.VISIBLE);
+        binding.tvUploadedFileName.setText(getString(R.string.msg_uploading_file));
+
+        if (binding.etMaterialTitle.getText() == null || binding.etMaterialTitle.getText().toString().trim().isEmpty()) {
+            binding.etMaterialTitle.setText(fileName);
+        }
+
+        autoSelectChipByFileName(fileName);
+
+        try {
+            MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
+            RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("materials");
+
+            ApiClient.getUserClassApiService(requireContext())
+                    .uploadFile(filePart, folderPart)
+                    .enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
+                                               @NonNull Response<ApiResponse<FileUploadResponse>> response) {
+                            if (!isAdded() || binding == null) return;
+                            binding.pbSubmitting.setVisibility(View.GONE);
+                            binding.btnSubmitMaterial.setEnabled(true);
+                            binding.btnPickMaterialFile.setEnabled(true);
+
+                            if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                                FileUploadResponse data = response.body().getData();
+                                String fileUrl = data.getFileUrl();
+                                binding.etMaterialUrl.setText(fileUrl);
+                                binding.tilMaterialUrl.setError(null);
+                                String resolvedName = data.getFileName() != null && !data.getFileName().isEmpty()
+                                        ? data.getFileName() : fileName;
+                                binding.tvUploadedFileName.setText("Đã tải lên: " + resolvedName);
+                                if (getContext() != null) {
+                                    Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                String msg = response.body() != null && response.body().getMessage() != null
+                                        ? response.body().getMessage() : "Tải tệp lên thất bại";
+                                if (getContext() != null) {
+                                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                                }
+                                binding.tvUploadedFileName.setVisibility(View.GONE);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
+                            if (!isAdded() || binding == null) return;
+                            binding.pbSubmitting.setVisibility(View.GONE);
+                            binding.btnSubmitMaterial.setEnabled(true);
+                            binding.btnPickMaterialFile.setEnabled(true);
+                            binding.tvUploadedFileName.setVisibility(View.GONE);
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), "Lỗi kết nối khi tải tệp", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            binding.pbSubmitting.setVisibility(View.GONE);
+            binding.btnSubmitMaterial.setEnabled(true);
+            binding.btnPickMaterialFile.setEnabled(true);
+            binding.tvUploadedFileName.setVisibility(View.GONE);
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Không thể đọc tệp đã chọn: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void autoSelectChipByFileName(@NonNull String fileName) {
+        String lower = fileName.toLowerCase();
+        if (lower.endsWith(".pdf")) {
+            binding.chipPdf.setChecked(true);
+        } else if (lower.endsWith(".doc") || lower.endsWith(".docx")) {
+            binding.chipDocx.setChecked(true);
+        } else if (lower.endsWith(".ppt") || lower.endsWith(".pptx")) {
+            binding.chipPptx.setChecked(true);
+        }
     }
 
     private void submitMaterial() {

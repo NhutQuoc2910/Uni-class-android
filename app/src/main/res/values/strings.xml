@@ -465,4 +465,6 @@
     <string name="btn_archive_confirm">Lưu trữ lớp</string>
     <string name="network_error">Lỗi kết nối mạng. Vui lòng thử lại sau.</string>
     <string name="cannot_load_classes">Không thể tải thông tin lớp học</string>
+    <string name="btn_pick_file_from_device">Chọn tệp từ thiết bị</string>
+    <string name="msg_uploading_file">Đang tải tệp lên máy chủ...</string>
 </resources>

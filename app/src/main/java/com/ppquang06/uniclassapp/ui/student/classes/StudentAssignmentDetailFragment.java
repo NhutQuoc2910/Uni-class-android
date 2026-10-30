@@ -18,11 +18,15 @@ import com.ppquang06.uniclassapp.data.api.ApiClient;
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.SubmitAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentAssignmentDetailBinding;
 import com.ppquang06.uniclassapp.ui.common.UiBadgeHelper;
+import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 import java.util.Locale;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -48,6 +52,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
     private AssignmentDetailResponse currentDetail;
     private String selectedFileName;
     private String selectedFileUrl;
+    private boolean isUploadingFile = false;
 
     public static int resolveAssignmentVisualState(boolean submitted, String deadlineIso, boolean hasChosenFile, long nowMillis) {
         if (submitted && !hasChosenFile) {
@@ -128,6 +133,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
         binding.ivRemoveSelectedFile.setOnClickListener(v -> {
             selectedFileName = null;
             selectedFileUrl = null;
+            isUploadingFile = false;
             renderState();
         });
 
@@ -138,12 +144,79 @@ public class StudentAssignmentDetailFragment extends Fragment {
 
     private void openFilePicker() {
         PickFileTypeBottomSheetDialogFragment sheet = PickFileTypeBottomSheetDialogFragment.newInstance();
-        sheet.setOnFileSelectedListener((fileName, fileUrl) -> {
-            selectedFileName = fileName;
-            selectedFileUrl = fileUrl;
-            renderState();
-        });
+        sheet.setOnFilePickedListener(this::handleFilePicked);
         sheet.show(getChildFragmentManager(), "PickFileTypeBottomSheet");
+    }
+
+    private void handleFilePicked(@NonNull Uri uri, @NonNull String fileName) {
+        if (getContext() == null) return;
+        selectedFileName = fileName;
+        selectedFileUrl = null;
+        isUploadingFile = true;
+        renderState();
+        uploadSelectedFile(uri, fileName);
+    }
+
+    private void uploadSelectedFile(@NonNull Uri uri, @NonNull String fileName) {
+        if (getContext() == null) return;
+        try {
+            MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
+            RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("assignments");
+
+            ApiClient.getUserClassApiService(requireContext())
+                    .uploadFile(filePart, folderPart)
+                    .enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
+                        @Override
+                        public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
+                                               @NonNull Response<ApiResponse<FileUploadResponse>> response) {
+                            if (binding == null) return;
+                            isUploadingFile = false;
+
+                            if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                                FileUploadResponse data = response.body().getData();
+                                selectedFileUrl = data.getFileUrl();
+                                if (data.getFileName() != null && !data.getFileName().trim().isEmpty()) {
+                                    selectedFileName = data.getFileName();
+                                }
+                                renderState();
+                                if (getContext() != null) {
+                                    Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                String msg = "Tải tệp lên máy chủ thất bại";
+                                if (response.body() != null && response.body().getMessage() != null) {
+                                    msg = response.body().getMessage();
+                                }
+                                if (getContext() != null) {
+                                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                                }
+                                selectedFileName = null;
+                                selectedFileUrl = null;
+                                renderState();
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
+                            if (binding == null) return;
+                            isUploadingFile = false;
+                            selectedFileName = null;
+                            selectedFileUrl = null;
+                            renderState();
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), "Lỗi kết nối khi tải tệp", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+        } catch (Exception e) {
+            isUploadingFile = false;
+            selectedFileName = null;
+            selectedFileUrl = null;
+            renderState();
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Không thể đọc tệp đã chọn: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void loadAssignmentDetail() {
@@ -192,6 +265,10 @@ public class StudentAssignmentDetailFragment extends Fragment {
     }
 
     private void performSubmitAssignment() {
+        if (isUploadingFile) {
+            Toast.makeText(requireContext(), "Đang tải tệp lên máy chủ, vui lòng đợi giây lát", Toast.LENGTH_SHORT).show();
+            return;
+        }
         if (selectedFileUrl == null || selectedFileUrl.trim().isEmpty()) {
             Toast.makeText(requireContext(), "Vui lòng chọn tệp bài làm trước khi nộp", Toast.LENGTH_SHORT).show();
             return;
@@ -216,6 +293,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
                             currentDetail = response.body().getData();
                             selectedFileName = null;
                             selectedFileUrl = null;
+                            isUploadingFile = false;
                             renderState();
                         } else {
                             String msg = (response.body() != null && response.body().getMessage() != null)
@@ -338,7 +416,15 @@ public class StudentAssignmentDetailFragment extends Fragment {
             }
 
             binding.btnSubmit.setVisibility(View.VISIBLE);
-            binding.btnSubmit.setEnabled(true);
+            if (isUploadingFile) {
+                binding.pbUploadProgress.setVisibility(View.VISIBLE);
+                binding.btnSubmit.setEnabled(false);
+                binding.tvSelectedFileMeta.setText("Đang tải tệp lên...");
+            } else {
+                binding.pbUploadProgress.setVisibility(View.GONE);
+                binding.btnSubmit.setEnabled(selectedFileUrl != null && !selectedFileUrl.trim().isEmpty());
+                binding.tvSelectedFileMeta.setText(selectedFileUrl != null ? "Sẵn sàng nộp bài" : "");
+            }
             binding.btnResubmit.setVisibility(View.GONE);
 
         } else {
@@ -346,6 +432,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
             binding.layoutDropzone.setVisibility(View.VISIBLE);
             binding.layoutSelectedFile.setVisibility(View.GONE);
             binding.layoutSubmittedFile.setVisibility(View.GONE);
+            binding.pbUploadProgress.setVisibility(View.GONE);
 
             binding.btnSubmit.setVisibility(View.VISIBLE);
             binding.btnSubmit.setText(R.string.btn_submit_assignment);

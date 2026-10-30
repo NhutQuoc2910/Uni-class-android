@@ -19,6 +19,7 @@ import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
+import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
@@ -26,12 +27,16 @@ import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 
 import java.util.List;
 
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
+import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface UserClassApiService {
@@ -67,6 +72,13 @@ public interface UserClassApiService {
 
     @POST("assignments/{id}/submit")
     Call<ApiResponse<AssignmentDetailResponse>> submitAssignment(@Path("id") String id, @Body SubmitAssignmentRequest request);
+
+    @Multipart
+    @POST("storage/upload")
+    Call<ApiResponse<FileUploadResponse>> uploadFile(
+            @Part MultipartBody.Part file,
+            @Part("folder") RequestBody folder
+    );
 
     @POST("attendance/check-in")
     Call<ApiResponse<AttendanceCheckInResponse>> checkInAttendance(@Body AttendanceCheckInRequest request);

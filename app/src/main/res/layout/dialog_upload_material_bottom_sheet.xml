@@ -62,7 +62,10 @@
         app:boxCornerRadiusBottomStart="@dimen/radius_sm"
         app:boxCornerRadiusTopEnd="@dimen/radius_sm"
         app:boxCornerRadiusTopStart="@dimen/radius_sm"
-        app:boxStrokeColor="@color/color_primary">
+        app:boxStrokeColor="@color/color_primary"
+        app:endIconMode="custom"
+        app:endIconDrawable="@drawable/ic_upload"
+        app:endIconContentDescription="@string/btn_pick_file_from_device">
 
         <com.google.android.material.textfield.TextInputEditText
             android:id="@+id/etMaterialUrl"
@@ -73,6 +76,27 @@
             android:maxLines="2"
             android:textColor="@color/text_primary" />
     </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Choose File From Device Button -->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnPickMaterialFile"
+        style="@style/Widget.EduLens.Button.Outlined"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginTop="@dimen/space_8"
+        android:text="@string/btn_pick_file_from_device"
+        app:icon="@drawable/ic_upload"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/space_8" />
+
+    <TextView
+        android:id="@+id/tvUploadedFileName"
+        style="@style/TextAppearance.EduLens.Caption"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/space_4"
+        android:textColor="@color/color_primary"
+        android:visibility="gone" />
 
     <!-- File Type Selector -->
     <TextView
