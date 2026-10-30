@@ -70,7 +70,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<ApiResponse<HomeSummaryResponse>> call, Throwable t) {
-                // Keep default layout preview values if network summary fails
+                Toast.makeText(HomeActivity.this, "Không thể tải dữ liệu trang chủ", Toast.LENGTH_SHORT).show();
             }
         });
     }

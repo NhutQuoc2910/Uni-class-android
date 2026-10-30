@@ -223,13 +223,18 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
                 .enqueue(new Callback<ApiResponse<Void>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<Void>> call, @NonNull Response<ApiResponse<Void>> response) {
-                        handleRemoveSuccess(member);
+                        if (!isAdded()) return;
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            handleRemoveSuccess(member);
+                        } else {
+                            Toast.makeText(requireContext(), "Xóa sinh viên thất bại", Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {
-                        // Fallback removal locally so UI flow works reliably
-                        handleRemoveSuccess(member);
+                        if (!isAdded()) return;
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

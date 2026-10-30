@@ -173,23 +173,25 @@ public class LecturerCreateAssignmentFragment extends Fragment {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> call,
                                            @NonNull Response<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> response) {
-                        if (!isAdded()) return;
+                        if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
                         binding.btnSubmitCreateAssignment.setEnabled(true);
 
-                        Toast.makeText(requireContext(), R.string.toast_create_assignment_success, Toast.LENGTH_SHORT).show();
-                        NavHostFragment.findNavController(LecturerCreateAssignmentFragment.this).popBackStack();
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            Toast.makeText(requireContext(), R.string.toast_create_assignment_success, Toast.LENGTH_SHORT).show();
+                            NavHostFragment.findNavController(LecturerCreateAssignmentFragment.this).popBackStack();
+                        } else {
+                            String msg = response.body() != null && response.body().getMessage() != null ? response.body().getMessage() : "Tạo bài tập thất bại";
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> call, @NonNull Throwable t) {
-                        if (!isAdded()) return;
+                        if (!isAdded() || binding == null) return;
                         binding.pbLoading.setVisibility(View.GONE);
                         binding.btnSubmitCreateAssignment.setEnabled(true);
-
-                        // Graceful offline fallback synthesis
-                        Toast.makeText(requireContext(), R.string.toast_create_assignment_success, Toast.LENGTH_SHORT).show();
-                        NavHostFragment.findNavController(LecturerCreateAssignmentFragment.this).popBackStack();
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }

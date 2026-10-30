@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,7 +19,6 @@ import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerMemberProfileBinding;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,6 +40,9 @@ public class LecturerMemberProfileFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         readArguments();
+        if (member == null) {
+            return;
+        }
         setupTopAppBar();
         setupRecyclerView();
         bindMemberData();
@@ -63,15 +66,13 @@ public class LecturerMemberProfileFragment extends Fragment {
         }
 
         if (member == null) {
-            // Fallback synthesis
-            member = new ClassMemberItemResponse(
-                    "stu-001", "Nguyễn Văn An", "an.nv@uit.edu.vn", "21520001",
-                    "NA", 93, 1, 15, 4, 4, 8.8,
-                    Arrays.asList(
-                            new ClassMemberItemResponse.MemberAssignmentSummary("a1", "Bài tập 1: Layouts & ViewBinding", "2026-10-15", true, "2026-10-14 20:30", 9.0),
-                            new ClassMemberItemResponse.MemberAssignmentSummary("a2", "Bài tập 2: Retrofit & MVVM", "2026-10-22", true, "2026-10-21 18:15", 8.5)
-                    )
-            );
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Không tìm thấy thông tin thành viên", Toast.LENGTH_SHORT).show();
+            }
+            try {
+                Navigation.findNavController(requireView()).navigateUp();
+            } catch (Exception ignored) {}
+            return;
         }
     }
 

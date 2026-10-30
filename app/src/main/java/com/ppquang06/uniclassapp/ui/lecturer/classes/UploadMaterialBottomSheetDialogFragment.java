@@ -105,13 +105,23 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call,
                                            @NonNull Response<ApiResponse<ClassDetailResponse.MaterialItem>> response) {
-                        handleComplete();
+                        if (!isAdded() || binding == null) return;
+                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                            handleComplete();
+                        } else {
+                            String msg = response.body() != null && response.body().getMessage() != null ? response.body().getMessage() : getString(R.string.network_error);
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                            binding.pbSubmitting.setVisibility(View.GONE);
+                            binding.btnSubmitMaterial.setEnabled(true);
+                        }
                     }
 
                     @Override
                     public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call, @NonNull Throwable t) {
-                        // Fallback completion
-                        handleComplete();
+                        if (!isAdded() || binding == null) return;
+                        binding.pbSubmitting.setVisibility(View.GONE);
+                        binding.btnSubmitMaterial.setEnabled(true);
+                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
