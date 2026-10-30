@@ -13,6 +13,11 @@ import okio.Buffer;
 public class UriFileMultipartHelperTest {
 
     @Test
+    public void maxFileSize_isConfiguredTo25MB() {
+        assertEquals(25 * 1024 * 1024L, UriFileMultipartHelper.MAX_FILE_SIZE);
+    }
+
+    @Test
     public void getFileName_returnsDefaultWhenUriNull() {
         String name = UriFileMultipartHelper.getFileName(null, null);
         assertEquals("tep_tin_chon.bin", name);

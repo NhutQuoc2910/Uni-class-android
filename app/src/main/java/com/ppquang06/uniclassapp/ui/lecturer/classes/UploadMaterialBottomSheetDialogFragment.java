@@ -39,6 +39,9 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
     private String classId = "";
     private OnMaterialUploadedListener listener;
 
+    private Call<ApiResponse<FileUploadResponse>> activeUploadCall;
+    private Call<ApiResponse<ClassDetailResponse.MaterialItem>> activeCreateCall;
+
     public static UploadMaterialBottomSheetDialogFragment newInstance(String classId) {
         UploadMaterialBottomSheetDialogFragment fragment = new UploadMaterialBottomSheetDialogFragment();
         Bundle args = new Bundle();
@@ -80,6 +83,10 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
     private void uploadMaterialFile(@NonNull Uri uri, @NonNull String fileName) {
         if (!isAdded() || getContext() == null || binding == null) return;
 
+        if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
+            activeUploadCall.cancel();
+        }
+
         binding.pbSubmitting.setVisibility(View.VISIBLE);
         binding.btnSubmitMaterial.setEnabled(false);
         binding.btnPickMaterialFile.setEnabled(false);
@@ -96,50 +103,51 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
             MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
             RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("materials");
 
-            ApiClient.getUserClassApiService(requireContext())
-                    .uploadFile(filePart, folderPart)
-                    .enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
-                                               @NonNull Response<ApiResponse<FileUploadResponse>> response) {
-                            if (!isAdded() || binding == null) return;
-                            binding.pbSubmitting.setVisibility(View.GONE);
-                            binding.btnSubmitMaterial.setEnabled(true);
-                            binding.btnPickMaterialFile.setEnabled(true);
+            activeUploadCall = ApiClient.getUserClassApiService(requireContext())
+                    .uploadFile(filePart, folderPart);
 
-                            if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                                FileUploadResponse data = response.body().getData();
-                                String fileUrl = data.getFileUrl();
-                                binding.etMaterialUrl.setText(fileUrl);
-                                binding.tilMaterialUrl.setError(null);
-                                String resolvedName = data.getFileName() != null && !data.getFileName().isEmpty()
-                                        ? data.getFileName() : fileName;
-                                binding.tvUploadedFileName.setText("Đã tải lên: " + resolvedName);
-                                if (getContext() != null) {
-                                    Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                String msg = response.body() != null && response.body().getMessage() != null
-                                        ? response.body().getMessage() : "Tải tệp lên thất bại";
-                                if (getContext() != null) {
-                                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                                }
-                                binding.tvUploadedFileName.setVisibility(View.GONE);
-                            }
-                        }
+            activeUploadCall.enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
+                @Override
+                public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
+                                       @NonNull Response<ApiResponse<FileUploadResponse>> response) {
+                    if (call.isCanceled() || !isAdded() || binding == null) return;
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitMaterial.setEnabled(true);
+                    binding.btnPickMaterialFile.setEnabled(true);
 
-                        @Override
-                        public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
-                            if (!isAdded() || binding == null) return;
-                            binding.pbSubmitting.setVisibility(View.GONE);
-                            binding.btnSubmitMaterial.setEnabled(true);
-                            binding.btnPickMaterialFile.setEnabled(true);
-                            binding.tvUploadedFileName.setVisibility(View.GONE);
-                            if (getContext() != null) {
-                                Toast.makeText(requireContext(), "Lỗi kết nối khi tải tệp", Toast.LENGTH_SHORT).show();
-                            }
+                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
+                        FileUploadResponse data = response.body().getData();
+                        String fileUrl = data.getFileUrl();
+                        binding.etMaterialUrl.setText(fileUrl);
+                        binding.tilMaterialUrl.setError(null);
+                        String resolvedName = data.getFileName() != null && !data.getFileName().isEmpty()
+                                ? data.getFileName() : fileName;
+                        binding.tvUploadedFileName.setText("Đã tải lên: " + resolvedName);
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
                         }
-                    });
+                    } else {
+                        String msg = response.body() != null && response.body().getMessage() != null
+                                ? response.body().getMessage() : "Tải tệp lên thất bại";
+                        if (getContext() != null) {
+                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                        }
+                        binding.tvUploadedFileName.setVisibility(View.GONE);
+                    }
+                }
+
+                @Override
+                public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
+                    if (call.isCanceled() || !isAdded() || binding == null) return;
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitMaterial.setEnabled(true);
+                    binding.btnPickMaterialFile.setEnabled(true);
+                    binding.tvUploadedFileName.setVisibility(View.GONE);
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Lỗi kết nối khi tải tệp", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         } catch (Exception e) {
             binding.pbSubmitting.setVisibility(View.GONE);
             binding.btnSubmitMaterial.setEnabled(true);
@@ -183,6 +191,10 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
 
         if (hasError || getContext() == null) return;
 
+        if (activeCreateCall != null && !activeCreateCall.isCanceled()) {
+            activeCreateCall.cancel();
+        }
+
         String fileType = "PDF";
         int checkedId = binding.chipGroupFileType.getCheckedChipId();
         if (checkedId == R.id.chipDocx) {
@@ -198,31 +210,37 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
 
         CreateMaterialRequest request = new CreateMaterialRequest(title, url, fileType, false);
 
-        ApiClient.getUserClassApiService(requireContext())
-                .createMaterial(classId, request)
-                .enqueue(new Callback<ApiResponse<ClassDetailResponse.MaterialItem>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call,
-                                           @NonNull Response<ApiResponse<ClassDetailResponse.MaterialItem>> response) {
-                        if (!isAdded() || binding == null) return;
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            handleComplete();
-                        } else {
-                            String msg = response.body() != null && response.body().getMessage() != null ? response.body().getMessage() : getString(R.string.network_error);
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            binding.pbSubmitting.setVisibility(View.GONE);
-                            binding.btnSubmitMaterial.setEnabled(true);
-                        }
-                    }
+        activeCreateCall = ApiClient.getUserClassApiService(requireContext())
+                .createMaterial(classId, request);
 
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbSubmitting.setVisibility(View.GONE);
-                        binding.btnSubmitMaterial.setEnabled(true);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+        activeCreateCall.enqueue(new Callback<ApiResponse<ClassDetailResponse.MaterialItem>>() {
+            @Override
+            public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call,
+                                   @NonNull Response<ApiResponse<ClassDetailResponse.MaterialItem>> response) {
+                if (call.isCanceled() || !isAdded() || binding == null) return;
+                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
+                    handleComplete();
+                } else {
+                    String msg = response.body() != null && response.body().getMessage() != null
+                            ? response.body().getMessage() : getString(R.string.network_error);
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                     }
-                });
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitMaterial.setEnabled(true);
+                }
+            }
+
+            @Override
+            public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call, @NonNull Throwable t) {
+                if (call.isCanceled() || !isAdded() || binding == null) return;
+                binding.pbSubmitting.setVisibility(View.GONE);
+                binding.btnSubmitMaterial.setEnabled(true);
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
     private void handleComplete() {
@@ -233,12 +251,18 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
         if (listener != null) {
             listener.onMaterialUploaded();
         }
-        dismiss();
+        dismissAllowingStateLoss();
     }
 
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
+            activeUploadCall.cancel();
+        }
+        if (activeCreateCall != null && !activeCreateCall.isCanceled()) {
+            activeCreateCall.cancel();
+        }
         binding = null;
     }
 }

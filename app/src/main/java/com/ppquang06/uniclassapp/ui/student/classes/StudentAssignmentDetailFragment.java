@@ -53,6 +53,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
     private String selectedFileName;
     private String selectedFileUrl;
     private boolean isUploadingFile = false;
+    private Call<ApiResponse<FileUploadResponse>> activeUploadCall;
 
     public static int resolveAssignmentVisualState(boolean submitted, String deadlineIso, boolean hasChosenFile, long nowMillis) {
         if (submitted && !hasChosenFile) {
@@ -131,6 +132,9 @@ public class StudentAssignmentDetailFragment extends Fragment {
         binding.layoutDropzone.setOnClickListener(v -> openFilePicker());
 
         binding.ivRemoveSelectedFile.setOnClickListener(v -> {
+            if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
+                activeUploadCall.cancel();
+            }
             selectedFileName = null;
             selectedFileUrl = null;
             isUploadingFile = false;
@@ -163,13 +167,16 @@ public class StudentAssignmentDetailFragment extends Fragment {
             MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
             RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("assignments");
 
-            ApiClient.getUserClassApiService(requireContext())
-                    .uploadFile(filePart, folderPart)
-                    .enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
+            if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
+                activeUploadCall.cancel();
+            }
+            activeUploadCall = ApiClient.getUserClassApiService(requireContext())
+                    .uploadFile(filePart, folderPart);
+            activeUploadCall.enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
                         @Override
                         public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
                                                @NonNull Response<ApiResponse<FileUploadResponse>> response) {
-                            if (binding == null) return;
+                            if (call.isCanceled() || !isAdded() || binding == null) return;
                             isUploadingFile = false;
 
                             if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
@@ -198,7 +205,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
 
                         @Override
                         public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
-                            if (binding == null) return;
+                            if (call.isCanceled() || !isAdded() || binding == null) return;
                             isUploadingFile = false;
                             selectedFileName = null;
                             selectedFileUrl = null;
@@ -484,6 +491,9 @@ public class StudentAssignmentDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
+            activeUploadCall.cancel();
+        }
         binding = null;
     }
 }

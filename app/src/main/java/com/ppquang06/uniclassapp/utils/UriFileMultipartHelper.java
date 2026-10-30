@@ -20,6 +20,7 @@ import okhttp3.RequestBody;
 
 public final class UriFileMultipartHelper {
 
+    public static final long MAX_FILE_SIZE = 25 * 1024 * 1024L; // 25 MB
     private static final String DEFAULT_FILE_NAME = "tep_tin_chon.bin";
     private static final String DEFAULT_MIME_TYPE = "application/octet-stream";
     private static final String DEFAULT_FOLDER = "materials";
@@ -29,7 +30,7 @@ public final class UriFileMultipartHelper {
     }
 
     /**
-     * Extracts the display name of a file Uri using OpenableColumns.DISPLAY_NAME.
+     * Extracts and sanitizes the display name of a file Uri using OpenableColumns.DISPLAY_NAME.
      */
     @NonNull
     public static String getFileName(@Nullable Context context, @Nullable Uri uri) {
@@ -52,15 +53,19 @@ public final class UriFileMultipartHelper {
 
         if (result == null || result.trim().isEmpty()) {
             result = uri.getLastPathSegment();
-            if (result != null) {
-                int cut = result.lastIndexOf('/');
-                if (cut != -1) {
-                    result = result.substring(cut + 1);
-                }
-            }
         }
 
-        return (result != null && !result.trim().isEmpty()) ? result.trim() : DEFAULT_FILE_NAME;
+        if (result != null) {
+            // Strip directory traversal delimiters and control characters to prevent header disruption
+            result = result.replace('\\', '/');
+            int cut = result.lastIndexOf('/');
+            if (cut != -1) {
+                result = result.substring(cut + 1);
+            }
+            result = result.replace("\"", "").replace("\r", "").replace("\n", "").trim();
+        }
+
+        return (result != null && !result.isEmpty()) ? result : DEFAULT_FILE_NAME;
     }
 
     /**
@@ -98,7 +103,7 @@ public final class UriFileMultipartHelper {
     }
 
     /**
-     * Reads bytes from a content Uri.
+     * Reads bytes from a content Uri with an OOM protection limit (25MB).
      */
     @NonNull
     public static byte[] readBytesFromUri(@NonNull Context context, @NonNull Uri uri) throws IOException {
@@ -109,8 +114,13 @@ public final class UriFileMultipartHelper {
             }
             ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
             byte[] buffer = new byte[8192];
+            long totalBytes = 0;
             int len;
             while ((len = inputStream.read(buffer)) != -1) {
+                totalBytes += len;
+                if (totalBytes > MAX_FILE_SIZE) {
+                    throw new IOException("Kích thước tệp vượt quá giới hạn tối đa cho phép (25MB)");
+                }
                 byteBuffer.write(buffer, 0, len);
             }
             return byteBuffer.toByteArray();
