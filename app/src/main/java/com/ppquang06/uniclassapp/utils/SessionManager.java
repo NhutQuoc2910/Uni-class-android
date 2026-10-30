@@ -47,6 +47,15 @@ public class SessionManager {
         }
     }
 
+    public void saveFcmToken(String token) {
+        editor.putString(Constants.KEY_FCM_TOKEN, token);
+        editor.apply();
+    }
+
+    public String getFcmToken() {
+        return pref.getString(Constants.KEY_FCM_TOKEN, null);
+    }
+
     public String getToken() {
         return pref.getString(Constants.KEY_TOKEN, null);
     }
@@ -73,8 +82,12 @@ public class SessionManager {
         return user;
     }
 
-    public void clearSession() {
+        public void clearSession() {
+        String fcmToken = getFcmToken();
         editor.clear();
+        if (fcmToken != null) {
+            editor.putString(Constants.KEY_FCM_TOKEN, fcmToken);
+        }
         editor.apply();
     }
 }

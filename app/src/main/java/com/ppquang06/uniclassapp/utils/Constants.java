@@ -16,6 +16,7 @@ public final class Constants {
     public static final String KEY_USER_ROLE = "user_role";
     public static final String KEY_USER_AVATAR = "user_avatar";
     public static final String KEY_USER_PHONE = "user_phone";
+    public static final String KEY_FCM_TOKEN = "fcm_token";
 
     // Intent extras
     public static final String EXTRA_EMAIL = "extra_email";

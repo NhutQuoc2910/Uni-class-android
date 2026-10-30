@@ -16,12 +16,15 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.api.ApiClient;
+import com.ppquang06.uniclassapp.data.api.StompWebSocketClient;
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse.AttendeeItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerAttendanceLiveBinding;
+import com.ppquang06.uniclassapp.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +35,13 @@ import retrofit2.Response;
 
 public class LecturerAttendanceLiveFragment extends Fragment {
 
+    private static final String TAG = "LecturerAttendanceLive";
+
     private FragmentLecturerAttendanceLiveBinding binding;
     private LiveAttendeeAdapter adapter;
+    private StompWebSocketClient stompClient;
+    private Call<ApiResponse<LiveAttendanceSessionResponse>> loadSessionCall;
+    private Call<ApiResponse<LiveAttendanceSessionResponse>> closeSessionCall;
 
     private String sessionId = "";
     private String classId = "";
@@ -68,6 +76,19 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         setupCloseSessionAction();
 
         loadLiveSession();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        connectWebSocket();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        disconnectWebSocket();
+        cancelPendingCalls();
     }
 
     private void setupTopBar() {
@@ -164,9 +185,13 @@ public class LecturerAttendanceLiveFragment extends Fragment {
             return;
         }
 
-        ApiClient.getUserClassApiService(requireContext())
-                .getLiveAttendanceSession(sessionId)
-                .enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
+        if (loadSessionCall != null && !loadSessionCall.isCanceled()) {
+            loadSessionCall.cancel();
+        }
+
+        loadSessionCall = ApiClient.getUserClassApiService(requireContext())
+                .getLiveAttendanceSession(sessionId);
+        loadSessionCall.enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
                                            @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
@@ -241,9 +266,13 @@ public class LecturerAttendanceLiveFragment extends Fragment {
 
         binding.pbLoadingLive.setVisibility(View.VISIBLE);
 
-        ApiClient.getUserClassApiService(requireContext())
-                .closeAttendanceSession(sessionId)
-                .enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
+        if (closeSessionCall != null && !closeSessionCall.isCanceled()) {
+            closeSessionCall.cancel();
+        }
+
+        closeSessionCall = ApiClient.getUserClassApiService(requireContext())
+                .closeAttendanceSession(sessionId);
+        closeSessionCall.enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
                     @Override
                     public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
                                            @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
@@ -280,9 +309,76 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         binding.btnCloseSessionLive.setBackgroundTintList(ColorStateList.valueOf(requireContext().getColor(R.color.color_primary)));
     }
 
+    private void connectWebSocket() {
+        if (TextUtils.isEmpty(sessionId) || getContext() == null) {
+            return;
+        }
+        disconnectWebSocket();
+        stompClient = new StompWebSocketClient();
+        String wsUrl = StompWebSocketClient.getDefaultWebSocketUrl();
+        String token = SessionManager.getInstance(requireContext()).getToken();
+
+        stompClient.connect(wsUrl, token, new StompWebSocketClient.StompListener() {
+            @Override
+            public void onConnected() {
+                if (!isAdded() || binding == null || stompClient == null) return;
+                stompClient.subscribe("/topic/attendance-sessions/" + sessionId + "/live", payload -> {
+                    if (!isAdded() || binding == null || TextUtils.isEmpty(payload)) return;
+                    try {
+                        LiveAttendanceSessionResponse data = new Gson().fromJson(payload, LiveAttendanceSessionResponse.class);
+                        if (data != null) {
+                            bindData(data);
+                        }
+                    } catch (Exception e) {
+                        android.util.Log.e(TAG, "Error parsing live STOMP payload", e);
+                    }
+                });
+            }
+
+            @Override
+            public void onDisconnected() {
+                android.util.Log.d(TAG, "STOMP WebSocket disconnected");
+            }
+
+            @Override
+            public void onError(Throwable t) {
+                android.util.Log.w(TAG, "STOMP WebSocket error: " + (t != null ? t.getMessage() : "unknown"));
+            }
+        });
+    }
+
+    private void disconnectWebSocket() {
+        if (stompClient != null) {
+            try {
+                stompClient.disconnect();
+            } catch (Exception ignored) {
+            }
+            stompClient = null;
+        }
+    }
+
+    private void cancelPendingCalls() {
+        if (loadSessionCall != null) {
+            try {
+                loadSessionCall.cancel();
+            } catch (Exception ignored) {
+            }
+            loadSessionCall = null;
+        }
+        if (closeSessionCall != null) {
+            try {
+                closeSessionCall.cancel();
+            } catch (Exception ignored) {
+            }
+            closeSessionCall = null;
+        }
+    }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
+        disconnectWebSocket();
+        cancelPendingCalls();
         binding = null;
     }
 }
