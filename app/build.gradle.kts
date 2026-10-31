@@ -67,6 +67,8 @@ dependencies {
     implementation(libs.mlkit.barcode.scanning)
     implementation(libs.play.services.location)
     implementation(libs.firebase.messaging)
+    implementation(libs.room.runtime)
+    annotationProcessor(libs.room.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.espresso.core)
     androidTestImplementation(libs.ext.junit)
