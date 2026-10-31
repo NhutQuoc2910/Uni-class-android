@@ -19,8 +19,10 @@ camerax = "1.4.0"
 mlkit-barcode = "17.3.0"
 play-services-location = "21.3.0"
 firebase-messaging = "24.0.3"
+desugarJdk = "2.1.2"
 
 [libraries]
+desugar-jdk-libs = { group = "com.android.tools", name = "desugar_jdk_libs", version.ref = "desugarJdk" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
