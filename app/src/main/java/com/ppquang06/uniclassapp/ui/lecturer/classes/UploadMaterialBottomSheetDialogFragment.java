@@ -9,23 +9,20 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.DialogUploadMaterialBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.student.classes.PickFileTypeBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -36,11 +33,10 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
     private static final String ARG_CLASS_ID = "classId";
 
     private DialogUploadMaterialBottomSheetBinding binding;
+    private LecturerManagementViewModel viewModel;
     private String classId = "";
     private OnMaterialUploadedListener listener;
-
-    private Call<ApiResponse<FileUploadResponse>> activeUploadCall;
-    private Call<ApiResponse<ClassDetailResponse.MaterialItem>> activeCreateCall;
+    private String lastPickedFileName = "";
 
     public static UploadMaterialBottomSheetDialogFragment newInstance(String classId) {
         UploadMaterialBottomSheetDialogFragment fragment = new UploadMaterialBottomSheetDialogFragment();
@@ -65,6 +61,8 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(LecturerManagementViewModel.class);
+
         if (getArguments() != null) {
             classId = getArguments().getString(ARG_CLASS_ID, "");
         }
@@ -72,6 +70,77 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
         binding.btnSubmitMaterial.setOnClickListener(v -> submitMaterial());
         binding.btnPickMaterialFile.setOnClickListener(v -> openFilePicker());
         binding.tilMaterialUrl.setEndIconOnClickListener(v -> openFilePicker());
+
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        viewModel.getUploadFileState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbSubmitting.setVisibility(View.VISIBLE);
+                    binding.btnSubmitMaterial.setEnabled(false);
+                    binding.btnPickMaterialFile.setEnabled(false);
+                    binding.tvUploadedFileName.setVisibility(View.VISIBLE);
+                    binding.tvUploadedFileName.setText(getString(R.string.msg_uploading_file));
+                    break;
+                case SUCCESS:
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitMaterial.setEnabled(true);
+                    binding.btnPickMaterialFile.setEnabled(true);
+                    FileUploadResponse data = state.getData();
+                    if (data != null) {
+                        String fileUrl = data.getFileUrl();
+                        binding.etMaterialUrl.setText(fileUrl);
+                        binding.tilMaterialUrl.setError(null);
+                        String resolvedName = data.getFileName() != null && !data.getFileName().isEmpty()
+                                ? data.getFileName() : lastPickedFileName;
+                        binding.tvUploadedFileName.setText("Đã tải lên: " + resolvedName);
+                    }
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case ERROR:
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitMaterial.setEnabled(true);
+                    binding.btnPickMaterialFile.setEnabled(true);
+                    binding.tvUploadedFileName.setVisibility(View.GONE);
+                    String msg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                            ? state.getMessage() : "Tải tệp lên thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getCreateMaterialState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbSubmitting.setVisibility(View.VISIBLE);
+                    binding.btnSubmitMaterial.setEnabled(false);
+                    break;
+                case SUCCESS:
+                    handleComplete();
+                    break;
+                case ERROR:
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitMaterial.setEnabled(true);
+                    String msg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                            ? state.getMessage() : getString(R.string.network_error);
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void openFilePicker() {
@@ -83,15 +152,7 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
     private void uploadMaterialFile(@NonNull Uri uri, @NonNull String fileName) {
         if (!isAdded() || getContext() == null || binding == null) return;
 
-        if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
-            activeUploadCall.cancel();
-        }
-
-        binding.pbSubmitting.setVisibility(View.VISIBLE);
-        binding.btnSubmitMaterial.setEnabled(false);
-        binding.btnPickMaterialFile.setEnabled(false);
-        binding.tvUploadedFileName.setVisibility(View.VISIBLE);
-        binding.tvUploadedFileName.setText(getString(R.string.msg_uploading_file));
+        lastPickedFileName = fileName;
 
         if (binding.etMaterialTitle.getText() == null || binding.etMaterialTitle.getText().toString().trim().isEmpty()) {
             binding.etMaterialTitle.setText(fileName);
@@ -102,52 +163,7 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
         try {
             MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
             RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("materials");
-
-            activeUploadCall = ApiClient.getUserClassApiService(requireContext())
-                    .uploadFile(filePart, folderPart);
-
-            activeUploadCall.enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
-                @Override
-                public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
-                                       @NonNull Response<ApiResponse<FileUploadResponse>> response) {
-                    if (call.isCanceled() || !isAdded() || binding == null) return;
-                    binding.pbSubmitting.setVisibility(View.GONE);
-                    binding.btnSubmitMaterial.setEnabled(true);
-                    binding.btnPickMaterialFile.setEnabled(true);
-
-                    if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                        FileUploadResponse data = response.body().getData();
-                        String fileUrl = data.getFileUrl();
-                        binding.etMaterialUrl.setText(fileUrl);
-                        binding.tilMaterialUrl.setError(null);
-                        String resolvedName = data.getFileName() != null && !data.getFileName().isEmpty()
-                                ? data.getFileName() : fileName;
-                        binding.tvUploadedFileName.setText("Đã tải lên: " + resolvedName);
-                        if (getContext() != null) {
-                            Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
-                        }
-                    } else {
-                        String msg = response.body() != null && response.body().getMessage() != null
-                                ? response.body().getMessage() : "Tải tệp lên thất bại";
-                        if (getContext() != null) {
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                        binding.tvUploadedFileName.setVisibility(View.GONE);
-                    }
-                }
-
-                @Override
-                public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
-                    if (call.isCanceled() || !isAdded() || binding == null) return;
-                    binding.pbSubmitting.setVisibility(View.GONE);
-                    binding.btnSubmitMaterial.setEnabled(true);
-                    binding.btnPickMaterialFile.setEnabled(true);
-                    binding.tvUploadedFileName.setVisibility(View.GONE);
-                    if (getContext() != null) {
-                        Toast.makeText(requireContext(), "Lỗi kết nối khi tải tệp", Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
+            viewModel.uploadFile(filePart, folderPart);
         } catch (Exception e) {
             binding.pbSubmitting.setVisibility(View.GONE);
             binding.btnSubmitMaterial.setEnabled(true);
@@ -191,10 +207,6 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
 
         if (hasError || getContext() == null) return;
 
-        if (activeCreateCall != null && !activeCreateCall.isCanceled()) {
-            activeCreateCall.cancel();
-        }
-
         String fileType = "PDF";
         int checkedId = binding.chipGroupFileType.getCheckedChipId();
         if (checkedId == R.id.chipDocx) {
@@ -205,42 +217,8 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
             fileType = "LINK";
         }
 
-        binding.pbSubmitting.setVisibility(View.VISIBLE);
-        binding.btnSubmitMaterial.setEnabled(false);
-
         CreateMaterialRequest request = new CreateMaterialRequest(title, url, fileType, false);
-
-        activeCreateCall = ApiClient.getUserClassApiService(requireContext())
-                .createMaterial(classId, request);
-
-        activeCreateCall.enqueue(new Callback<ApiResponse<ClassDetailResponse.MaterialItem>>() {
-            @Override
-            public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call,
-                                   @NonNull Response<ApiResponse<ClassDetailResponse.MaterialItem>> response) {
-                if (call.isCanceled() || !isAdded() || binding == null) return;
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    handleComplete();
-                } else {
-                    String msg = response.body() != null && response.body().getMessage() != null
-                            ? response.body().getMessage() : getString(R.string.network_error);
-                    if (getContext() != null) {
-                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                    }
-                    binding.pbSubmitting.setVisibility(View.GONE);
-                    binding.btnSubmitMaterial.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call, @NonNull Throwable t) {
-                if (call.isCanceled() || !isAdded() || binding == null) return;
-                binding.pbSubmitting.setVisibility(View.GONE);
-                binding.btnSubmitMaterial.setEnabled(true);
-                if (getContext() != null) {
-                    Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+        viewModel.createMaterial(classId, request);
     }
 
     private void handleComplete() {
@@ -257,12 +235,6 @@ public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFr
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
-            activeUploadCall.cancel();
-        }
-        if (activeCreateCall != null && !activeCreateCall.isCanceled()) {
-            activeCreateCall.cancel();
-        }
         binding = null;
     }
 }

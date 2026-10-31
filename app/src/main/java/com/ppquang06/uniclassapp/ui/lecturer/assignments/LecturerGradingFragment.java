@@ -13,32 +13,29 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.GradeSubmissionRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse.SubmissionItem;
 import com.ppquang06.uniclassapp.databinding.DialogPublishGradeBinding;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerGradingBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LecturerGradingFragment extends Fragment {
 
     private FragmentLecturerGradingBinding binding;
+    private GradingViewModel viewModel;
     private final Gson gson = new Gson();
 
     private String assignmentId = "";
@@ -48,6 +45,7 @@ public class LecturerGradingFragment extends Fragment {
 
     private List<SubmissionItem> submissions = new ArrayList<>();
     private int currentIndex = 0;
+    private boolean isLastActionPublish = false;
 
     @Nullable
     @Override
@@ -60,6 +58,8 @@ public class LecturerGradingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(GradingViewModel.class);
+
         parseArguments();
         if (submissions.isEmpty()) {
             Toast.makeText(requireContext(), "Không có bài nộp nào để chấm", Toast.LENGTH_SHORT).show();
@@ -71,6 +71,7 @@ public class LecturerGradingFragment extends Fragment {
         setupQuickScoreChips();
         setupStudentSwitcher();
         setupActionButtons();
+        observeViewModel();
 
         displayStudent(currentIndex);
     }
@@ -159,6 +160,33 @@ public class LecturerGradingFragment extends Fragment {
         binding.btnOpenFile.setOnClickListener(v -> openSubmittedFile());
         binding.btnSaveDraft.setOnClickListener(v -> saveDraftGrade());
         binding.btnPublishGrade.setOnClickListener(v -> showPublishGradeDialog());
+    }
+
+    private void observeViewModel() {
+        viewModel.getGradeState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbLoading.setVisibility(View.VISIBLE);
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    if (isLastActionPublish) {
+                        onGradePublishedSuccess();
+                    } else {
+                        Toast.makeText(requireContext(), R.string.toast_draft_saved, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : (isLastActionPublish ? "Chấm điểm thất bại" : "Lưu bản nháp thất bại");
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void displayStudent(int index) {
@@ -318,32 +346,8 @@ public class LecturerGradingFragment extends Fragment {
         updateGradingProgress();
 
         GradeSubmissionRequest request = new GradeSubmissionRequest(score, feedback, false);
-
-        binding.pbLoading.setVisibility(View.VISIBLE);
-        ApiClient.getUserClassApiService(requireContext())
-                .gradeSubmission(assignmentId, item.getStudentId(), request)
-                .enqueue(new Callback<ApiResponse<AssignmentSubmissionListResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call,
-                                           @NonNull Response<ApiResponse<AssignmentSubmissionListResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            Toast.makeText(requireContext(), R.string.toast_draft_saved, Toast.LENGTH_SHORT).show();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Lưu bản nháp thất bại";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        isLastActionPublish = false;
+        viewModel.gradeSubmission(assignmentId, item.getStudentId(), request);
     }
 
     private void showPublishGradeDialog() {
@@ -371,32 +375,8 @@ public class LecturerGradingFragment extends Fragment {
         updateGradingProgress();
 
         GradeSubmissionRequest request = new GradeSubmissionRequest(score, feedback, publishAll);
-
-        binding.pbLoading.setVisibility(View.VISIBLE);
-        ApiClient.getUserClassApiService(requireContext())
-                .gradeSubmission(assignmentId, item.getStudentId(), request)
-                .enqueue(new Callback<ApiResponse<AssignmentSubmissionListResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call,
-                                           @NonNull Response<ApiResponse<AssignmentSubmissionListResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            onGradePublishedSuccess();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Chấm điểm thất bại";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        isLastActionPublish = true;
+        viewModel.gradeSubmission(assignmentId, item.getStudentId(), request);
     }
 
     private void onGradePublishedSuccess() {
@@ -411,7 +391,7 @@ public class LecturerGradingFragment extends Fragment {
         }
     }
 
-    private static String getInitialFromName(String name) {
+    public static String getInitialFromName(String name) {
         if (TextUtils.isEmpty(name)) return "U";
         String[] parts = name.trim().split("\\s+");
         if (parts.length == 1) {
@@ -422,7 +402,7 @@ public class LecturerGradingFragment extends Fragment {
         return (first + last).toUpperCase();
     }
 
-    private static String extractFileName(String url) {
+    public static String extractFileName(String url) {
         if (url == null) return "attachment";
         int lastSlash = url.lastIndexOf('/');
         if (lastSlash >= 0 && lastSlash < url.length() - 1) {

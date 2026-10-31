@@ -12,16 +12,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerClassDetailBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.MaterialAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter;
@@ -29,13 +29,10 @@ import com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter;
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LecturerClassDetailFragment extends Fragment {
 
     private FragmentLecturerClassDetailBinding binding;
+    private LecturerManagementViewModel viewModel;
 
     private NotificationAdapter announcementAdapter;
     private MaterialAdapter materialAdapter;
@@ -61,12 +58,15 @@ public class LecturerClassDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(LecturerManagementViewModel.class);
+
         readArguments();
         setupTopAppBar();
         setupInitialHeaders();
         setupRecyclerViews();
         setupActionButtons();
         setupSwipeRefresh();
+        observeViewModel();
         loadClassDetail();
     }
 
@@ -239,40 +239,44 @@ public class LecturerClassDetailFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(this::loadClassDetail);
     }
 
+    private void observeViewModel() {
+        viewModel.getClassDetailState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    if (state.getData() != null) {
+                        bindDetailData(state.getData());
+                    } else if (!binding.swipeRefresh.isRefreshing()) {
+                        binding.pbLoading.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    if (state.getData() != null) {
+                        bindDetailData(state.getData());
+                    }
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    if (state.getData() != null) {
+                        bindDetailData(state.getData());
+                    } else {
+                        String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                                ? state.getMessage() : getString(R.string.cannot_load_classes);
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void loadClassDetail() {
         if (getContext() == null || binding == null) return;
-
-        if (!binding.swipeRefresh.isRefreshing()) {
-            binding.pbLoading.setVisibility(View.VISIBLE);
-        }
-
-        ApiClient.getUserClassApiService(requireContext())
-                .getClassDetail(classId)
-                .enqueue(new Callback<ApiResponse<ClassDetailResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse>> call,
-                                           @NonNull Response<ApiResponse<ClassDetailResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.swipeRefresh.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            bindDetailData(response.body().getData());
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : getString(R.string.cannot_load_classes);
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.swipeRefresh.setRefreshing(false);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.loadClassDetail(classId, classCode, className, semester);
     }
 
     private void bindDetailData(ClassDetailResponse detail) {

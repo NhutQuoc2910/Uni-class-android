@@ -10,28 +10,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse.SubmissionItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerAssignmentSubmissionsBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LecturerAssignmentSubmissionsFragment extends Fragment {
 
     private FragmentLecturerAssignmentSubmissionsBinding binding;
+    private GradingViewModel viewModel;
     private SubmissionListAdapter adapter;
     private final Gson gson = new Gson();
 
@@ -54,6 +51,8 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(GradingViewModel.class);
+
         if (getArguments() != null) {
             assignmentId = getArguments().getString("assignmentId", "");
             assignmentTitle = getArguments().getString("assignmentTitle", "");
@@ -66,7 +65,7 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
         setupRecyclerView();
         setupFilterTabs();
         setupSwipeRefresh();
-
+        observeViewModel();
         loadSubmissions();
     }
 
@@ -132,41 +131,37 @@ public class LecturerAssignmentSubmissionsFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(this::loadSubmissions);
     }
 
+    private void observeViewModel() {
+        viewModel.getSubmissionsState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    if (!binding.swipeRefresh.isRefreshing()) {
+                        binding.pbLoading.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    currentData = state.getData();
+                    bindData(currentData);
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Không thể tải danh sách bài nộp";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void loadSubmissions() {
         if (getContext() == null || binding == null) return;
-
-        if (!binding.swipeRefresh.isRefreshing()) {
-            binding.pbLoading.setVisibility(View.VISIBLE);
-        }
-
-        ApiClient.getUserClassApiService(requireContext())
-                .getAssignmentSubmissions(assignmentId)
-                .enqueue(new Callback<ApiResponse<AssignmentSubmissionListResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call,
-                                           @NonNull Response<ApiResponse<AssignmentSubmissionListResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.swipeRefresh.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            currentData = response.body().getData();
-                            bindData(currentData);
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Không thể tải danh sách bài nộp";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<AssignmentSubmissionListResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.swipeRefresh.setRefreshing(false);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.loadSubmissions(assignmentId);
     }
 
     private void bindData(AssignmentSubmissionListResponse data) {

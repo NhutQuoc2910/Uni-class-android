@@ -10,23 +10,20 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerCreateClassBinding;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 public class LecturerCreateClassFragment extends Fragment {
 
     private FragmentLecturerCreateClassBinding binding;
+    private LecturerManagementViewModel viewModel;
 
     @Nullable
     @Override
@@ -39,8 +36,11 @@ public class LecturerCreateClassFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(LecturerManagementViewModel.class);
+
         setupTopBar();
         setupListeners();
+        observeViewModel();
     }
 
     private void setupTopBar() {
@@ -53,6 +53,33 @@ public class LecturerCreateClassFragment extends Fragment {
 
     private void setupListeners() {
         binding.btnSubmitCreateClass.setOnClickListener(v -> attemptCreateClass());
+    }
+
+    private void observeViewModel() {
+        viewModel.getCreateClassState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    setLoading(true);
+                    break;
+                case SUCCESS:
+                    setLoading(false);
+                    CourseClassItem created = state.getData();
+                    if (created != null) {
+                        navigateToInvite(created.getId(), created.getCode(), created.getName(), created.getInviteCode());
+                    }
+                    break;
+                case ERROR:
+                    setLoading(false);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : getString(R.string.cannot_load_classes);
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    setLoading(false);
+                    break;
+            }
+        });
     }
 
     private void attemptCreateClass() {
@@ -79,38 +106,9 @@ public class LecturerCreateClassFragment extends Fragment {
 
         if (hasError) return;
 
-        setLoading(true);
-
         CreateClassRequest request = new CreateClassRequest(name, code, semester, room);
-        ApiClient.getUserClassApiService(requireContext())
-                .createClass(request)
-                .enqueue(new Callback<ApiResponse<CourseClassItem>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<CourseClassItem>> call,
-                                           @NonNull Response<ApiResponse<CourseClassItem>> response) {
-                        if (!isAdded() || binding == null) return;
-                        setLoading(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            CourseClassItem created = response.body().getData();
-                            navigateToInvite(created.getId(), created.getCode(), created.getName(), created.getInviteCode());
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : getString(R.string.cannot_load_classes);
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<CourseClassItem>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        setLoading(false);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.createClass(request);
     }
-
-
 
     private void navigateToInvite(String classId, String classCode, String className, String inviteCode) {
         Bundle args = new Bundle();

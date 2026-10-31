@@ -148,9 +148,27 @@ public class BaseViewModel extends AndroidViewModel {
             String errorJson = errorBody.string();
             if (errorJson != null && !errorJson.trim().isEmpty()) {
                 ApiResponse<?> errorResponse = gson.fromJson(errorJson, ApiResponse.class);
-                if (errorResponse != null && errorResponse.getMessage() != null
-                        && !errorResponse.getMessage().trim().isEmpty()) {
-                    return errorResponse.getMessage();
+                if (errorResponse != null) {
+                    if (errorResponse.getCode() == 40006) {
+                        return "Mật khẩu hiện tại không chính xác";
+                    } else if (errorResponse.getCode() == 40007) {
+                        return "Mật khẩu mới không được trùng mật khẩu cũ";
+                    } else if (errorResponse.getCode() == 40008) {
+                        return "ALREADY_JOINED";
+                    } else if (errorResponse.getCode() == 40402) {
+                        return "CLASS_NOT_FOUND";
+                    } else if (errorResponse.getCode() == 40010 || "QR_EXPIRED".equalsIgnoreCase(errorResponse.getErrorCode())) {
+                        return "QR_EXPIRED";
+                    } else if (errorResponse.getCode() == 40011 || "WIFI_MISMATCH".equalsIgnoreCase(errorResponse.getErrorCode())) {
+                        return "WIFI_MISMATCH";
+                    } else if (errorResponse.getCode() == 40012 || "GPS_OUT_OF_RANGE".equalsIgnoreCase(errorResponse.getErrorCode())) {
+                        return "GPS_OUT_OF_RANGE";
+                    } else if (errorResponse.getCode() == 40013 || "DEVICE_ALREADY_USED".equalsIgnoreCase(errorResponse.getErrorCode())) {
+                        return "DEVICE_ALREADY_USED";
+                    }
+                    if (errorResponse.getMessage() != null && !errorResponse.getMessage().trim().isEmpty()) {
+                        return errorResponse.getMessage();
+                    }
                 }
 
                 // Fallback check for standard Spring Boot "error" or "detail" fields
@@ -181,6 +199,13 @@ public class BaseViewModel extends AndroidViewModel {
      */
     public Set<Call<?>> getActiveCalls() {
         return Collections.unmodifiableSet(activeCalls);
+    }
+
+    /**
+     * Returns the mutable set of active Retrofit calls for subclasses delegating to repository methods.
+     */
+    protected Set<Call<?>> getActiveCallsMutable() {
+        return activeCalls;
     }
 
     /**

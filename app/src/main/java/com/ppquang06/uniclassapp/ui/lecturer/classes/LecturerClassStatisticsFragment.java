@@ -16,30 +16,26 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse.ScoreBucket;
-import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerClassStatisticsBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LecturerClassStatisticsFragment extends Fragment {
 
     private FragmentLecturerClassStatisticsBinding binding;
+    private LecturerManagementViewModel viewModel;
 
     private String classId = "";
     private String classCode = "";
@@ -58,6 +54,8 @@ public class LecturerClassStatisticsFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(LecturerManagementViewModel.class);
+
         if (getArguments() != null) {
             classId = getArguments().getString("classId", "");
             classCode = getArguments().getString("classCode", "");
@@ -69,7 +67,7 @@ public class LecturerClassStatisticsFragment extends Fragment {
         setupHeader();
         setupSwipeRefresh();
         setupArchiveButton();
-
+        observeViewModel();
         loadStatistics();
     }
 
@@ -121,12 +119,57 @@ public class LecturerClassStatisticsFragment extends Fragment {
                 .show();
     }
 
+    private void observeViewModel() {
+        viewModel.getStatisticsState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    if (!binding.swipeRefreshStats.isRefreshing()) {
+                        binding.pbLoadingStats.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case SUCCESS:
+                    binding.pbLoadingStats.setVisibility(View.GONE);
+                    binding.swipeRefreshStats.setRefreshing(false);
+                    bindData(state.getData());
+                    break;
+                case ERROR:
+                    binding.pbLoadingStats.setVisibility(View.GONE);
+                    binding.swipeRefreshStats.setRefreshing(false);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Không thể tải thống kê lớp học";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getArchiveClassState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbLoadingStats.setVisibility(View.VISIBLE);
+                    break;
+                case SUCCESS:
+                    binding.pbLoadingStats.setVisibility(View.GONE);
+                    markClassArchivedUi();
+                    Toast.makeText(requireContext(), "Đã lưu trữ lớp học thành công", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    binding.pbLoadingStats.setVisibility(View.GONE);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Lưu trữ lớp học thất bại";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void loadStatistics() {
         if (getContext() == null || binding == null) return;
-
-        if (!binding.swipeRefreshStats.isRefreshing()) {
-            binding.pbLoadingStats.setVisibility(View.VISIBLE);
-        }
 
         if (TextUtils.isEmpty(classId)) {
             binding.pbLoadingStats.setVisibility(View.GONE);
@@ -135,33 +178,7 @@ public class LecturerClassStatisticsFragment extends Fragment {
             return;
         }
 
-        ApiClient.getUserClassApiService(requireContext())
-                .getClassStatistics(classId)
-                .enqueue(new Callback<ApiResponse<ClassStatisticsResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<ClassStatisticsResponse>> call,
-                                           @NonNull Response<ApiResponse<ClassStatisticsResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingStats.setVisibility(View.GONE);
-                        binding.swipeRefreshStats.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            bindData(response.body().getData());
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Không thể tải thống kê lớp học";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<ClassStatisticsResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingStats.setVisibility(View.GONE);
-                        binding.swipeRefreshStats.setRefreshing(false);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.loadClassStatistics(classId);
     }
 
     private void bindData(ClassStatisticsResponse data) {
@@ -359,34 +376,7 @@ public class LecturerClassStatisticsFragment extends Fragment {
 
     private void executeArchiveClass() {
         if (getContext() == null || binding == null) return;
-
-        binding.pbLoadingStats.setVisibility(View.VISIBLE);
-
-        ApiClient.getUserClassApiService(requireContext())
-                .archiveClass(classId)
-                .enqueue(new Callback<ApiResponse<CourseClassItem>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<CourseClassItem>> call,
-                                           @NonNull Response<ApiResponse<CourseClassItem>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingStats.setVisibility(View.GONE);
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            markClassArchivedUi();
-                            Toast.makeText(requireContext(), "Đã lưu trữ lớp học thành công", Toast.LENGTH_SHORT).show();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Lưu trữ lớp học thất bại";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<CourseClassItem>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingStats.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.archiveClass(classId);
     }
 
     private void markClassArchivedUi() {

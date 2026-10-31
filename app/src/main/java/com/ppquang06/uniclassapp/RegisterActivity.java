@@ -10,21 +10,15 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.RegisterRequest;
-import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityRegisterBinding;
-
-import org.json.JSONObject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.ppquang06.uniclassapp.ui.auth.AuthViewModel;
 
 public class RegisterActivity extends AppCompatActivity {
     private ActivityRegisterBinding binding;
+    private AuthViewModel authViewModel;
     private String selectedRole = "STUDENT";
     private boolean isPasswordVisible = false;
     private boolean isConfirmPasswordVisible = false;
@@ -35,9 +29,12 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         setupRoleSelection();
         setupPasswordToggles();
         setupListeners();
+        observeViewModel();
     }
 
     private void setupRoleSelection() {
@@ -93,6 +90,29 @@ public class RegisterActivity extends AppCompatActivity {
         binding.btnRegister.setOnClickListener(v -> performRegister());
     }
 
+    private void observeViewModel() {
+        authViewModel.getRegisterState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoading(true);
+            } else if (state.isSuccess()) {
+                setLoading(false);
+                authViewModel.resetRegisterState();
+                Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegisterActivity.this, RegisterSuccessActivity.class);
+                startActivity(intent);
+                finish();
+            } else if (state.isError()) {
+                setLoading(false);
+                String errorMsg = state.getMessage() != null ? state.getMessage() : "Đăng ký không thành công";
+                authViewModel.resetRegisterState();
+                Toast.makeText(RegisterActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void performRegister() {
         String fullName = binding.edtFullName.getText() != null ? binding.edtFullName.getText().toString().trim() : "";
         String contact = binding.edtContact.getText() != null ? binding.edtContact.getText().toString().trim() : "";
@@ -136,41 +156,9 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        setLoading(true);
-
         String roleToSend = "LECTURER".equalsIgnoreCase(selectedRole) ? "ROLE_LECTURER" : "ROLE_STUDENT";
         RegisterRequest request = new RegisterRequest(email, password, fullName, phone, roleToSend);
-        ApiClient.getAuthApiService(this).register(request).enqueue(new Callback<ApiResponse<UserResponse>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<UserResponse>> call, Response<ApiResponse<UserResponse>> response) {
-                setLoading(false);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(RegisterActivity.this, RegisterSuccessActivity.class);
-                    startActivity(intent);
-                    finish();
-                } else {
-                    String errorMsg = "Đăng ký không thành công";
-                    try {
-                        if (response.errorBody() != null) {
-                            JSONObject errJson = new JSONObject(response.errorBody().string());
-                            if (errJson.has("message")) {
-                                errorMsg = errJson.getString("message");
-                            }
-                        } else if (response.body() != null && response.body().getMessage() != null) {
-                            errorMsg = response.body().getMessage();
-                        }
-                    } catch (Exception ignored) {}
-                    Toast.makeText(RegisterActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<UserResponse>> call, Throwable t) {
-                setLoading(false);
-                Toast.makeText(RegisterActivity.this, "Lỗi kết nối máy chủ: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        authViewModel.register(request);
     }
 
     private void setLoading(boolean isLoading) {

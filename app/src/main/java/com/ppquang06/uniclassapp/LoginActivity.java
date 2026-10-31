@@ -8,23 +8,17 @@ import android.text.method.PasswordTransformationMethod;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
-import com.ppquang06.uniclassapp.data.model.request.LoginRequest;
 import com.ppquang06.uniclassapp.data.model.response.AuthResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityLoginBinding;
+import com.ppquang06.uniclassapp.ui.auth.AuthViewModel;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
-import org.json.JSONObject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
+    private AuthViewModel authViewModel;
     private boolean isPasswordVisible = false;
 
     @Override
@@ -33,7 +27,10 @@ public class LoginActivity extends AppCompatActivity {
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         setupListeners();
+        observeViewModel();
     }
 
     private void setupListeners() {
@@ -60,6 +57,38 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setOnClickListener(v -> performLogin());
     }
 
+    private void observeViewModel() {
+        authViewModel.getLoginState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoading(true);
+            } else if (state.isSuccess()) {
+                setLoading(false);
+                AuthResponse auth = state.getData();
+                authViewModel.resetLoginState();
+                if (auth != null && auth.getToken() != null) {
+                    SessionManager.getInstance(LoginActivity.this).saveAuth(auth.getToken(), auth.getUser());
+
+                    String welcomeName = auth.getUser() != null ? auth.getUser().getFullName() : "";
+                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công! " + welcomeName, Toast.LENGTH_SHORT).show();
+
+                    RoleRouter.navigateToHomeByRole(LoginActivity.this);
+                } else {
+                    Toast.makeText(LoginActivity.this, "Email/Số điện thoại hoặc mật khẩu không chính xác", Toast.LENGTH_LONG).show();
+                }
+            } else if (state.isError()) {
+                setLoading(false);
+                String errorMsg = state.getMessage() != null
+                        ? state.getMessage()
+                        : "Email/Số điện thoại hoặc mật khẩu không chính xác";
+                authViewModel.resetLoginState();
+                Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void performLogin() {
         String emailOrPhone = binding.edtEmail.getText() != null ? binding.edtEmail.getText().toString().trim() : "";
         String password = binding.edtPassword.getText() != null ? binding.edtPassword.getText().toString() : "";
@@ -76,46 +105,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        setLoading(true);
-
-        LoginRequest request = new LoginRequest(emailOrPhone, password);
-        ApiClient.getAuthApiService(this).login(request).enqueue(new Callback<ApiResponse<AuthResponse>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<AuthResponse>> call, Response<ApiResponse<AuthResponse>> response) {
-                setLoading(false);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    AuthResponse auth = response.body().getData();
-                    if (auth != null && auth.getToken() != null) {
-                        SessionManager.getInstance(LoginActivity.this).saveAuth(auth.getToken(), auth.getUser());
-
-                        String welcomeName = auth.getUser() != null ? auth.getUser().getFullName() : "";
-                        Toast.makeText(LoginActivity.this, "Đăng nhập thành công! " + welcomeName, Toast.LENGTH_SHORT).show();
-
-                        RoleRouter.navigateToHomeByRole(LoginActivity.this);
-                        return;
-                    }
-                }
-
-                String errorMsg = "Email/Số điện thoại hoặc mật khẩu không chính xác";
-                try {
-                    if (response.errorBody() != null) {
-                        JSONObject errJson = new JSONObject(response.errorBody().string());
-                        if (errJson.has("message")) {
-                            errorMsg = errJson.getString("message");
-                        }
-                    } else if (response.body() != null && response.body().getMessage() != null) {
-                        errorMsg = response.body().getMessage();
-                    }
-                } catch (Exception ignored) {}
-                Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<AuthResponse>> call, Throwable t) {
-                setLoading(false);
-                Toast.makeText(LoginActivity.this, "Lỗi kết nối máy chủ: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        authViewModel.login(emailOrPhone, password);
     }
 
     private void setLoading(boolean isLoading) {

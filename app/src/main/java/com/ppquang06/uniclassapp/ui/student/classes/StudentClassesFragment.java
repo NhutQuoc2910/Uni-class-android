@@ -4,34 +4,29 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
-import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentClassesBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
 
 import java.util.Collections;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class StudentClassesFragment extends Fragment {
 
     private FragmentStudentClassesBinding binding;
     private CourseClassAdapter adapter;
+    private ClassDetailViewModel viewModel;
 
     @Nullable
     @Override
@@ -44,10 +39,13 @@ public class StudentClassesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(ClassDetailViewModel.class);
+
         setupTopBar();
         setupRecyclerView();
         setupEmptyAndErrorViews();
         setupListeners();
+        observeViewModel();
         loadClasses();
     }
 
@@ -98,6 +96,36 @@ public class StudentClassesFragment extends Fragment {
         binding.fabJoinClass.setOnClickListener(v -> openJoinClassSheet());
     }
 
+    private void observeViewModel() {
+        viewModel.getClassesState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    if (state.getData() != null && !state.getData().isEmpty()) {
+                        binding.swipeRefresh.setRefreshing(false);
+                        handleClassesResult(state.getData());
+                    } else if (!binding.swipeRefresh.isRefreshing()) {
+                        showLoadingState();
+                    }
+                    break;
+                case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
+                    handleClassesResult(state.getData());
+                    break;
+                case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+                    if (state.getData() != null && !state.getData().isEmpty()) {
+                        handleClassesResult(state.getData());
+                    } else {
+                        showErrorState(state.getMessage());
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void openJoinClassSheet() {
         JoinClassBottomSheetDialogFragment sheet = JoinClassBottomSheetDialogFragment.newInstance();
         sheet.setOnClassJoinedListener(newClass -> loadClasses());
@@ -106,65 +134,7 @@ public class StudentClassesFragment extends Fragment {
 
     private void loadClasses() {
         if (getContext() == null || binding == null) return;
-
-        if (!binding.swipeRefresh.isRefreshing()) {
-            showLoadingState();
-        }
-
-        ApiClient.getUserClassApiService(requireContext())
-                .getClasses()
-                .enqueue(new Callback<ApiResponse<List<CourseClassItem>>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<List<CourseClassItem>>> call,
-                                           @NonNull Response<ApiResponse<List<CourseClassItem>>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            List<CourseClassItem> items = response.body().getData();
-                            handleClassesResult(items);
-                        } else {
-                            // Fallback to home summary if classes endpoint is not available or errored
-                            fallbackToHomeSummary();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<List<CourseClassItem>>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        fallbackToHomeSummary();
-                    }
-                });
-    }
-
-    private void fallbackToHomeSummary() {
-        if (getContext() == null || binding == null) return;
-
-        ApiClient.getUserClassApiService(requireContext())
-                .getHomeSummary()
-                .enqueue(new Callback<ApiResponse<HomeSummaryResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<HomeSummaryResponse>> call,
-                                           @NonNull Response<ApiResponse<HomeSummaryResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            HomeSummaryResponse homeData = response.body().getData();
-                            List<CourseClassItem> courses = homeData != null ? homeData.getCourses() : null;
-                            handleClassesResult(courses);
-                        } else {
-                            showErrorState(getString(R.string.classes_load_error));
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<HomeSummaryResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-                        showErrorState(t.getMessage());
-                    }
-                });
+        viewModel.loadClasses();
     }
 
     private void handleClassesResult(List<CourseClassItem> items) {

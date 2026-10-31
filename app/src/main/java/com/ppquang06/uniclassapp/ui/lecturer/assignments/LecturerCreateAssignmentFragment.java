@@ -10,30 +10,27 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.CreateAssignmentRequest;
-import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerCreateAssignmentBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LecturerCreateAssignmentFragment extends Fragment {
 
     private FragmentLecturerCreateAssignmentBinding binding;
+    private GradingViewModel viewModel;
+
     private String classId = "";
     private String classCode = "";
     private String className = "";
@@ -49,6 +46,8 @@ public class LecturerCreateAssignmentFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(GradingViewModel.class);
+
         if (getArguments() != null) {
             classId = getArguments().getString("classId", "");
             classCode = getArguments().getString("classCode", "");
@@ -58,6 +57,7 @@ public class LecturerCreateAssignmentFragment extends Fragment {
         setupTopBar();
         setupDateTimePickers();
         setupSubmitButton();
+        observeViewModel();
     }
 
     private void setupTopBar() {
@@ -122,6 +122,33 @@ public class LecturerCreateAssignmentFragment extends Fragment {
         binding.btnSubmitCreateAssignment.setOnClickListener(v -> attemptCreateAssignment());
     }
 
+    private void observeViewModel() {
+        viewModel.getCreateAssignmentState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbLoading.setVisibility(View.VISIBLE);
+                    binding.btnSubmitCreateAssignment.setEnabled(false);
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.btnSubmitCreateAssignment.setEnabled(true);
+                    Toast.makeText(requireContext(), R.string.toast_create_assignment_success, Toast.LENGTH_SHORT).show();
+                    NavHostFragment.findNavController(LecturerCreateAssignmentFragment.this).popBackStack();
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.btnSubmitCreateAssignment.setEnabled(true);
+                    String msg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                            ? state.getMessage() : "Tạo bài tập thất bại";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void attemptCreateAssignment() {
         binding.tilAssignmentTitle.setError(null);
         binding.tilDueDate.setError(null);
@@ -164,36 +191,7 @@ public class LecturerCreateAssignmentFragment extends Fragment {
                 allowLate
         );
 
-        binding.pbLoading.setVisibility(View.VISIBLE);
-        binding.btnSubmitCreateAssignment.setEnabled(false);
-
-        ApiClient.getUserClassApiService(requireContext())
-                .createAssignment(classId, request)
-                .enqueue(new Callback<ApiResponse<ClassDetailResponse.ClassAssignmentItem>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> call,
-                                           @NonNull Response<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.btnSubmitCreateAssignment.setEnabled(true);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            Toast.makeText(requireContext(), R.string.toast_create_assignment_success, Toast.LENGTH_SHORT).show();
-                            NavHostFragment.findNavController(LecturerCreateAssignmentFragment.this).popBackStack();
-                        } else {
-                            String msg = response.body() != null && response.body().getMessage() != null ? response.body().getMessage() : "Tạo bài tập thất bại";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.btnSubmitCreateAssignment.setEnabled(true);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.createAssignment(classId, request);
     }
 
     @Override

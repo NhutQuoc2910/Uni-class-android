@@ -11,23 +11,17 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
 import com.ppquang06.uniclassapp.databinding.DialogChangePasswordBottomSheetBinding;
-import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ChangePasswordBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
     private DialogChangePasswordBottomSheetBinding binding;
+    private ProfileViewModel profileViewModel;
 
     public static ChangePasswordBottomSheetDialogFragment newInstance() {
         return new ChangePasswordBottomSheetDialogFragment();
@@ -44,7 +38,10 @@ public class ChangePasswordBottomSheetDialogFragment extends BottomSheetDialogFr
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
         setupListeners();
+        observeViewModel();
     }
 
     private void setupListeners() {
@@ -67,6 +64,38 @@ public class ChangePasswordBottomSheetDialogFragment extends BottomSheetDialogFr
         binding.etCurrentPassword.addTextChangedListener(textWatcher);
         binding.etNewPassword.addTextChangedListener(textWatcher);
         binding.etConfirmPassword.addTextChangedListener(textWatcher);
+    }
+
+    private void observeViewModel() {
+        profileViewModel.getChangePasswordState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || state.isIdle() || binding == null) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoading(true);
+            } else if (state.isSuccess()) {
+                setLoading(false);
+                profileViewModel.resetChangePasswordState();
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), R.string.change_pass_success, Toast.LENGTH_SHORT).show();
+                }
+                dismiss();
+            } else if (state.isError()) {
+                setLoading(false);
+                String errorMessage = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                        ? state.getMessage()
+                        : getString(R.string.change_pass_error_generic);
+                profileViewModel.resetChangePasswordState();
+
+                if (errorMessage.contains("hiện tại")
+                        || errorMessage.toLowerCase().contains("current")
+                        || errorMessage.contains("40006")) {
+                    binding.tilCurrentPassword.setError(errorMessage);
+                } else {
+                    binding.tilNewPassword.setError(errorMessage);
+                }
+            }
+        });
     }
 
     private void clearErrors() {
@@ -108,58 +137,8 @@ public class ChangePasswordBottomSheetDialogFragment extends BottomSheetDialogFr
             return;
         }
 
-        setLoading(true);
-
         ChangePasswordRequest request = new ChangePasswordRequest(currentPass, newPass);
-        ApiClient.getUserClassApiService(requireContext())
-                .changePassword(request)
-                .enqueue(new Callback<ApiResponse<Void>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<Void>> call, @NonNull Response<ApiResponse<Void>> response) {
-                        if (!isAdded() || binding == null) return;
-                        setLoading(false);
-
-                        if (response.isSuccessful()) {
-                            Toast.makeText(requireContext(), R.string.change_pass_success, Toast.LENGTH_SHORT).show();
-                            dismiss();
-                        } else {
-                            handleApiError(response);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        setLoading(false);
-                        binding.tilNewPassword.setError(getString(R.string.change_pass_error_generic));
-                    }
-                });
-    }
-
-    private void handleApiError(Response<ApiResponse<Void>> response) {
-        String fallback = getString(R.string.change_pass_error_generic);
-        int errorCode = -1;
-        String errorMessage = fallback;
-
-        try {
-            if (response.errorBody() != null) {
-                String errorJson = response.errorBody().string();
-                ApiResponse<?> errRes = new Gson().fromJson(errorJson, ApiResponse.class);
-                if (errRes != null) {
-                    errorCode = errRes.getCode();
-                    errorMessage = NotificationFilterHelper.resolveChangePasswordErrorMessage(errorCode, errRes.getMessage());
-                }
-            }
-        } catch (Exception ignored) {
-        }
-
-        if (errorCode == 40006) {
-            binding.tilCurrentPassword.setError(errorMessage);
-        } else if (errorCode == 40007) {
-            binding.tilNewPassword.setError(errorMessage);
-        } else {
-            binding.tilNewPassword.setError(errorMessage);
-        }
+        profileViewModel.changePassword(request);
     }
 
     private void setLoading(boolean loading) {

@@ -11,25 +11,17 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
-import com.ppquang06.uniclassapp.data.model.request.ForgotPasswordRequest;
-import com.ppquang06.uniclassapp.data.model.request.VerifyOtpRequest;
 import com.ppquang06.uniclassapp.databinding.ActivityForgotPassOtpBinding;
+import com.ppquang06.uniclassapp.ui.auth.AuthViewModel;
 import com.ppquang06.uniclassapp.utils.Constants;
-
-import org.json.JSONObject;
-
-import java.util.Map;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ForgotPassOTPActivity extends AppCompatActivity {
     private ActivityForgotPassOtpBinding binding;
+    private AuthViewModel authViewModel;
     private String email = "";
+    private String pendingOtp = "";
     private CountDownTimer countDownTimer;
     private boolean isTimerRunning = false;
 
@@ -38,6 +30,8 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityForgotPassOtpBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
         email = getIntent().getStringExtra(Constants.EXTRA_EMAIL);
         if (email == null) email = "";
@@ -49,6 +43,7 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
         setupOtpInputBoxes();
         setupResendTimer();
         setupListeners();
+        observeViewModel();
     }
 
     private void setupOtpInputBoxes() {
@@ -118,34 +113,59 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
         }.start();
     }
 
+    private void observeViewModel() {
+        authViewModel.getForgotPasswordState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
+            }
+            if (state.isLoading()) {
+                binding.tvResendTimer.setText("Đang gửi...");
+                binding.tvResendTimer.setEnabled(false);
+            } else if (state.isSuccess()) {
+                authViewModel.resetForgotPasswordState();
+                Toast.makeText(ForgotPassOTPActivity.this, "Đã gửi lại mã OTP!", Toast.LENGTH_SHORT).show();
+                startCountdown();
+            } else if (state.isError()) {
+                String errorMsg = state.getMessage() != null ? state.getMessage() : "Gửi lại OTP thất bại";
+                authViewModel.resetForgotPasswordState();
+                Toast.makeText(ForgotPassOTPActivity.this, errorMsg, Toast.LENGTH_SHORT).show();
+                binding.tvResendTimer.setText("Gửi lại mã");
+                binding.tvResendTimer.setEnabled(true);
+            }
+        });
+
+        authViewModel.getVerifyOtpState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoading(true);
+            } else if (state.isSuccess()) {
+                setLoading(false);
+                authViewModel.resetVerifyOtpState();
+                Toast.makeText(ForgotPassOTPActivity.this, "Xác thực OTP thành công!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ForgotPassOTPActivity.this, ForgotPassNewActivity.class);
+                intent.putExtra(Constants.EXTRA_EMAIL, email);
+                intent.putExtra(Constants.EXTRA_OTP, pendingOtp);
+                startActivity(intent);
+            } else if (state.isError()) {
+                setLoading(false);
+                String errorMsg = state.getMessage() != null
+                        ? state.getMessage()
+                        : "Mã OTP không chính xác hoặc đã hết hạn";
+                authViewModel.resetVerifyOtpState();
+                Toast.makeText(ForgotPassOTPActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     private void resendOtp() {
         if (TextUtils.isEmpty(email)) {
             Toast.makeText(this, "Không có thông tin email", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        binding.tvResendTimer.setText("Đang gửi...");
-        ForgotPasswordRequest request = new ForgotPasswordRequest(email);
-        ApiClient.getAuthApiService(this).forgotPassword(request).enqueue(new Callback<ApiResponse<String>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    Toast.makeText(ForgotPassOTPActivity.this, "Đã gửi lại mã OTP!", Toast.LENGTH_SHORT).show();
-                    startCountdown();
-                } else {
-                    Toast.makeText(ForgotPassOTPActivity.this, "Gửi lại OTP thất bại", Toast.LENGTH_SHORT).show();
-                    binding.tvResendTimer.setText("Gửi lại mã");
-                    binding.tvResendTimer.setEnabled(true);
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
-                Toast.makeText(ForgotPassOTPActivity.this, "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show();
-                binding.tvResendTimer.setText("Gửi lại mã");
-                binding.tvResendTimer.setEnabled(true);
-            }
-        });
+        authViewModel.forgotPassword(email);
     }
 
     private void setupListeners() {
@@ -173,41 +193,8 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
             return;
         }
 
-        setLoading(true);
-
-        VerifyOtpRequest request = new VerifyOtpRequest(email, otp);
-        ApiClient.getAuthApiService(this).verifyOtp(request).enqueue(new Callback<ApiResponse<Map<String, Object>>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<Map<String, Object>>> call, Response<ApiResponse<Map<String, Object>>> response) {
-                setLoading(false);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    Toast.makeText(ForgotPassOTPActivity.this, "Xác thực OTP thành công!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ForgotPassOTPActivity.this, ForgotPassNewActivity.class);
-                    intent.putExtra(Constants.EXTRA_EMAIL, email);
-                    intent.putExtra(Constants.EXTRA_OTP, otp);
-                    startActivity(intent);
-                } else {
-                    String errorMsg = "Mã OTP không chính xác hoặc đã hết hạn";
-                    try {
-                        if (response.errorBody() != null) {
-                            JSONObject errJson = new JSONObject(response.errorBody().string());
-                            if (errJson.has("message")) {
-                                errorMsg = errJson.getString("message");
-                            }
-                        } else if (response.body() != null && response.body().getMessage() != null) {
-                            errorMsg = response.body().getMessage();
-                        }
-                    } catch (Exception ignored) {}
-                    Toast.makeText(ForgotPassOTPActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<Map<String, Object>>> call, Throwable t) {
-                setLoading(false);
-                Toast.makeText(ForgotPassOTPActivity.this, "Lỗi kết nối máy chủ: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        pendingOtp = otp;
+        authViewModel.verifyOtp(email, otp);
     }
 
     private void setLoading(boolean isLoading) {

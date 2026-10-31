@@ -7,21 +7,16 @@ import android.util.Patterns;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
-import com.ppquang06.uniclassapp.data.model.request.ForgotPasswordRequest;
 import com.ppquang06.uniclassapp.databinding.ActivityForgotPasswordBinding;
+import com.ppquang06.uniclassapp.ui.auth.AuthViewModel;
 import com.ppquang06.uniclassapp.utils.Constants;
-
-import org.json.JSONObject;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class ForgotPasswordActivity extends AppCompatActivity {
     private ActivityForgotPasswordBinding binding;
+    private AuthViewModel authViewModel;
+    private String pendingEmail = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,13 +24,39 @@ public class ForgotPasswordActivity extends AppCompatActivity {
         binding = ActivityForgotPasswordBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+
         setupListeners();
+        observeViewModel();
     }
 
     private void setupListeners() {
         binding.tvReturnToLogin.setOnClickListener(v -> finish());
 
         binding.btnSendOTP.setOnClickListener(v -> performSendOtp());
+    }
+
+    private void observeViewModel() {
+        authViewModel.getForgotPasswordState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoading(true);
+            } else if (state.isSuccess()) {
+                setLoading(false);
+                authViewModel.resetForgotPasswordState();
+                Toast.makeText(ForgotPasswordActivity.this, "Mã OTP đã được gửi đến email của bạn!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(ForgotPasswordActivity.this, ForgotPassOTPActivity.class);
+                intent.putExtra(Constants.EXTRA_EMAIL, pendingEmail);
+                startActivity(intent);
+            } else if (state.isError()) {
+                setLoading(false);
+                String errorMsg = state.getMessage() != null ? state.getMessage() : "Gửi mã OTP thất bại";
+                authViewModel.resetForgotPasswordState();
+                Toast.makeText(ForgotPasswordActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     private void performSendOtp() {
@@ -53,40 +74,8 @@ public class ForgotPasswordActivity extends AppCompatActivity {
             return;
         }
 
-        setLoading(true);
-
-        ForgotPasswordRequest request = new ForgotPasswordRequest(email);
-        ApiClient.getAuthApiService(this).forgotPassword(request).enqueue(new Callback<ApiResponse<String>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<String>> call, Response<ApiResponse<String>> response) {
-                setLoading(false);
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    Toast.makeText(ForgotPasswordActivity.this, "Mã OTP đã được gửi đến email của bạn!", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ForgotPasswordActivity.this, ForgotPassOTPActivity.class);
-                    intent.putExtra(Constants.EXTRA_EMAIL, email);
-                    startActivity(intent);
-                } else {
-                    String errorMsg = "Gửi mã OTP thất bại";
-                    try {
-                        if (response.errorBody() != null) {
-                            JSONObject errJson = new JSONObject(response.errorBody().string());
-                            if (errJson.has("message")) {
-                                errorMsg = errJson.getString("message");
-                            }
-                        } else if (response.body() != null && response.body().getMessage() != null) {
-                            errorMsg = response.body().getMessage();
-                        }
-                    } catch (Exception ignored) {}
-                    Toast.makeText(ForgotPasswordActivity.this, errorMsg, Toast.LENGTH_LONG).show();
-                }
-            }
-
-            @Override
-            public void onFailure(Call<ApiResponse<String>> call, Throwable t) {
-                setLoading(false);
-                Toast.makeText(ForgotPasswordActivity.this, "Lỗi kết nối máy chủ: " + t.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
+        pendingEmail = email;
+        authViewModel.forgotPassword(email);
     }
 
     private void setLoading(boolean isLoading) {

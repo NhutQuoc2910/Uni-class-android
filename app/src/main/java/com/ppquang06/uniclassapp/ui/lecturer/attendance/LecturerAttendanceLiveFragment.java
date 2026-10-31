@@ -12,36 +12,31 @@ import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
 import com.ppquang06.uniclassapp.data.api.StompWebSocketClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse.AttendeeItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerAttendanceLiveBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LecturerAttendanceLiveFragment extends Fragment {
 
     private static final String TAG = "LecturerAttendanceLive";
 
     private FragmentLecturerAttendanceLiveBinding binding;
+    private AttendanceViewModel viewModel;
     private LiveAttendeeAdapter adapter;
     private StompWebSocketClient stompClient;
-    private Call<ApiResponse<LiveAttendanceSessionResponse>> loadSessionCall;
-    private Call<ApiResponse<LiveAttendanceSessionResponse>> closeSessionCall;
 
     private String sessionId = "";
     private String classId = "";
@@ -61,6 +56,8 @@ public class LecturerAttendanceLiveFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(AttendanceViewModel.class);
+
         if (getArguments() != null) {
             sessionId = getArguments().getString("sessionId", "");
             classId = getArguments().getString("classId", "");
@@ -74,6 +71,7 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         setupRecyclerView();
         setupSwipeRefresh();
         setupCloseSessionAction();
+        observeViewModel();
 
         loadLiveSession();
     }
@@ -88,7 +86,6 @@ public class LecturerAttendanceLiveFragment extends Fragment {
     public void onStop() {
         super.onStop();
         disconnectWebSocket();
-        cancelPendingCalls();
     }
 
     private void setupTopBar() {
@@ -171,12 +168,57 @@ public class LecturerAttendanceLiveFragment extends Fragment {
                 .show();
     }
 
+    private void observeViewModel() {
+        viewModel.getLiveSessionState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    if (!binding.swipeRefreshLive.isRefreshing()) {
+                        binding.pbLoadingLive.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case SUCCESS:
+                    binding.pbLoadingLive.setVisibility(View.GONE);
+                    binding.swipeRefreshLive.setRefreshing(false);
+                    bindData(state.getData());
+                    break;
+                case ERROR:
+                    binding.pbLoadingLive.setVisibility(View.GONE);
+                    binding.swipeRefreshLive.setRefreshing(false);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Không thể tải phiên điểm danh";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getCloseSessionState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbLoadingLive.setVisibility(View.VISIBLE);
+                    break;
+                case SUCCESS:
+                    binding.pbLoadingLive.setVisibility(View.GONE);
+                    markSessionClosedUi();
+                    Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
+                    break;
+                case ERROR:
+                    binding.pbLoadingLive.setVisibility(View.GONE);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Chốt phiên điểm danh thất bại";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void loadLiveSession() {
         if (getContext() == null || binding == null) return;
-
-        if (!binding.swipeRefreshLive.isRefreshing()) {
-            binding.pbLoadingLive.setVisibility(View.VISIBLE);
-        }
 
         if (TextUtils.isEmpty(sessionId)) {
             binding.pbLoadingLive.setVisibility(View.GONE);
@@ -185,37 +227,7 @@ public class LecturerAttendanceLiveFragment extends Fragment {
             return;
         }
 
-        if (loadSessionCall != null && !loadSessionCall.isCanceled()) {
-            loadSessionCall.cancel();
-        }
-
-        loadSessionCall = ApiClient.getUserClassApiService(requireContext())
-                .getLiveAttendanceSession(sessionId);
-        loadSessionCall.enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
-                                           @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingLive.setVisibility(View.GONE);
-                        binding.swipeRefreshLive.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            bindData(response.body().getData());
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Không thể tải phiên điểm danh";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingLive.setVisibility(View.GONE);
-                        binding.swipeRefreshLive.setRefreshing(false);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.loadLiveSession(sessionId);
     }
 
     private void bindData(LiveAttendanceSessionResponse data) {
@@ -263,38 +275,7 @@ public class LecturerAttendanceLiveFragment extends Fragment {
 
     private void executeCloseSession() {
         if (getContext() == null || binding == null) return;
-
-        binding.pbLoadingLive.setVisibility(View.VISIBLE);
-
-        if (closeSessionCall != null && !closeSessionCall.isCanceled()) {
-            closeSessionCall.cancel();
-        }
-
-        closeSessionCall = ApiClient.getUserClassApiService(requireContext())
-                .closeAttendanceSession(sessionId);
-        closeSessionCall.enqueue(new Callback<ApiResponse<LiveAttendanceSessionResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call,
-                                           @NonNull Response<ApiResponse<LiveAttendanceSessionResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingLive.setVisibility(View.GONE);
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            markSessionClosedUi();
-                            Toast.makeText(requireContext(), "Đã chốt phiên điểm danh thành công", Toast.LENGTH_SHORT).show();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Chốt phiên điểm danh thất bại";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<LiveAttendanceSessionResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoadingLive.setVisibility(View.GONE);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.closeSession(sessionId);
     }
 
     private void markSessionClosedUi() {
@@ -357,28 +338,10 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         }
     }
 
-    private void cancelPendingCalls() {
-        if (loadSessionCall != null) {
-            try {
-                loadSessionCall.cancel();
-            } catch (Exception ignored) {
-            }
-            loadSessionCall = null;
-        }
-        if (closeSessionCall != null) {
-            try {
-                closeSessionCall.cancel();
-            } catch (Exception ignored) {
-            }
-            closeSessionCall = null;
-        }
-    }
-
     @Override
     public void onDestroyView() {
         super.onDestroyView();
         disconnectWebSocket();
-        cancelPendingCalls();
         binding = null;
     }
 }

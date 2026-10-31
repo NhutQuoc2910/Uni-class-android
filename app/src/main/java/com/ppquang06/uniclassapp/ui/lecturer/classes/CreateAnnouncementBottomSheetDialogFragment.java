@@ -8,18 +8,13 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
-import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.databinding.DialogCreateAnnouncementBottomSheetBinding;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 public class CreateAnnouncementBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -30,6 +25,7 @@ public class CreateAnnouncementBottomSheetDialogFragment extends BottomSheetDial
     private static final String ARG_CLASS_ID = "classId";
 
     private DialogCreateAnnouncementBottomSheetBinding binding;
+    private LecturerManagementViewModel viewModel;
     private String classId = "";
     private OnAnnouncementCreatedListener listener;
 
@@ -56,11 +52,38 @@ public class CreateAnnouncementBottomSheetDialogFragment extends BottomSheetDial
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(LecturerManagementViewModel.class);
+
         if (getArguments() != null) {
             classId = getArguments().getString(ARG_CLASS_ID, "");
         }
 
         binding.btnSubmitAnnouncement.setOnClickListener(v -> submitAnnouncement());
+        observeViewModel();
+    }
+
+    private void observeViewModel() {
+        viewModel.getCreateMaterialState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbSubmitting.setVisibility(View.VISIBLE);
+                    binding.btnSubmitAnnouncement.setEnabled(false);
+                    break;
+                case SUCCESS:
+                    handleComplete();
+                    break;
+                case ERROR:
+                    binding.pbSubmitting.setVisibility(View.GONE);
+                    binding.btnSubmitAnnouncement.setEnabled(true);
+                    String msg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                            ? state.getMessage() : getString(R.string.network_error);
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void submitAnnouncement() {
@@ -85,36 +108,8 @@ public class CreateAnnouncementBottomSheetDialogFragment extends BottomSheetDial
 
         if (hasError || getContext() == null) return;
 
-        binding.pbSubmitting.setVisibility(View.VISIBLE);
-        binding.btnSubmitAnnouncement.setEnabled(false);
-
         CreateMaterialRequest request = new CreateMaterialRequest(title, content, "ANNOUNCEMENT", isUrgent);
-
-        ApiClient.getUserClassApiService(requireContext())
-                .createMaterial(classId, request)
-                .enqueue(new Callback<ApiResponse<ClassDetailResponse.MaterialItem>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call,
-                                           @NonNull Response<ApiResponse<ClassDetailResponse.MaterialItem>> response) {
-                        if (!isAdded() || binding == null) return;
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            handleComplete();
-                        } else {
-                            String msg = response.body() != null && response.body().getMessage() != null ? response.body().getMessage() : getString(R.string.network_error);
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            binding.pbSubmitting.setVisibility(View.GONE);
-                            binding.btnSubmitAnnouncement.setEnabled(true);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<ClassDetailResponse.MaterialItem>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbSubmitting.setVisibility(View.GONE);
-                        binding.btnSubmitAnnouncement.setEnabled(true);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.createMaterial(classId, request);
     }
 
     private void handleComplete() {

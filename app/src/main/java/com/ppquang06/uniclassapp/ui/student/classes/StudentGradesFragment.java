@@ -9,28 +9,25 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentGradesBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.common.adapter.GradeAdapter;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class StudentGradesFragment extends Fragment {
 
     private FragmentStudentGradesBinding binding;
     private GradeAdapter adapter;
+    private ClassDetailViewModel viewModel;
 
     private String classId = "";
     private String classCode = "";
@@ -47,10 +44,13 @@ public class StudentGradesFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(ClassDetailViewModel.class);
+
         readArguments();
         setupTopAppBar();
         setupRecyclerView();
         setupListeners();
+        observeViewModel();
         loadGradesData();
     }
 
@@ -85,9 +85,34 @@ public class StudentGradesFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(this::loadGradesData);
     }
 
+    private void observeViewModel() {
+        viewModel.getClassGradesState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.swipeRefresh.setRefreshing(true);
+                    break;
+                case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
+                    if (state.getData() != null) {
+                        bindData(state.getData());
+                    }
+                    break;
+                case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+                    String msg = state.getMessage() != null ? state.getMessage() : "Không thể tải bảng điểm";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void loadGradesData() {
         if (getContext() == null) return;
-        binding.swipeRefresh.setRefreshing(true);
 
         if (classId == null || classId.trim().isEmpty()) {
             binding.swipeRefresh.setRefreshing(false);
@@ -101,38 +126,7 @@ public class StudentGradesFragment extends Fragment {
             return;
         }
 
-        ApiClient.getUserClassApiService(requireContext())
-                .getClassGrades(classId)
-                .enqueue(new Callback<ApiResponse<ClassGradesResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<ClassGradesResponse>> call,
-                                           @NonNull Response<ApiResponse<ClassGradesResponse>> response) {
-                        if (binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null
-                                && response.body().isSuccess() && response.body().getData() != null) {
-                            bindData(response.body().getData());
-                        } else {
-                            String msg = "Không thể tải bảng điểm";
-                            if (response.body() != null && response.body().getMessage() != null) {
-                                msg = response.body().getMessage();
-                            }
-                            if (getContext() != null) {
-                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<ClassGradesResponse>> call, @NonNull Throwable t) {
-                        if (binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-                        if (getContext() != null) {
-                            Toast.makeText(requireContext(), "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        viewModel.loadClassGrades(classId);
     }
 
     private void bindData(@NonNull ClassGradesResponse data) {

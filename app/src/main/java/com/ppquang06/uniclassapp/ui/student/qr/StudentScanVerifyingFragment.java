@@ -15,21 +15,17 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavOptions;
 import androidx.navigation.Navigation;
 
 import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.AttendanceCheckInRequest;
 import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentScanVerifyingBinding;
+import com.ppquang06.uniclassapp.ui.lecturer.attendance.AttendanceViewModel;
 import com.ppquang06.uniclassapp.utils.HardwareSensorAttendanceHelper;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class StudentScanVerifyingFragment extends Fragment {
 
@@ -46,6 +42,7 @@ public class StudentScanVerifyingFragment extends Fragment {
 
     private FragmentStudentScanVerifyingBinding binding;
     private final Handler handler = new Handler(Looper.getMainLooper());
+    private AttendanceViewModel viewModel;
 
     private String sessionId;
     private String qrPayload;
@@ -54,7 +51,6 @@ public class StudentScanVerifyingFragment extends Fragment {
     private String longitudeStr;
     private String deviceId;
     private String simulationMode;
-    private Call<ApiResponse<AttendanceCheckInResponse>> activeCheckInCall;
 
     private final Gson gson = new Gson();
 
@@ -69,7 +65,10 @@ public class StudentScanVerifyingFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(AttendanceViewModel.class);
+
         readArguments();
+        observeViewModel();
         startSequentialHardwareVerification();
     }
 
@@ -93,6 +92,35 @@ public class StudentScanVerifyingFragment extends Fragment {
                 }
             }
         }
+    }
+
+    private void observeViewModel() {
+        viewModel.getCheckInState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    AttendanceCheckInResponse data = state.getData();
+                    updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_PASSED);
+                    handler.postDelayed(() -> {
+                        if (!isAdded() || binding == null) return;
+                        navigateToResult(true, "", gson.toJson(data));
+                    }, 300);
+                    break;
+                case ERROR:
+                    String msg = state.getMessage();
+                    String classifiedError = classifyError(0, msg, simulationMode);
+                    applyErrorToStepViews(classifiedError);
+                    handler.postDelayed(() -> {
+                        if (!isAdded() || binding == null) return;
+                        navigateToResult(false, classifiedError, "");
+                    }, 300);
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void startSequentialHardwareVerification() {
@@ -180,44 +208,7 @@ public class StudentScanVerifyingFragment extends Fragment {
                 lng,
                 devId
         );
-
-        if (activeCheckInCall != null && !activeCheckInCall.isCanceled()) {
-            activeCheckInCall.cancel();
-        }
-        activeCheckInCall = ApiClient.getUserClassApiService(requireContext()).checkInAttendance(request);
-        activeCheckInCall.enqueue(new Callback<ApiResponse<AttendanceCheckInResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<AttendanceCheckInResponse>> call,
-                                           @NonNull Response<ApiResponse<AttendanceCheckInResponse>> response) {
-                        if (call.isCanceled() || !isAdded() || binding == null) return;
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            AttendanceCheckInResponse data = response.body().getData();
-                            updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_PASSED);
-                            handler.postDelayed(() -> {
-                                if (!isAdded() || binding == null) return;
-                                navigateToResult(true, "", gson.toJson(data));
-                            }, 300);
-                        } else {
-                            String classifiedError = resolveErrorFromResponse(response);
-                            applyErrorToStepViews(classifiedError);
-                            handler.postDelayed(() -> {
-                                if (!isAdded() || binding == null) return;
-                                navigateToResult(false, classifiedError, "");
-                            }, 300);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<AttendanceCheckInResponse>> call, @NonNull Throwable t) {
-                        if (call.isCanceled() || !isAdded() || binding == null) return;
-                        applyErrorToStepViews(ERROR_NETWORK);
-                        handler.postDelayed(() -> {
-                            if (!isAdded() || binding == null) return;
-                            navigateToResult(false, ERROR_NETWORK, "");
-                        }, 300);
-                    }
-                });
+        viewModel.checkIn(request);
     }
 
     private void applyErrorToStepViews(String errorType) {
@@ -236,23 +227,6 @@ public class StudentScanVerifyingFragment extends Fragment {
             updateStepView(binding.tvStep2State, binding.ivStep2Status, STEP_STATE_PASSED);
             updateStepView(binding.tvStep3State, binding.ivStep3Status, STEP_STATE_FAILED);
         }
-    }
-
-    private String resolveErrorFromResponse(Response<ApiResponse<AttendanceCheckInResponse>> response) {
-        int code = response.code();
-        String errorCode = "";
-        try {
-            if (response.errorBody() != null) {
-                String errorJson = response.errorBody().string();
-                ApiResponse<?> errRes = gson.fromJson(errorJson, ApiResponse.class);
-                if (errRes != null) {
-                    if (errRes.getCode() != 0) code = errRes.getCode();
-                    if (errRes.getErrorCode() != null) errorCode = errRes.getErrorCode();
-                }
-            }
-        } catch (Exception ignored) {}
-
-        return classifyError(code, errorCode, simulationMode);
     }
 
     public static String classifyError(int apiCode, String apiErrorCode, String simMode) {
@@ -331,9 +305,6 @@ public class StudentScanVerifyingFragment extends Fragment {
 
     @Override
     public void onDestroyView() {
-        if (activeCheckInCall != null && !activeCheckInCall.isCanceled()) {
-            activeCheckInCall.cancel();
-        }
         handler.removeCallbacksAndMessages(null);
         super.onDestroyView();
         binding = null;

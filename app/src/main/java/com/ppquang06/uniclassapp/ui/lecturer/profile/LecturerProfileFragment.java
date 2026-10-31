@@ -10,25 +10,22 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ppquang06.uniclassapp.LoginActivity;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerProfileBinding;
 import com.ppquang06.uniclassapp.ui.common.profile.ChangePasswordBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.ui.common.profile.EditProfileBottomSheetDialogFragment;
+import com.ppquang06.uniclassapp.ui.common.profile.ProfileViewModel;
 import com.ppquang06.uniclassapp.utils.SessionManager;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LecturerProfileFragment extends Fragment {
 
     private FragmentLecturerProfileBinding binding;
+    private ProfileViewModel profileViewModel;
 
     @Nullable
     @Override
@@ -41,15 +38,33 @@ public class LecturerProfileFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
         setupTopBar();
         bindUserData(null);
         setupActions();
+        observeViewModel();
         loadLiveUserData();
     }
 
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.nav_profile);
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_lecturer);
+    }
+
+    private void observeViewModel() {
+        profileViewModel.getProfileState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) {
+                return;
+            }
+            if (state.isSuccess() && state.getData() != null) {
+                UserResponse liveUser = state.getData();
+                if (getContext() != null) {
+                    SessionManager.getInstance(requireContext()).saveUser(liveUser);
+                }
+                bindUserData(liveUser);
+            }
+        });
     }
 
     private void bindUserData(@Nullable UserResponse freshUser) {
@@ -84,28 +99,9 @@ public class LecturerProfileFragment extends Fragment {
     }
 
     private void loadLiveUserData() {
-        if (getContext() == null) return;
-
-        ApiClient.getUserClassApiService(requireContext())
-                .getCurrentUser()
-                .enqueue(new Callback<ApiResponse<UserResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<UserResponse>> call,
-                                           @NonNull Response<ApiResponse<UserResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                            UserResponse liveUser = response.body().getData();
-                            SessionManager.getInstance(requireContext()).saveUser(liveUser);
-                            bindUserData(liveUser);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<UserResponse>> call, @NonNull Throwable t) {
-                        // Silent fallback, cached session user is already shown
-                    }
-                });
+        if (profileViewModel != null) {
+            profileViewModel.loadProfile();
+        }
     }
 
     private void setupActions() {

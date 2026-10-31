@@ -10,16 +10,16 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerHomeBinding;
+import com.ppquang06.uniclassapp.ui.common.HomeViewModel;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
 import com.ppquang06.uniclassapp.ui.lecturer.LecturerMainActivity;
 import com.ppquang06.uniclassapp.utils.SessionManager;
@@ -27,13 +27,10 @@ import com.ppquang06.uniclassapp.utils.SessionManager;
 import java.util.Collections;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class LecturerHomeFragment extends Fragment {
 
     private FragmentLecturerHomeBinding binding;
+    private HomeViewModel homeViewModel;
     private CourseClassAdapter courseAdapter;
     private CourseClassItem activeHeroClass;
 
@@ -48,11 +45,14 @@ public class LecturerHomeFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
         setupTopBar();
         setupMetricLabels();
         setupRecyclerView();
         setupListeners();
         bindUserData();
+        observeViewModel();
         loadHomeSummary();
     }
 
@@ -142,29 +142,33 @@ public class LecturerHomeFragment extends Fragment {
         }
     }
 
-    private void loadHomeSummary() {
-        if (getContext() == null) return;
-
-        ApiClient.getUserClassApiService(requireContext()).getHomeSummary().enqueue(new Callback<ApiResponse<HomeSummaryResponse>>() {
-            @Override
-            public void onResponse(@NonNull Call<ApiResponse<HomeSummaryResponse>> call, @NonNull Response<ApiResponse<HomeSummaryResponse>> response) {
-                if (!isAdded() || binding == null) return;
+    private void observeViewModel() {
+        homeViewModel.getHomeSummaryState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || state.isIdle() || binding == null) {
+                return;
+            }
+            if (state.isLoading()) {
+                if (state.getData() != null) {
+                    bindHomeData(state.getData());
+                }
+            } else if (state.isSuccess()) {
                 binding.swipeRefresh.setRefreshing(false);
-
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    HomeSummaryResponse data = response.body().getData();
-                    if (data != null) {
-                        bindHomeData(data);
-                    }
+                if (state.getData() != null) {
+                    bindHomeData(state.getData());
+                }
+            } else if (state.isError()) {
+                binding.swipeRefresh.setRefreshing(false);
+                if (state.getData() != null) {
+                    bindHomeData(state.getData());
                 }
             }
-
-            @Override
-            public void onFailure(@NonNull Call<ApiResponse<HomeSummaryResponse>> call, @NonNull Throwable t) {
-                if (!isAdded() || binding == null) return;
-                binding.swipeRefresh.setRefreshing(false);
-            }
         });
+    }
+
+    private void loadHomeSummary() {
+        if (homeViewModel != null) {
+            homeViewModel.loadHomeSummary();
+        }
     }
 
     private void bindHomeData(@NonNull HomeSummaryResponse data) {

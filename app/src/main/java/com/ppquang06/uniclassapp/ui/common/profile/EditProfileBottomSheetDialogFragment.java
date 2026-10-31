@@ -11,20 +11,14 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.lifecycle.ViewModelProvider;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
-import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.DialogEditProfileBottomSheetBinding;
 import com.ppquang06.uniclassapp.utils.SessionManager;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class EditProfileBottomSheetDialogFragment extends BottomSheetDialogFragment {
 
@@ -33,7 +27,10 @@ public class EditProfileBottomSheetDialogFragment extends BottomSheetDialogFragm
     }
 
     private DialogEditProfileBottomSheetBinding binding;
+    private ProfileViewModel profileViewModel;
     private OnProfileUpdatedListener listener;
+    private String pendingFullName = "";
+    private String pendingPhone = "";
 
     public static EditProfileBottomSheetDialogFragment newInstance() {
         return new EditProfileBottomSheetDialogFragment();
@@ -54,8 +51,11 @@ public class EditProfileBottomSheetDialogFragment extends BottomSheetDialogFragm
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        profileViewModel = new ViewModelProvider(this).get(ProfileViewModel.class);
+
         populateCurrentData();
         setupListeners();
+        observeViewModel();
     }
 
     private void populateCurrentData() {
@@ -90,6 +90,55 @@ public class EditProfileBottomSheetDialogFragment extends BottomSheetDialogFragm
         });
     }
 
+    private void observeViewModel() {
+        profileViewModel.getUpdateProfileState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || state.isIdle() || binding == null) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoading(true);
+            } else if (state.isSuccess()) {
+                setLoading(false);
+                UserResponse updatedUser = state.getData();
+                profileViewModel.resetUpdateProfileState();
+
+                if (getContext() != null) {
+                    if (updatedUser == null) {
+                        updatedUser = SessionManager.getInstance(requireContext()).getUser();
+                        if (updatedUser == null) {
+                            updatedUser = new UserResponse();
+                        }
+                        updatedUser.setFullName(pendingFullName);
+                        updatedUser.setPhone(pendingPhone);
+                    } else {
+                        if (TextUtils.isEmpty(updatedUser.getFullName())) {
+                            updatedUser.setFullName(pendingFullName);
+                        }
+                        if (TextUtils.isEmpty(updatedUser.getPhone())) {
+                            updatedUser.setPhone(pendingPhone);
+                        }
+                    }
+
+                    SessionManager.getInstance(requireContext()).saveUser(updatedUser);
+
+                    if (listener != null) {
+                        listener.onProfileUpdated(updatedUser);
+                    }
+
+                    Toast.makeText(requireContext(), R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
+                }
+                dismiss();
+            } else if (state.isError()) {
+                setLoading(false);
+                String errorMsg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                        ? state.getMessage()
+                        : getString(R.string.edit_profile_error_generic);
+                profileViewModel.resetUpdateProfileState();
+                binding.tilFullName.setError(errorMsg);
+            }
+        });
+    }
+
     private void saveProfile() {
         if (getContext() == null || binding == null) return;
 
@@ -101,72 +150,11 @@ public class EditProfileBottomSheetDialogFragment extends BottomSheetDialogFragm
             return;
         }
 
-        setLoading(true);
+        pendingFullName = fullName;
+        pendingPhone = phone;
 
         UpdateProfileRequest request = new UpdateProfileRequest(fullName, phone);
-        ApiClient.getUserClassApiService(requireContext())
-                .updateCurrentUser(request)
-                .enqueue(new Callback<ApiResponse<UserResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<UserResponse>> call,
-                                           @NonNull Response<ApiResponse<UserResponse>> response) {
-                        if (!isAdded() || binding == null) return;
-                        setLoading(false);
-
-                        if (response.isSuccessful() && response.body() != null) {
-                            UserResponse updatedUser = response.body().getData();
-                            if (updatedUser == null) {
-                                updatedUser = SessionManager.getInstance(requireContext()).getUser();
-                                if (updatedUser == null) {
-                                    updatedUser = new UserResponse();
-                                }
-                                updatedUser.setFullName(fullName);
-                                updatedUser.setPhone(phone);
-                            } else {
-                                if (TextUtils.isEmpty(updatedUser.getFullName())) {
-                                    updatedUser.setFullName(fullName);
-                                }
-                                if (TextUtils.isEmpty(updatedUser.getPhone())) {
-                                    updatedUser.setPhone(phone);
-                                }
-                            }
-
-                            SessionManager.getInstance(requireContext()).saveUser(updatedUser);
-
-                            if (listener != null) {
-                                listener.onProfileUpdated(updatedUser);
-                            }
-
-                            Toast.makeText(requireContext(), R.string.edit_profile_success, Toast.LENGTH_SHORT).show();
-                            dismiss();
-                        } else {
-                            String errorMsg = resolveErrorMessage(response);
-                            binding.tilFullName.setError(errorMsg);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<UserResponse>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        setLoading(false);
-                        binding.tilFullName.setError(getString(R.string.edit_profile_error_generic));
-                    }
-                });
-    }
-
-    private String resolveErrorMessage(Response<ApiResponse<UserResponse>> response) {
-        String fallback = getString(R.string.edit_profile_error_generic);
-        try {
-            if (response.errorBody() != null) {
-                String errorJson = response.errorBody().string();
-                ApiResponse<?> errRes = new Gson().fromJson(errorJson, ApiResponse.class);
-                if (errRes != null && !TextUtils.isEmpty(errRes.getMessage())) {
-                    return errRes.getMessage();
-                }
-            }
-        } catch (Exception ignored) {
-        }
-        return fallback;
+        profileViewModel.updateProfile(request);
     }
 
     private void setLoading(boolean loading) {

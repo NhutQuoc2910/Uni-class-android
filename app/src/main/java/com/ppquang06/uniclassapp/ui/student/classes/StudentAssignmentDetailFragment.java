@@ -11,25 +11,22 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.SubmitAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentAssignmentDetailBinding;
 import com.ppquang06.uniclassapp.ui.common.UiBadgeHelper;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 import java.util.Locale;
 
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class StudentAssignmentDetailFragment extends Fragment {
 
@@ -44,6 +41,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
     public static final int STATE_SUBMITTED = 5;
 
     private FragmentStudentAssignmentDetailBinding binding;
+    private StudentAssignmentViewModel viewModel;
 
     private String assignmentId;
     private String assignmentTitle;
@@ -53,7 +51,6 @@ public class StudentAssignmentDetailFragment extends Fragment {
     private String selectedFileName;
     private String selectedFileUrl;
     private boolean isUploadingFile = false;
-    private Call<ApiResponse<FileUploadResponse>> activeUploadCall;
 
     public static int resolveAssignmentVisualState(boolean submitted, String deadlineIso, boolean hasChosenFile, long nowMillis) {
         if (submitted && !hasChosenFile) {
@@ -93,9 +90,12 @@ public class StudentAssignmentDetailFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(StudentAssignmentViewModel.class);
+
         readArguments();
         setupTopAppBar();
         setupListeners();
+        observeViewModel();
         loadAssignmentDetail();
     }
 
@@ -132,9 +132,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
         binding.layoutDropzone.setOnClickListener(v -> openFilePicker());
 
         binding.ivRemoveSelectedFile.setOnClickListener(v -> {
-            if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
-                activeUploadCall.cancel();
-            }
+            viewModel.resetUploadFileState();
             selectedFileName = null;
             selectedFileUrl = null;
             isUploadingFile = false;
@@ -144,6 +142,101 @@ public class StudentAssignmentDetailFragment extends Fragment {
         binding.btnSubmit.setOnClickListener(v -> performSubmitAssignment());
 
         binding.btnResubmit.setOnClickListener(v -> openFilePicker());
+    }
+
+    private void observeViewModel() {
+        viewModel.getAssignmentDetailState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.swipeRefresh.setRefreshing(true);
+                    break;
+                case SUCCESS:
+                    binding.swipeRefresh.setRefreshing(false);
+                    if (state.getData() != null) {
+                        currentDetail = state.getData();
+                        renderState();
+                    }
+                    break;
+                case ERROR:
+                    binding.swipeRefresh.setRefreshing(false);
+                    String msg = state.getMessage() != null ? state.getMessage() : "Không thể tải chi tiết bài tập";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getUploadFileState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    isUploadingFile = true;
+                    renderState();
+                    break;
+                case SUCCESS:
+                    isUploadingFile = false;
+                    FileUploadResponse data = state.getData();
+                    if (data != null) {
+                        selectedFileUrl = data.getFileUrl();
+                        if (data.getFileName() != null && !data.getFileName().trim().isEmpty()) {
+                            selectedFileName = data.getFileName();
+                        }
+                    }
+                    renderState();
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case ERROR:
+                    isUploadingFile = false;
+                    selectedFileName = null;
+                    selectedFileUrl = null;
+                    renderState();
+                    String msg = state.getMessage() != null ? state.getMessage() : "Tải tệp lên máy chủ thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getSubmitAssignmentState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbUploadProgress.setVisibility(View.VISIBLE);
+                    binding.btnSubmit.setEnabled(false);
+                    break;
+                case SUCCESS:
+                    binding.pbUploadProgress.setVisibility(View.GONE);
+                    binding.btnSubmit.setEnabled(true);
+                    Toast.makeText(requireContext(), R.string.assignment_submit_success, Toast.LENGTH_SHORT).show();
+                    if (state.getData() != null) {
+                        currentDetail = state.getData();
+                    }
+                    selectedFileName = null;
+                    selectedFileUrl = null;
+                    isUploadingFile = false;
+                    renderState();
+                    break;
+                case ERROR:
+                    binding.pbUploadProgress.setVisibility(View.GONE);
+                    binding.btnSubmit.setEnabled(true);
+                    String msg = state.getMessage() != null ? state.getMessage() : "Nộp bài thất bại. Vui lòng thử lại.";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void openFilePicker() {
@@ -166,55 +259,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
         try {
             MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
             RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("assignments");
-
-            if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
-                activeUploadCall.cancel();
-            }
-            activeUploadCall = ApiClient.getUserClassApiService(requireContext())
-                    .uploadFile(filePart, folderPart);
-            activeUploadCall.enqueue(new Callback<ApiResponse<FileUploadResponse>>() {
-                        @Override
-                        public void onResponse(@NonNull Call<ApiResponse<FileUploadResponse>> call,
-                                               @NonNull Response<ApiResponse<FileUploadResponse>> response) {
-                            if (call.isCanceled() || !isAdded() || binding == null) return;
-                            isUploadingFile = false;
-
-                            if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                                FileUploadResponse data = response.body().getData();
-                                selectedFileUrl = data.getFileUrl();
-                                if (data.getFileName() != null && !data.getFileName().trim().isEmpty()) {
-                                    selectedFileName = data.getFileName();
-                                }
-                                renderState();
-                                if (getContext() != null) {
-                                    Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
-                                }
-                            } else {
-                                String msg = "Tải tệp lên máy chủ thất bại";
-                                if (response.body() != null && response.body().getMessage() != null) {
-                                    msg = response.body().getMessage();
-                                }
-                                if (getContext() != null) {
-                                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                                }
-                                selectedFileName = null;
-                                selectedFileUrl = null;
-                                renderState();
-                            }
-                        }
-
-                        @Override
-                        public void onFailure(@NonNull Call<ApiResponse<FileUploadResponse>> call, @NonNull Throwable t) {
-                            if (call.isCanceled() || !isAdded() || binding == null) return;
-                            isUploadingFile = false;
-                            selectedFileName = null;
-                            selectedFileUrl = null;
-                            renderState();
-                            if (getContext() != null) {
-                                Toast.makeText(requireContext(), "Lỗi kết nối khi tải tệp", Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    });
+            viewModel.uploadFile(filePart, folderPart);
         } catch (Exception e) {
             isUploadingFile = false;
             selectedFileName = null;
@@ -237,38 +282,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
             return;
         }
 
-        binding.swipeRefresh.setRefreshing(true);
-        ApiClient.getUserClassApiService(requireContext())
-                .getAssignmentDetail(assignmentId)
-                .enqueue(new Callback<ApiResponse<AssignmentDetailResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<AssignmentDetailResponse>> call,
-                                           @NonNull Response<ApiResponse<AssignmentDetailResponse>> response) {
-                        if (binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                            currentDetail = response.body().getData();
-                            renderState();
-                        } else {
-                            String msg = "Không thể tải chi tiết bài tập";
-                            if (response.body() != null && response.body().getMessage() != null) {
-                                msg = response.body().getMessage();
-                            }
-                            if (getContext() != null) {
-                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<AssignmentDetailResponse>> call, @NonNull Throwable t) {
-                        if (binding == null) return;
-                        binding.swipeRefresh.setRefreshing(false);
-                        if (getContext() != null) {
-                            Toast.makeText(requireContext(), "Lỗi kết nối máy chủ", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        viewModel.loadAssignmentDetail(assignmentId);
     }
 
     private void performSubmitAssignment() {
@@ -281,47 +295,8 @@ public class StudentAssignmentDetailFragment extends Fragment {
             return;
         }
 
-        binding.pbUploadProgress.setVisibility(View.VISIBLE);
-        binding.btnSubmit.setEnabled(false);
-
         SubmitAssignmentRequest request = new SubmitAssignmentRequest(selectedFileUrl, selectedFileName);
-        ApiClient.getUserClassApiService(requireContext())
-                .submitAssignment(assignmentId, request)
-                .enqueue(new Callback<ApiResponse<AssignmentDetailResponse>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<AssignmentDetailResponse>> call,
-                                           @NonNull Response<ApiResponse<AssignmentDetailResponse>> response) {
-                        if (binding == null) return;
-                        binding.pbUploadProgress.setVisibility(View.GONE);
-                        binding.btnSubmit.setEnabled(true);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().getData() != null) {
-                            Toast.makeText(requireContext(), R.string.assignment_submit_success, Toast.LENGTH_SHORT).show();
-                            currentDetail = response.body().getData();
-                            selectedFileName = null;
-                            selectedFileUrl = null;
-                            isUploadingFile = false;
-                            renderState();
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage()
-                                    : "Nộp bài thất bại. Vui lòng thử lại.";
-                            if (getContext() != null) {
-                                Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                            }
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<AssignmentDetailResponse>> call, @NonNull Throwable t) {
-                        if (binding == null) return;
-                        binding.pbUploadProgress.setVisibility(View.GONE);
-                        binding.btnSubmit.setEnabled(true);
-                        if (getContext() != null) {
-                            Toast.makeText(requireContext(), "Nộp bài thất bại: " + (t.getMessage() != null ? t.getMessage() : "Lỗi kết nối máy chủ"), Toast.LENGTH_SHORT).show();
-                        }
-                    }
-                });
+        viewModel.submitAssignment(assignmentId, request);
     }
 
     private void renderState() {
@@ -491,9 +466,6 @@ public class StudentAssignmentDetailFragment extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        if (activeUploadCall != null && !activeUploadCall.isCanceled()) {
-            activeUploadCall.cancel();
-        }
         binding = null;
     }
 }

@@ -7,20 +7,17 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityHomeBinding;
+import com.ppquang06.uniclassapp.ui.common.HomeViewModel;
 import com.ppquang06.uniclassapp.utils.SessionManager;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     private ActivityHomeBinding binding;
+    private HomeViewModel homeViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +31,12 @@ public class HomeActivity extends AppCompatActivity {
         binding = ActivityHomeBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
         bindUserData();
-        loadHomeSummary();
         setupListeners();
+        observeViewModel();
+        loadHomeSummary();
     }
 
     private void bindUserData() {
@@ -55,24 +55,26 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void loadHomeSummary() {
-        ApiClient.getUserClassApiService(this).getHomeSummary().enqueue(new Callback<ApiResponse<HomeSummaryResponse>>() {
-            @Override
-            public void onResponse(Call<ApiResponse<HomeSummaryResponse>> call, Response<ApiResponse<HomeSummaryResponse>> response) {
-                if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                    HomeSummaryResponse summary = response.body().getData();
-                    if (summary != null) {
-                        binding.tvCoursesCount.setText(String.valueOf(summary.getActiveCoursesCount()));
-                        binding.tvAssignmentsCount.setText(String.valueOf(summary.getPendingAssignmentsCount()));
-                    }
-                }
+    private void observeViewModel() {
+        homeViewModel.getHomeSummaryState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
             }
-
-            @Override
-            public void onFailure(Call<ApiResponse<HomeSummaryResponse>> call, Throwable t) {
+            HomeSummaryResponse summary = state.getData();
+            if (summary != null) {
+                binding.tvCoursesCount.setText(String.valueOf(summary.getActiveCoursesCount()));
+                binding.tvAssignmentsCount.setText(String.valueOf(summary.getPendingAssignmentsCount()));
+            }
+            if (state.isError() && summary == null) {
                 Toast.makeText(HomeActivity.this, "Không thể tải dữ liệu trang chủ", Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void loadHomeSummary() {
+        if (homeViewModel != null) {
+            homeViewModel.loadHomeSummary();
+        }
     }
 
     private void setupListeners() {

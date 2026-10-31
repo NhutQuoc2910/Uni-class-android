@@ -11,31 +11,28 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.google.gson.Gson;
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.data.api.ApiClient;
-import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerMembersBinding;
+import com.ppquang06.uniclassapp.ui.common.UiState;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LecturerMembersFragment extends Fragment implements ClassMemberAdapter.OnMemberActionListener {
 
     private FragmentLecturerMembersBinding binding;
+    private LecturerManagementViewModel viewModel;
     private ClassMemberAdapter adapter;
     private final List<ClassMemberItemResponse> allMembers = new ArrayList<>();
     private final List<ClassMemberItemResponse> displayedMembers = new ArrayList<>();
+    private ClassMemberItemResponse pendingRemoveMember;
 
     private String classId = "";
     private String classCode = "";
@@ -53,11 +50,14 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        viewModel = new ViewModelProvider(this).get(LecturerManagementViewModel.class);
+
         readArguments();
         setupTopAppBar();
         setupRecyclerView();
         setupSearch();
         setupSwipeRefresh();
+        observeViewModel();
         loadMembers();
     }
 
@@ -111,40 +111,56 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
         binding.swipeRefresh.setOnRefreshListener(this::loadMembers);
     }
 
+    private void observeViewModel() {
+        viewModel.getMembersState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    if (!binding.swipeRefresh.isRefreshing()) {
+                        binding.pbLoading.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    setMembersList(state.getData());
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.swipeRefresh.setRefreshing(false);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Không thể tải danh sách sinh viên";
+                    Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getRemoveMemberState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    if (pendingRemoveMember != null) {
+                        handleRemoveSuccess(pendingRemoveMember);
+                        pendingRemoveMember = null;
+                    }
+                    break;
+                case ERROR:
+                    pendingRemoveMember = null;
+                    Toast.makeText(requireContext(), "Xóa sinh viên thất bại", Toast.LENGTH_SHORT).show();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+    }
+
     private void loadMembers() {
         if (getContext() == null || binding == null) return;
-
-        if (!binding.swipeRefresh.isRefreshing()) {
-            binding.pbLoading.setVisibility(View.VISIBLE);
-        }
-
-        ApiClient.getUserClassApiService(requireContext())
-                .getClassMembers(classId)
-                .enqueue(new Callback<ApiResponse<List<ClassMemberItemResponse>>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<List<ClassMemberItemResponse>>> call,
-                                           @NonNull Response<ApiResponse<List<ClassMemberItemResponse>>> response) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.swipeRefresh.setRefreshing(false);
-
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess() && response.body().getData() != null) {
-                            setMembersList(response.body().getData());
-                        } else {
-                            String msg = (response.body() != null && response.body().getMessage() != null)
-                                    ? response.body().getMessage() : "Không thể tải danh sách sinh viên";
-                            Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<List<ClassMemberItemResponse>>> call, @NonNull Throwable t) {
-                        if (!isAdded() || binding == null) return;
-                        binding.pbLoading.setVisibility(View.GONE);
-                        binding.swipeRefresh.setRefreshing(false);
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        viewModel.loadClassMembers(classId);
     }
 
     private void setMembersList(List<ClassMemberItemResponse> list) {
@@ -217,26 +233,8 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
 
     private void executeRemoveMember(ClassMemberItemResponse member) {
         if (getContext() == null) return;
-
-        ApiClient.getUserClassApiService(requireContext())
-                .removeClassMember(classId, member.getStudentId())
-                .enqueue(new Callback<ApiResponse<Void>>() {
-                    @Override
-                    public void onResponse(@NonNull Call<ApiResponse<Void>> call, @NonNull Response<ApiResponse<Void>> response) {
-                        if (!isAdded()) return;
-                        if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
-                            handleRemoveSuccess(member);
-                        } else {
-                            Toast.makeText(requireContext(), "Xóa sinh viên thất bại", Toast.LENGTH_SHORT).show();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call<ApiResponse<Void>> call, @NonNull Throwable t) {
-                        if (!isAdded()) return;
-                        Toast.makeText(requireContext(), R.string.network_error, Toast.LENGTH_SHORT).show();
-                    }
-                });
+        pendingRemoveMember = member;
+        viewModel.removeClassMember(classId, member.getStudentId());
     }
 
     private void handleRemoveSuccess(ClassMemberItemResponse member) {
