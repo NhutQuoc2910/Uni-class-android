@@ -455,4 +455,13 @@
     <string name="msg_uploading_file">Đang tải tệp lên...</string>
     <string name="label_attendance">Điểm danh</string>
     <string name="label_pending">Cần xử lý</string>
+    <!-- OTP Register -->
+    <string name="step_2_2">Bước 2/2</string>
+    <string name="register_otp_title">Xác thực tài khoản</string>
+    <string name="register_otp_subtitle">Mã xác minh đã được gửi đến email đăng ký của bạn. Vui lòng nhập mã để hoàn tất đăng ký.</string>
+    <string name="step_register_info">Thông tin</string>
+    <string name="step_verify_otp">Xác thực</string>
+    <string name="confirm_register_button">Hoàn tất đăng ký</string>
+    <string name="back_to_register_step">Quay lại bước nhập thông tin</string>
+    <string name="already_have_account_question">Đã có tài khoản? </string>
 </resources>
