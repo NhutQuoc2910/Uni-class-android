@@ -6,6 +6,8 @@
     android:layout_height="match_parent"
     android:background="@color/background_light"
     android:fillViewport="true"
+    android:clipToPadding="false"
+    android:scrollbars="vertical"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -13,6 +15,7 @@
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:orientation="vertical"
+        android:descendantFocusability="beforeDescendants"
         android:padding="24dp">
 
         <!-- Top Logo & App Name -->
@@ -199,7 +202,14 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="@null" />
-
+        <ProgressBar
+            android:id="@+id/progressBar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="36dp"
+            android:layout_height="36dp"
+            android:layout_gravity="center_horizontal"
+            android:visibility="gone"
+            android:indeterminate="true" />
         <!-- Footer / Register Link -->
         <LinearLayout
             android:layout_width="wrap_content"

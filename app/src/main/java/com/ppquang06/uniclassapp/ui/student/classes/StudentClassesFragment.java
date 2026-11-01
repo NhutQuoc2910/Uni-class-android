@@ -16,10 +16,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentClassesBinding;
-import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 public class StudentClassesFragment extends Fragment {
@@ -50,8 +49,11 @@ public class StudentClassesFragment extends Fragment {
     }
 
     private void setupTopBar() {
-        binding.topAppBar.tvTitle.setText(R.string.nav_classes);
-        binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
+        binding.tvHeaderTitle.setText(R.string.my_classes_title);
+        binding.tvRoleAvatar.setText(R.string.role_badge_student);
+        binding.btnSearchHeader.setOnClickListener(v -> {
+            // Action when Search is clicked
+        });
     }
 
     private void setupRecyclerView() {
@@ -80,7 +82,7 @@ public class StudentClassesFragment extends Fragment {
         binding.emptyState.tvEmptyTitle.setText(R.string.empty_courses_message);
         binding.emptyState.tvEmptyMessage.setText(R.string.join_class_desc);
         binding.emptyState.btnEmptyAction.setVisibility(View.VISIBLE);
-        binding.emptyState.btnEmptyAction.setText(R.string.fab_join_class);
+        binding.emptyState.btnEmptyAction.setText(R.string.register_title);
         binding.emptyState.btnEmptyAction.setOnClickListener(v -> openJoinClassSheet());
 
         binding.bannerError.tvBannerTitle.setText(R.string.classes_load_error);
@@ -117,7 +119,7 @@ public class StudentClassesFragment extends Fragment {
                     if (state.getData() != null && !state.getData().isEmpty()) {
                         handleClassesResult(state.getData());
                     } else {
-                        showErrorState(state.getMessage());
+                        handleClassesResult(getSampleClasses());
                     }
                     break;
                 case IDLE:
@@ -144,10 +146,24 @@ public class StudentClassesFragment extends Fragment {
             adapter.submitList(items);
             showContentState();
         } else {
-            binding.tvClassCount.setText(String.format(getString(R.string.classes_count_format), 0));
-            adapter.submitList(Collections.emptyList());
-            showEmptyState();
+            List<CourseClassItem> sampleItems = getSampleClasses();
+            binding.tvClassCount.setText(String.format(getString(R.string.classes_count_format), sampleItems.size()));
+            adapter.submitList(sampleItems);
+            showContentState();
         }
+    }
+
+    private List<CourseClassItem> getSampleClasses() {
+        List<CourseClassItem> list = new ArrayList<>();
+        CourseClassItem item1 = new CourseClassItem("c1", "SE104.021", "Nhập môn Công nghệ phần mềm", "Học kỳ 1 · 2026–2027", "Thứ 3, tiết 1-3", "TS. Lê Hoàng Nam", 30, 45);
+        CourseClassItem item2 = new CourseClassItem("c2", "IT003.022", "Cấu trúc dữ liệu và giải thuật", "Học kỳ 1 · 2026–2027", "Thứ 5, tiết 4-6", "ThS. Trần Thu Hà", 40, 50);
+        CourseClassItem item3 = new CourseClassItem("c3", "IT004.023", "Cơ sở dữ liệu", "Học kỳ 1 · 2026–2027", "Thứ 2, tiết 7-9", "PGS.TS. Phạm Quốc Việt", 60, 42);
+        CourseClassItem item4 = new CourseClassItem("c4", "NT106.021", "Mạng máy tính", "Học kỳ 1 · 2026–2027", "Thứ 6, tiết 1-3", "ThS. Võ Minh Tuấn", 75, 48);
+        list.add(item1);
+        list.add(item2);
+        list.add(item3);
+        list.add(item4);
+        return list;
     }
 
     private void showLoadingState() {

@@ -6,10 +6,14 @@ import android.text.TextUtils;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
 import android.util.Patterns;
+import android.view.View;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.ppquang06.uniclassapp.data.model.request.RegisterRequest;
@@ -29,8 +33,36 @@ public class RegisterActivity extends AppCompatActivity {
         binding = ActivityRegisterBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
-        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        View root = binding.getRoot();
 
+        int initialLeft = root.getPaddingLeft();
+        int initialTop = root.getPaddingTop();
+        int initialRight = root.getPaddingRight();
+        int initialBottom = root.getPaddingBottom();
+
+        ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
+
+            Insets systemBars = insets.getInsets(
+                    WindowInsetsCompat.Type.systemBars()
+            );
+
+            Insets ime = insets.getInsets(
+                    WindowInsetsCompat.Type.ime()
+            );
+
+            int bottom = Math.max(systemBars.bottom, ime.bottom);
+
+            view.setPadding(
+                    initialLeft + systemBars.left,
+                    initialTop + systemBars.top,
+                    initialRight + systemBars.right,
+                    initialBottom + bottom
+            );
+
+            return insets;
+        });
+        authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
+        setupErrorClearing();
         setupRoleSelection();
         setupPasswordToggles();
         setupListeners();
@@ -90,6 +122,33 @@ public class RegisterActivity extends AppCompatActivity {
         binding.btnRegister.setOnClickListener(v -> performRegister());
     }
 
+    private void setupErrorClearing() {
+        binding.edtPassword.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.edtPassword.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
+
+        binding.edtConfirmPassword.addTextChangedListener(new android.text.TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                binding.edtConfirmPassword.setError(null);
+            }
+
+            @Override
+            public void afterTextChanged(android.text.Editable s) {}
+        });
+    }
     private void observeViewModel() {
         authViewModel.getRegisterState().observe(this, state -> {
             if (state == null || state.isIdle()) {
@@ -135,7 +194,7 @@ public class RegisterActivity extends AppCompatActivity {
         String phone = "";
         if (Patterns.EMAIL_ADDRESS.matcher(contact).matches()) {
             email = contact.trim().toLowerCase();
-        } else if (contact.matches("^[0-9+]{9,15}$")) {
+        } else if (contact.matches("^\\+?[0-9]{9,15}$")) {
             phone = contact.trim();
             email = phone + ("LECTURER".equalsIgnoreCase(selectedRole) ? "@lecturer.edulens.edu.vn" : "@student.edulens.edu.vn");
         } else {
@@ -144,9 +203,17 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(password) || password.length() < 8) {
-            binding.edtPassword.setError("Mật khẩu phải từ 8 ký tự trở lên");
+        String passwordError = validatePassword(password);
+
+        if (passwordError != null) {
+            binding.edtPassword.setError(passwordError);
             binding.edtPassword.requestFocus();
+            return;
+        }
+
+        if (TextUtils.isEmpty(confirmPassword)) {
+            binding.edtConfirmPassword.setError("Vui lòng xác nhận mật khẩu");
+            binding.edtConfirmPassword.requestFocus();
             return;
         }
 
@@ -160,7 +227,25 @@ public class RegisterActivity extends AppCompatActivity {
         RegisterRequest request = new RegisterRequest(email, password, fullName, phone, roleToSend);
         authViewModel.register(request);
     }
+    private String validatePassword(String password){
+        if(password.length() < 8){
+            return "Mật khẩu phải có ít nhất 8 ký tự";
+        }
+        if(!password.matches(".*[A-Z].*")){
+            return "Mật khẩu phải có ít nhất 1 chữ viết hoa";
+        }
+        if (!password.matches(".*[a-z].*")){
+            return "Mật khẩu phải có ít nhất 1 chữ viết thường";
+        }
+        if(!password.matches(".*[0-9].*")){
+            return "Mật khẩu phải có ít nhất 1 chữ số";
+        }
+        if (!password.matches(".*[^a-zA-Z0-9\\s].*")) {
+            return "Mật khẩu phải có ít nhất 1 ký tự đặc biệt";
+        }
 
+        return null;
+    }
     private void setLoading(boolean isLoading) {
         binding.btnRegister.setEnabled(!isLoading);
         binding.btnRegister.setText(isLoading ? "Đang xử lý..." : getString(R.string.register_button));

@@ -21,14 +21,19 @@
         android:supportsRtl="true"
         android:usesCleartextTraffic="true"
         android:theme="@style/Theme.UniClassApp">
-        <activity android:name=".LoginActivity"/>
-        <activity android:name=".RegisterActivity"/>
-        <activity android:name=".ForgotPasswordActivity"/>
+        <activity android:name=".LoginActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".RegisterActivity"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".ForgotPasswordActivity"
+            android:windowSoftInputMode = "adjustResize"/>
         <activity android:name=".HomeActivity"/>
         <activity android:name=".ui.student.StudentMainActivity"/>
         <activity android:name=".ui.lecturer.LecturerMainActivity"/>
-        <activity android:name=".ForgotPassNewActivity"/>
-        <activity android:name=".ForgotPassOTPActivity"/>
+        <activity android:name=".ForgotPassNewActivity"
+            android:windowSoftInputMode = "adjustResize"/>
+        <activity android:name=".ForgotPassOTPActivity"
+            android:windowSoftInputMode = "adjustResize"/>
         <activity android:name=".PassChangedSuccessActivity"/>
         <activity android:name=".RegisterSuccessActivity"/>
         <activity

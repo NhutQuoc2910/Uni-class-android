@@ -1,8 +1,16 @@
 <resources>
+    <!-- App & General -->
     <string name="app_name">UniClassApp</string>
     <string name="edu_lens_title">EduLens</string>
     <string name="edu_lens_subtitle">Quản lý lớp học, điểm danh QR, tài liệu và bài tập</string>
     <string name="app_version">Phiên bản 1.0.0</string>
+    <string name="action_retry">Thử lại</string>
+    <string name="network_error">Lỗi kết nối mạng</string>
+    <string name="err_required_field">Trường này không được để trống</string>
+    <string name="btn_cancel">Hủy</string>
+    <string name="dialog_cancel">Hủy</string>
+
+    <!-- Auth -->
     <string name="login_welcome">Chào mừng trở lại!</string>
     <string name="login_subtitle">Đăng nhập để tiếp tục học tập cùng EduLens.</string>
     <string name="email_label">Email</string>
@@ -35,6 +43,8 @@
     <string name="login_link">Đăng nhập</string>
     <string name="forgot_pass_title">Quên mật khẩu</string>
     <string name="forgot_pass_subtitle">Nhập email sinh viên để nhận mã xác thực và bắt đầu khôi phục quyền truy cập</string>
+
+    <!-- Forgot Password Flow -->
     <string name="step_1_3">Bước 1/3</string>
     <string name="step_2_3">Bước 2/3</string>
     <string name="step_3_3">Bước 3/3</string>
@@ -77,6 +87,9 @@
     <string name="register_complete_subtitle">Bạn đã sẵn sàng sử dụng tài khoản.</string>
     <string name="register_complete_note">Bạn đã hoàn tất quá trình đăng ký tài khoản.</string>
     <string name="desc_user_check_icon">Biểu tượng đăng ký thành công</string>
+
+    <!-- Home & Navigation -->
+    <string name="nav_home">Trang chủ</string>
     <string name="today_date">THỨ BA, 13 THÁNG 10</string>
     <string name="greeting_user">Chào buổi sáng, Nguyễn Văn A!</string>
     <string name="greeting_sub">Sẵn sàng cho một ngày học tập hiệu quả?</string>
@@ -104,367 +117,342 @@
     <string name="nav_qr">Quét QR</string>
     <string name="nav_notifications">Thông báo</string>
     <string name="nav_profile">Cá nhân</string>
-    <!-- Navigation & Role Shell Strings -->
-    <string name="nav_home">Trang chủ</string>
-    <string name="role_badge_student">Sinh viên</string>
-    <string name="role_badge_lecturer">Giảng viên</string>
-    <string name="logout_button">Đăng xuất</string>
-    <string name="desc_back_button">Quay lại</string>
+    <string name="enter_class">Vào lớp</string>
+    <string name="classes_count_format">%d lớp đang học</string>
+    <string name="search">Tìm</string>
+    <string name="qr_session_title">Tạo phiên điểm danh QR</string>
+
+    <!-- Roles & Headers -->
+    <string name="role_badge_student">SV</string>
+    <string name="role_badge_lecturer">GV</string>
+    <string name="classes_semester_header">Học kỳ 1 · 2026–2027</string>
+    <string name="empty_courses_message">Chưa có lớp học nào</string>
+    <string name="join_class_desc">Nhập mã lớp học để tham gia lớp của bạn</string>
+    <string name="fab_join_class">Tham gia lớp</string>
+    <string name="classes_load_error">Không thể tải danh sách lớp</string>
+    <string name="cannot_load_classes">Không thể tải danh sách lớp</string>
+
+    <!-- UI Helpers & Descriptions -->
+    <string name="desc_back_button">Nút quay lại</string>
     <string name="desc_avatar">Ảnh đại diện</string>
     <string name="status_present">Có mặt</string>
-    <string name="status_absent">Vắng</string>
-    <string name="status_submitted">Đã nộp</string>
-    <string name="status_due_soon">Sắp hết hạn</string>
-    <string name="status_open">Còn hạn</string>
+    <string name="status_open">Mở</string>
+    <string name="status_due_soon">Sắp hạn</string>
     <string name="status_overdue">Quá hạn</string>
-    <string name="tag_urgent">Khẩn</string>
-    <string name="label_attendance">Chuyên cần</string>
-    <string name="label_pending">Chờ chấm điểm</string>
-    <string name="scan_qr_title">Quét mã QR</string>
-    <string name="scan_qr_desc">Đưa camera vào mã QR của giảng viên để ghi nhận chuyên cần.</string>
-    <string name="scan_qr_btn_action">Bắt đầu quét</string>
+    <string name="status_submitted">Đã nộp</string>
+    <string name="status_not_graded">Chưa chấm</string>
 
-    <!-- Student Home & Classes Strings -->
-    <string name="hero_today_class_tag">LỚP HÔM NAY · THỨ 3</string>
-    <string name="btn_scan_now">Điểm danh ngay</string>
-    <string name="empty_assignments_message">Không có bài tập nào sắp đến hạn</string>
-    <string name="empty_courses_message">Chưa có lớp học nào</string>
-    <string name="classes_semester_header">Học kỳ 1 2026–2027</string>
-    <string name="classes_count_format">%1$d lớp</string>
-    <string name="fab_join_class">Tham gia lớp</string>
+    <!-- Change Password Dialog -->
+    <string name="change_pass_title">Đổi mật khẩu</string>
+    <string name="change_pass_desc">Nhập mật khẩu hiện tại và mật khẩu mới của bạn</string>
+    <string name="change_pass_current_hint">Mật khẩu hiện tại</string>
+    <string name="change_pass_new_hint">Mật khẩu mới</string>
+    <string name="change_pass_confirm_hint">Xác nhận mật khẩu mới</string>
+    <string name="change_pass_btn_submit">Cập nhật mật khẩu</string>
+    <string name="change_pass_success">Đổi mật khẩu thành công!</string>
+    <string name="change_pass_error_generic">Không thể đổi mật khẩu, vui lòng thử lại</string>
+    <string name="change_pass_error_current_empty">Vui lòng nhập mật khẩu hiện tại</string>
+    <string name="change_pass_error_new_short">Mật khẩu mới phải có ít nhất 8 ký tự</string>
+    <string name="change_pass_error_same_as_old">Mật khẩu mới không được trùng mật khẩu cũ</string>
+    <string name="change_pass_error_confirm_mismatch">Mật khẩu xác nhận không trùng khớp</string>
+
+    <!-- Edit Profile Dialog -->
+    <string name="edit_profile_title">Chỉnh sửa hồ sơ</string>
+    <string name="edit_profile_desc">Cập nhật thông tin cá nhân của bạn</string>
+    <string name="edit_profile_fullname_hint">Họ và tên</string>
+    <string name="edit_profile_phone_hint">Số điện thoại</string>
+    <string name="edit_profile_btn_save">Lưu thay đổi</string>
+    <string name="edit_profile_success">Cập nhật hồ sơ thành công!</string>
+    <string name="edit_profile_error_generic">Không thể cập nhật hồ sơ, vui lòng thử lại</string>
+    <string name="edit_profile_error_name_empty">Họ và tên không được để trống</string>
+    <string name="profile_not_set">Chưa cập nhật</string>
+
+    <!-- Join Class Dialog -->
     <string name="join_class_title">Tham gia lớp học</string>
-    <string name="join_class_desc">Nhập mã tham gia được giảng viên cung cấp để vào lớp.</string>
-    <string name="join_class_code_hint">Mã lớp</string>
-    <string name="join_class_example_hint">Ví dụ: NT118DEMO (mã không phân biệt hoa thường)</string>
-    <string name="join_class_submit">Tham gia ngay</string>
+    <string name="join_class_code_hint">Mã mời tham gia lớp</string>
+    <string name="join_class_example_hint">Ví dụ: SE104_2026</string>
     <string name="join_class_cancel">Hủy</string>
-    <string name="join_class_code_empty">Vui lòng nhập mã lớp</string>
-    <string name="join_class_success">Tham gia lớp học thành công!</string>
-    <string name="join_class_error_already_joined">Bạn đã tham gia lớp học này rồi</string>
-    <string name="join_class_error_not_found">Mã lớp không tồn tại</string>
-    <string name="join_class_error_generic">Không thể tham gia lớp học. Vui lòng kiểm tra lại mã.</string>
-    <string name="classes_load_error">Không thể tải danh sách lớp học</string>
-    <string name="action_retry">Thử lại</string>
+    <string name="join_class_submit">Tham gia</string>
 
-    <!-- Student Class Detail Strings -->
+    <!-- Pick File Type Dialog -->
+    <string name="pick_file_type_title">Chọn loại tệp đính kèm</string>
+    <string name="file_type_pdf">Tệp PDF</string>
+    <string name="file_type_pdf_ext">.pdf</string>
+    <string name="file_type_word">Tệp Word</string>
+    <string name="file_type_word_ext">.docx / .doc</string>
+    <string name="file_type_zip">Tệp nén ZIP/RAR</string>
+    <string name="file_type_zip_ext">.zip / .rar</string>
+    <string name="file_type_image">Hình ảnh</string>
+    <string name="file_type_image_ext">.jpg / .png</string>
+    <string name="pick_demo_file_btn">Chọn tệp mẫu</string>
+
+    <!-- Publish Grade Dialog & Upload Material -->
+    <string name="dialog_publish_grade_title">Công bố điểm số</string>
+    <string name="rb_publish_current">Chỉ bài nộp hiện tại</string>
+    <string name="rb_publish_all">Tất cả bài nộp đã chấm</string>
+    <string name="material_upload_title">Tải lên tài liệu</string>
+    <string name="label_material_title">Tiêu đề tài liệu</string>
+    <string name="hint_material_title">Nhập tiêu đề tài liệu</string>
+    <string name="btn_pick_file_from_device">Chọn tệp từ thiết bị</string>
+    <string name="label_material_url">Hoặc liên kết tài liệu (URL)</string>
+    <string name="hint_material_url">https://...</string>
+    <string name="label_file_type">Loại tệp</string>
+    <string name="btn_post_material">Đăng tài liệu</string>
+
+    <!-- Attendance Tab & History -->
+    <string name="attendance_diligence">Tỷ lệ chuyên cần</string>
+    <string name="attendance_note">Ghi chú chuyên cần</string>
+    <string name="btn_scan_attendance">Quét mã điểm danh</string>
+    <string name="section_attendance_history">Lịch sử điểm danh</string>
+    <string name="empty_attendance">Chưa có dữ liệu điểm danh</string>
+
+    <!-- Material Tab Filters -->
+    <string name="filter_all">Tất cả</string>
+    <string name="material_filter_pdf">PDF</string>
+    <string name="material_filter_word">Word</string>
+    <string name="material_filter_powerpoint">PowerPoint</string>
+    <string name="empty_data">Chưa có dữ liệu</string>
+
+    <!-- Submissions & Grading Tabs -->
+    <string name="tab_all_submissions">Tất cả bài nộp</string>
+    <string name="tab_pending_grading">Chờ chấm điểm</string>
+
+    <!-- Lecturer Live Attendance & Metrics -->
+    <string name="session_status_open">Đang diễn ra</string>
+    <string name="metric_present">Có mặt</string>
+    <string name="metric_absent">Vắng mặt</string>
+    <string name="metric_total">Tổng số</string>
+    <string name="metric_students">Sinh viên</string>
+    <string name="metric_assignments">Bài tập</string>
+    <string name="metric_attendance">Điểm danh</string>
+    <string name="lecturer_action_members">Thành viên</string>
+    <string name="lecturer_action_qr">Mã QR</string>
+    <string name="lecturer_action_stats">Thống kê</string>
+    <string name="section_announcements">Thông báo</string>
+    <string name="btn_create_announcement">Tạo thông báo</string>
+    <string name="section_materials">Tài liệu</string>
+    <string name="btn_upload_material">Tải tài liệu</string>
+    <string name="section_assignments">Bài tập</string>
+    <string name="btn_create_assignment">Tạo bài tập</string>
+    <string name="create_class_success_subtitle">Lớp học của bạn đã sẵn sàng</string>
+    <string name="btn_copy_code">Sao chép mã</string>
+    <string name="btn_share_code">Chia sẻ mã</string>
+    <string name="btn_enter_class">Vào lớp học</string>
+    <string name="stat_attendance_rate">Tỷ lệ điểm danh</string>
+    <string name="stat_warning_absent">Cảnh báo vắng</string>
+    <string name="stat_average_score">Điểm trung bình</string>
+    <string name="warning_students_title">Sinh viên cần chú ý</string>
+    <string name="score_distribution_title">Phổ điểm bài tập</string>
+    <string name="btn_archive_class">Lưu trữ lớp học</string>
+    <string name="lecturer_tab_active">Đang dạy</string>
+    <string name="lecturer_tab_archived">Đã lưu trữ</string>
+    <string name="btn_create_class">Tạo lớp mới</string>
+    <string name="label_assignment_title">Tiêu đề bài tập</string>
+    <string name="label_assignment_description">Mô tả bài tập</string>
+    <string name="label_attachment_url">Đường dẫn tệp đính kèm (nếu có)</string>
+    <string name="label_max_score">Thang điểm</string>
+    <string name="switch_notify_students">Gửi thông báo tới sinh viên</string>
+    <string name="desc_notify_students">Thông báo cho toàn bộ sinh viên trong lớp</string>
+    <string name="switch_allow_late">Cho phép nộp trễ</string>
+    <string name="desc_allow_late">Cho phép nộp sau khi hết hạn</string>
+    <string name="btn_submit_create_assignment">Tạo bài tập</string>
+    <string name="label_class_name">Tên lớp học</string>
+    <string name="label_class_code">Mã môn học</string>
+    <string name="label_semester">Học kỳ</string>
+    <string name="label_room">Phòng học</string>
+    <string name="btn_submit_create_class">Tạo lớp học</string>
+    <string name="btn_prev_student">Sinh viên trước</string>
+    <string name="btn_next_student">Sinh viên tiếp</string>
+    <string name="submitted_file_title">Tệp bài nộp</string>
+    <string name="btn_open_file">Mở tệp</string>
+    <string name="label_score">Điểm số</string>
+    <string name="quick_score_title">Chấm nhanh</string>
+    <string name="label_feedback">Nhận xét</string>
+    <string name="btn_save_draft">Lưu nháp</string>
+    <string name="btn_publish_grade">Công bố điểm</string>
+    <string name="hero_lecturer_tag">Giảng viên</string>
+    <string name="hero_btn_open_qr">Mở điểm danh QR</string>
+    <string name="metric_submitted">Đã nộp</string>
+    <string name="metric_gpa">Điểm TB</string>
+    <string name="absence_warning_limit">Cảnh báo vắng quá giới hạn</string>
+    <string name="recent_assignments_title">Bài tập gần đây</string>
+    <string name="hint_search_members">Tìm kiếm thành viên...</string>
+    <string name="filter_unread">Chưa đọc</string>
+    <string name="filter_urgent">Khẩn cấp</string>
+    <string name="filter_assignments">Bài tập</string>
+    <string name="filter_grades">Điểm số</string>
+    <string name="empty_notifications">Chưa có thông báo nào</string>
+    <string name="profile_contact_info">Thông tin liên hệ</string>
+    <string name="profile_fullname_caption">Họ và tên</string>
+    <string name="profile_email_caption">Email trường</string>
+    <string name="profile_phone_caption">Số điện thoại</string>
+    <string name="profile_account_actions">Tài khoản</string>
+    <string name="action_edit_profile">Chỉnh sửa hồ sơ</string>
+    <string name="action_change_password">Đổi mật khẩu</string>
+    <string name="action_logout">Đăng xuất</string>
+    <string name="security_layer_title">Lớp bảo mật điểm danh</string>
+    <string name="security_layer_wifi">Wi-Fi phòng học</string>
+    <string name="security_layer_gps">Định vị GPS</string>
+    <string name="security_layer_device">Xác thực thiết bị</string>
+    <string name="security_layer_device_desc">1 thiết bị chỉ điểm danh cho 1 tài khoản</string>
+    <string name="btn_track_live">Theo dõi trực tiếp</string>
+    <string name="btn_close_session">Đóng phiên điểm danh</string>
+    <string name="assignment_submission_section">Bài nộp của bạn</string>
+
+    <!-- Student Assignment & Scan -->
+    <string name="assignment_dropzone_title">Tải tệp bài làm lên</string>
+    <string name="assignment_dropzone_caption">Nhấp hoặc kéo tệp vào đây (PDF, Word, ZIP, Hình ảnh)</string>
+    <string name="assignment_grading_pending">Đang chờ chấm điểm</string>
+    <string name="assignment_requirements_title">Yêu cầu bài tập</string>
+    <string name="hero_today_class_tag">Lớp học hôm nay</string>
+    <string name="btn_scan_now">Quét ngay</string>
+    <string name="empty_assignments_message">Chưa có bài tập nào cần nộp</string>
+    <string name="scan_qr_screen_title">Quét mã QR điểm danh</string>
+    <string name="scan_qr_viewfinder_instruction">Căn chỉnh mã QR vào khung vuông bên dưới</string>
+    <string name="scan_qr_viewfinder_subinstruction">Mã QR sẽ tự động quét khi lọt vào khung</string>
+    <string name="scan_qr_before_title">Yêu cầu trước khi quét</string>
+    <string name="scan_qr_req_wifi">Wi-Fi lớp học</string>
+    <string name="scan_qr_req_gps">Vị trí GPS</string>
+    <string name="scan_qr_req_device">Chính chủ thiết bị</string>
+    <string name="scan_qr_btn_quick">Quét nhanh</string>
+    <string name="scan_qr_btn_simulate">Mô phỏng thử</string>
+    <string name="scan_success_headline">Điểm danh thành công!</string>
+    <string name="scan_success_subtitle">Bạn đã hoàn tất điểm danh cho buổi học này.</string>
+    <string name="scan_pill_qr">Mã QR hợp lệ</string>
+    <string name="scan_pill_wifi">Wi-Fi khớp</string>
+    <string name="scan_pill_gps">GPS khớp</string>
+    <string name="scan_detail_course">Môn học</string>
+    <string name="scan_detail_room">Phòng học</string>
+    <string name="scan_detail_lecturer">Giảng viên</string>
+    <string name="scan_detail_time">Thời gian</string>
+    <string name="scan_detail_device">Thiết bị</string>
+    <string name="scan_detail_status">Trạng thái</string>
+    <string name="scan_btn_home">Trở về trang chủ</string>
+    <string name="verifying_step_1_title">Xác thực vị trí GPS</string>
+    <string name="verifying_step_2_title">Kiểm tra kết nối Wi-Fi</string>
+    <string name="verifying_step_3_title">Xác minh thiết bị sinh viên</string>
+    <string name="scan_btn_rescan">Quét lại</string>
+    <string name="verifying_title">Xác thực điểm danh</string>
+    <string name="verifying_headline">Đang tiến hành kiểm tra bảo mật</string>
+    <string name="verifying_subtitle">Vui lòng chờ trong giây lát</string>
+    <string name="tag_urgent">Khẩn cấp</string>
+
+    <!-- Logout Confirm -->
+    <string name="logout_confirm_title">Đăng xuất</string>
+    <string name="logout_confirm_message">Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng không?</string>
+    <string name="logout_confirm_btn">Đăng xuất</string>
+
+    <!-- Student Tabs & Empty States -->
+    <string name="empty_announcements">Chưa có thông báo nào trong lớp này</string>
+    <string name="empty_assignments">Chưa có bài tập nào trong lớp này</string>
+    <string name="attendance_fraction_format">Tham gia: %1$d / %2$d buổi</string>
+    <string name="empty_materials">Chưa có tài liệu nào trong lớp này</string>
+    <string name="empty_materials_filtered">Không tìm thấy tài liệu phù hợp</string>
+    <string name="join_class_success">Tham gia lớp thành công!</string>
+    <string name="join_class_error_already_joined">Bạn đã tham gia lớp học này rồi</string>
+    <string name="join_class_error_not_found">Không tìm thấy lớp học với mã này</string>
+    <string name="join_class_error_generic">Không thể tham gia lớp học, vui lòng thử lại</string>
+    <string name="join_class_code_empty">Vui lòng nhập mã tham gia lớp</string>
+    <string name="assignment_detail_title">Chi tiết bài tập</string>
+    <string name="assignment_submit_success">Nộp bài tập thành công!</string>
+    <string name="assignment_due_prefix">Hạn nộp: %s</string>
+    <string name="assignment_warning_overdue">Bài tập này đã quá hạn nộp!</string>
+    <string name="assignment_warning_due_soon">Sắp hết hạn nộp bài!</string>
+    <string name="assignment_submitted_at_prefix">Đã nộp vào lúc: %s</string>
+    <string name="assignment_feedback_prefix">Nhận xét của giảng viên: %s</string>
+    <string name="btn_resubmit_assignment">Nộp lại bài tập</string>
+    <string name="btn_submit_assignment">Nộp bài tập</string>
+    <string name="assignment_attachment_title">Tệp đính kèm</string>
     <string name="class_detail_title">Chi tiết lớp học</string>
     <string name="tab_announcements">Thông báo</string>
     <string name="tab_materials">Tài liệu</string>
     <string name="tab_assignments">Bài tập</string>
     <string name="tab_attendance">Điểm danh</string>
-    <string name="attendance_diligence">CHUYÊN CẦN</string>
-    <string name="attendance_fraction_format">%1$d/%2$d buổi</string>
-    <string name="attendance_note">Cần duy trì tối thiểu 80% để đủ điều kiện dự thi</string>
-    <string name="btn_scan_attendance">Điểm danh ngay bằng mã QR</string>
-    <string name="section_attendance_history">LỊCH SỬ TỪNG BUỔI</string>
-    <string name="empty_data">Chưa có dữ liệu</string>
-    <string name="empty_announcements">Chưa có thông báo nào</string>
-    <string name="empty_materials">Chưa có tài liệu nào</string>
-    <string name="empty_materials_filtered">Không có tài liệu nào thuộc loại này</string>
-    <string name="material_filter_pdf">PDF</string>
-    <string name="material_filter_word">Word</string>
-    <string name="material_filter_powerpoint">PowerPoint</string>
-    <string name="empty_assignments">Chưa có bài tập nào</string>
-    <string name="empty_attendance">Chưa có lịch sử điểm danh</string>
 
-    <!-- Notifications Filter & Empty -->
-    <string name="filter_all">Tất cả</string>
-    <string name="filter_unread">Chưa đọc</string>
-    <string name="filter_urgent">Khẩn</string>
-    <string name="filter_assignments">Bài tập</string>
-    <string name="filter_grades">Điểm</string>
-    <string name="empty_notifications">Không có thông báo nào</string>
-
-    <!-- Profile & Actions -->
-    <string name="profile_contact_info">THÔNG TIN LIÊN HỆ</string>
-    <string name="profile_fullname_caption">HỌ VÀ TÊN</string>
-    <string name="profile_email_caption">EMAIL</string>
-    <string name="profile_phone_caption">SỐ ĐIỆN THOẠI</string>
-    <string name="profile_not_set">Chưa cập nhật</string>
-    <string name="profile_account_actions">TÀI KHOẢN</string>
-    <string name="action_edit_profile">Chỉnh sửa hồ sơ</string>
-    <string name="action_change_password">Đổi mật khẩu</string>
-    <string name="action_logout">Đăng xuất</string>
-    <string name="logout_confirm_title">Đăng xuất</string>
-    <string name="logout_confirm_message">Bạn có chắc chắn muốn đăng xuất khỏi ứng dụng?</string>
-    <string name="logout_confirm_btn">Đăng xuất</string>
-    <string name="btn_cancel">Hủy</string>
-
-    <!-- Edit Profile BottomSheet -->
-    <string name="edit_profile_title">Chỉnh sửa hồ sơ</string>
-    <string name="edit_profile_desc">Cập nhật họ và tên hoặc số điện thoại của bạn.</string>
-    <string name="edit_profile_fullname_hint">Họ và tên</string>
-    <string name="edit_profile_phone_hint">Số điện thoại</string>
-    <string name="edit_profile_btn_save">Lưu thay đổi</string>
-    <string name="edit_profile_error_name_empty">Vui lòng nhập họ và tên</string>
-    <string name="edit_profile_success">Cập nhật thông tin thành công!</string>
-    <string name="edit_profile_error_generic">Không thể cập nhật thông tin. Vui lòng thử lại sau.</string>
-
-    <!-- Change Password BottomSheet -->
-    <string name="change_pass_title">Đổi mật khẩu</string>
-    <string name="change_pass_desc">Mật khẩu mới phải có tối thiểu 6 ký tự.</string>
-    <string name="change_pass_current_hint">Mật khẩu hiện tại</string>
-    <string name="change_pass_new_hint">Mật khẩu mới</string>
-    <string name="change_pass_confirm_hint">Xác nhận mật khẩu mới</string>
-    <string name="change_pass_btn_submit">Đổi mật khẩu</string>
-    <string name="change_pass_error_current_empty">Vui lòng nhập mật khẩu hiện tại</string>
-    <string name="change_pass_error_new_short">Mật khẩu mới phải có ít nhất 6 ký tự</string>
-    <string name="change_pass_error_confirm_mismatch">Mật khẩu xác nhận không khớp</string>
-    <string name="change_pass_error_same_as_old">Mật khẩu mới không được trùng với mật khẩu hiện tại</string>
-    <string name="change_pass_error_wrong_current">Mật khẩu hiện tại không chính xác</string>
-    <string name="change_pass_success">Đổi mật khẩu thành công!</string>
-    <string name="change_pass_error_generic">Không thể đổi mật khẩu. Vui lòng thử lại.</string>
-    <!-- Assignment Detail & Submission 5 States -->
-    <string name="assignment_detail_title">Chi tiết bài tập</string>
-    <string name="assignment_due_prefix">Hạn nộp: %1$s</string>
-    <string name="assignment_scale_format">Thang điểm: %1$s</string>
-    <string name="assignment_submission_section">Bài nộp của bạn</string>
-    <string name="assignment_dropzone_title">Nhấn để chọn tệp tải lên</string>
-    <string name="assignment_dropzone_caption">Hỗ trợ PDF, Word, ZIP, Ảnh (tối đa 25MB)</string>
-    <string name="assignment_submitted_at_prefix">Đã nộp lúc %1$s</string>
-    <string name="assignment_grading_pending">Đang chờ giảng viên chấm điểm</string>
-    <string name="assignment_score_format">%1$s / 10</string>
-    <string name="assignment_feedback_prefix">Nhận xét: %1$s</string>
-    <string name="assignment_requirements_title">Yêu cầu bài tập</string>
-    <string name="assignment_attachment_title">Tệp đính kèm của đề bài</string>
-    <string name="btn_submit_assignment">Nộp bài</string>
-    <string name="btn_resubmit_assignment">Nộp lại bài</string>
-    <string name="assignment_warning_due_soon">Bài tập sắp hết hạn!</string>
-    <string name="assignment_warning_overdue">Bài tập đã quá hạn nộp!</string>
-    <string name="assignment_submit_success">Nộp bài tập thành công!</string>
-    <string name="pick_file_type_title">Chọn loại tệp</string>
-    <string name="file_type_pdf">Tệp PDF</string>
-    <string name="file_type_pdf_ext">.pdf</string>
-    <string name="file_type_word">Tài liệu Word</string>
-    <string name="file_type_word_ext">.docx, .doc</string>
-    <string name="file_type_zip">Tệp nén</string>
-    <string name="file_type_zip_ext">.zip, .rar</string>
-    <string name="file_type_image">Ảnh</string>
-    <string name="file_type_image_ext">.jpg, .png</string>
-    <string name="pick_demo_file_btn">Dùng tệp mẫu demo (báo cáo.pdf)</string>
-
-    <!-- 3-Layer QR Attendance Scan & Verifying & Result (Task 4) -->
-    <string name="scan_qr_screen_title">Quét mã điểm danh</string>
-    <string name="scan_qr_viewfinder_instruction">Hướng camera về phía mã QR trên màn hình giảng viên</string>
-    <string name="scan_qr_viewfinder_subinstruction">Giữ điện thoại thẳng và ổn định</string>
-    <string name="scan_qr_before_title">Trước khi quét</string>
-    <string name="scan_qr_req_wifi">Đã kết nối WiFi phòng học (hoặc UIT-Student)</string>
-    <string name="scan_qr_req_gps">Đã bật GPS trong bán kính phòng học</string>
-    <string name="scan_qr_req_device">Điểm danh bằng thiết bị chính chủ của bạn</string>
-    <string name="scan_qr_btn_quick">Quét ngay (Phiên hợp lệ)</string>
-    <string name="scan_qr_btn_simulate">Mô phỏng kịch bản lỗi</string>
-    <string name="scan_qr_sim_qr_expired">1. Mã QR hết hạn</string>
-    <string name="scan_qr_sim_wifi_mismatch">2. Sai WiFi phòng học</string>
-    <string name="scan_qr_sim_gps_out">3. Ngoài vùng GPS</string>
-    <string name="scan_qr_sim_device_used">4. Trùng thiết bị</string>
-
-    <string name="verifying_title">Đang xác thực thông tin...</string>
-    <string name="verifying_headline">Đang kiểm tra 3 lớp bảo mật</string>
-    <string name="verifying_subtitle">Vui lòng giữ ứng dụng mở trong giây lát.</string>
-    <string name="verifying_step_1_title">Lớp 1: Mã QR phiên học</string>
-    <string name="verifying_step_2_title">Lớp 2: Mạng WiFi phòng học</string>
-    <string name="verifying_step_3_title">Lớp 3: Vị trí GPS &amp; Thiết bị</string>
-    <string name="verifying_state_checking">Đang kiểm tra...</string>
-    <string name="verifying_state_waiting">Chờ...</string>
-    <string name="verifying_state_passed">Đạt</string>
-    <string name="verifying_state_failed">Lỗi</string>
-
-    <string name="scan_success_headline">Điểm danh thành công!</string>
-    <string name="scan_success_subtitle">Thông tin chuyên cần của bạn đã được ghi nhận.</string>
-    <string name="scan_pill_qr">✓ QR</string>
-    <string name="scan_pill_wifi">✓ WiFi</string>
-    <string name="scan_pill_gps">✓ GPS</string>
-    <string name="scan_detail_course">Môn học</string>
-    <string name="scan_detail_room">Phòng học</string>
-    <string name="scan_detail_lecturer">Giảng viên</string>
-    <string name="scan_detail_time">Thời gian quét</string>
-    <string name="scan_detail_device">Thiết bị</string>
-    <string name="scan_detail_status">Trạng thái</string>
-    <string name="scan_device_default">Thiết bị chính chủ</string>
-    <string name="scan_btn_home">Về trang chủ</string>
-    <string name="scan_btn_rescan">Quét lại</string>
-
-    <string name="error_qr_expired_title">Mã QR đã hết hạn</string>
-    <string name="error_qr_expired_desc">Phiên điểm danh đã kết thúc hoặc giảng viên đã tạo mã mới.</string>
-    <string name="error_qr_expired_advice">Hãy liên hệ giảng viên để được mở lại phiên điểm danh hoặc quét mã mới nhất.</string>
-
-    <string name="error_wifi_mismatch_title">Sai mạng WiFi phòng học</string>
-    <string name="error_wifi_mismatch_desc">Thiết bị chưa kết nối đúng mạng WiFi của phòng học.</string>
-    <string name="error_wifi_mismatch_advice">Vui lòng vào Cài đặt WiFi và kết nối đúng mạng phòng học của trường.</string>
-
-    <string name="error_gps_out_title">Ngoài phạm vi phòng học</string>
-    <string name="error_gps_out_desc">Tọa độ GPS phát hiện bạn đang ở ngoài bán kính cho phép của lớp học.</string>
-    <string name="error_gps_out_advice">Đảm bảo bạn đang ngồi trong phòng học và đã cấp quyền vị trí chính xác.</string>
-
+    <!-- QR Scan Simulation / Errors -->
+    <string name="scan_qr_sim_qr_expired">Mô phỏng: Mã QR đã hết hạn</string>
+    <string name="scan_qr_sim_wifi_mismatch">Mô phỏng: Sai mạng Wi-Fi</string>
+    <string name="scan_qr_sim_gps_out">Mô phỏng: Ngoài phạm vi GPS</string>
+    <string name="scan_qr_sim_device_used">Mô phỏng: Thiết bị đã được dùng</string>
+    <string name="scan_device_default">Thiết bị hiện tại</string>
+    <string name="error_wifi_mismatch_title">Sai mạng Wi-Fi</string>
+    <string name="error_wifi_mismatch_desc">Bạn chưa kết nối đúng mạng Wi-Fi của lớp học</string>
+    <string name="error_wifi_mismatch_advice">Hãy kết nối đúng Wi-Fi lớp học và thử lại</string>
+    <string name="error_gps_out_title">Ngoài vị trí quy định</string>
+    <string name="error_gps_out_desc">Vị trí của bạn nằm ngoài phạm vi phòng học</string>
+    <string name="error_gps_out_advice">Hãy di chuyển vào trong phòng học và thử lại</string>
     <string name="error_device_used_title">Thiết bị đã được sử dụng</string>
-    <string name="error_device_used_desc">Thiết bị này đã được dùng để điểm danh cho tài khoản khác trong phiên này.</string>
-    <string name="error_device_used_advice">Quy định của trường nghiêm cấm điểm danh hộ. Mỗi sinh viên phải dùng thiết bị cá nhân.</string>
+    <string name="error_device_used_desc">Thiết bị này đã điểm danh cho một sinh viên khác</string>
+    <string name="error_device_used_advice">Mỗi thiết bị chỉ được sử dụng điểm danh cho 1 tài khoản</string>
+    <string name="error_network_title">Lỗi kết nối</string>
+    <string name="error_network_desc">Không thể kết nối tới máy chủ điểm danh</string>
+    <string name="error_network_advice">Vui lòng kiểm tra kết nối mạng và thử lại</string>
+    <string name="error_qr_expired_title">Mã QR hết hạn</string>
+    <string name="error_qr_expired_desc">Mã QR điểm danh này đã hết thời gian hiệu lực</string>
+    <string name="error_qr_expired_advice">Vui lòng đợi giảng viên đổi mã QR mới và quét lại</string>
+    <string name="verifying_state_passed">Thành công</string>
+    <string name="verifying_state_failed">Thất bại</string>
+    <string name="verifying_state_waiting">Đang chờ</string>
+    <string name="verifying_state_checking">Đang kiểm tra</string>
 
-    <string name="error_network_title">Lỗi kết nối máy chủ</string>
-    <string name="error_network_desc">Không thể kết nối đến máy chủ hoặc phiên làm việc gián đoạn.</string>
-    <string name="error_network_advice">Vui lòng kiểm tra lại kết nối mạng Internet hoặc WiFi phòng học và thử quét lại.</string>
-
-    <!-- Phase 4: Lecturer Flow Strings -->
-    <string name="lecturer_tab_active">Đang mở</string>
-    <string name="lecturer_tab_archived">Đã lưu trữ</string>
-    <string name="btn_create_class">+ Tạo lớp mới</string>
-    <string name="create_class_title">Tạo lớp học mới</string>
-    <string name="label_class_name">Tên môn học *</string>
-    <string name="hint_class_name">Ví dụ: Thiết kế giao diện người dùng</string>
-    <string name="label_class_code">Mã lớp *</string>
-    <string name="hint_class_code">Ví dụ: NT118.O21</string>
-    <string name="label_semester">Học kỳ *</string>
-    <string name="hint_semester">Ví dụ: HK1 (2026-2027)</string>
-    <string name="label_room">Phòng học</string>
-    <string name="hint_room">Ví dụ: B5.12</string>
-    <string name="btn_submit_create_class">Tạo lớp học</string>
-    <string name="create_class_success_title">Tạo lớp thành công!</string>
-    <string name="create_class_success_subtitle">Chia sẻ mã này với sinh viên để họ tham gia lớp học</string>
-    <string name="btn_copy_code">Sao chép mã</string>
-    <string name="btn_share_code">Chia sẻ</string>
-    <string name="btn_enter_class">Vào lớp học</string>
-    <string name="copied_invite_code">Đã sao chép mã mời</string>
-    <string name="share_code_subject">Mã mời tham gia lớp học</string>
-    <string name="share_code_format">Mã tham gia lớp học %1$s trên EduLens: %2$s</string>
-    <string name="err_required_field">Vui lòng không để trống trường này</string>
-    <string name="hero_lecturer_tag">LỚP ĐANG DẠY HÔM NAY</string>
-    <string name="hero_btn_open_qr">Mở phiên QR</string>
-
-    <!-- Phase 4 Flow A2: Lecturer Class Detail & Members -->
-    <string name="lecturer_class_detail_title">Chi tiết lớp học</string>
-    <string name="lecturer_action_members">Sinh viên</string>
-    <string name="lecturer_action_qr">Điểm danh QR</string>
-    <string name="lecturer_action_stats">Thống kê</string>
-    <string name="metric_students">Sinh viên</string>
-    <string name="metric_assignments">Bài tập</string>
-    <string name="metric_attendance">Chuyên cần</string>
-    <string name="section_announcements">Thông báo</string>
-    <string name="btn_create_announcement">+ Tạo thông báo</string>
-    <string name="section_materials">Tài liệu</string>
-    <string name="btn_upload_material">+ Tải tài liệu</string>
-    <string name="section_assignments">Bài tập</string>
-    <string name="btn_create_assignment">+ Tạo bài tập</string>
-    <string name="lecturer_members_title">Danh sách sinh viên</string>
-    <string name="hint_search_members">Tìm theo tên, MSSV, email...</string>
-    <string name="format_member_count">%1$d sinh viên</string>
-    <string name="dialog_remove_member_title">Xác nhận xóa sinh viên?</string>
-    <string name="dialog_remove_member_message">Bạn có chắc chắn muốn xóa sinh viên %1$s khỏi lớp học này?</string>
-    <string name="btn_confirm_remove">Xóa sinh viên</string>
-    <string name="lecturer_profile_title">Hồ sơ sinh viên</string>
-    <string name="metric_submitted">Bài đã nộp</string>
-    <string name="metric_gpa">Điểm TB</string>
-    <string name="format_absence_sessions">Số buổi vắng: %1$d/%2$d buổi</string>
-    <string name="absence_warning_limit">Cảnh báo: Sinh viên đã vắng quá 20% số buổi học!</string>
-    <string name="recent_assignments_title">Bài tập gần đây</string>
+    <!-- Announcements -->
     <string name="announcement_new_title">Tạo thông báo mới</string>
-    <string name="label_announcement_title">Tiêu đề thông báo *</string>
-    <string name="hint_announcement_title">Nhập tiêu đề thông báo...</string>
-    <string name="label_announcement_content">Nội dung chi tiết *</string>
-    <string name="hint_announcement_content">Nhập nội dung thông báo cho sinh viên...</string>
-    <string name="label_urgent_announcement">Thông báo khẩn</string>
-    <string name="desc_urgent_announcement">Gửi thông báo đẩy đến tất cả sinh viên</string>
+    <string name="label_announcement_title">Tiêu đề thông báo</string>
+    <string name="hint_announcement_title">Nhập tiêu đề thông báo</string>
+    <string name="label_announcement_content">Nội dung thông báo</string>
+    <string name="hint_announcement_content">Nhập nội dung thông báo...</string>
+    <string name="label_urgent_announcement">Thông báo khẩn cấp</string>
+    <string name="desc_urgent_announcement">Đánh dấu nếu đây là thông báo quan trọng cần chú ý ngay</string>
     <string name="btn_post_announcement">Đăng thông báo</string>
-    <string name="material_upload_title">Tải lên tài liệu học tập</string>
-    <string name="label_material_title">Tiêu đề tài liệu *</string>
-    <string name="hint_material_title">Ví dụ: Slide Bài giảng Tuần 1</string>
-    <string name="label_material_url">URL hoặc đường dẫn tệp *</string>
-    <string name="hint_material_url">https://drive.google.com/... hoặc đường dẫn</string>
-    <string name="label_file_type">Định dạng tệp</string>
-    <string name="btn_post_material">Đăng tài liệu</string>
-    <string name="status_not_graded">Chưa chấm</string>
 
-    <!-- Phase 4 Flow B: Lecturer Assignment Creation, Submissions List & Grading -->
-    <string name="create_assignment_title">Tạo bài tập mới</string>
-    <string name="label_assignment_title">Tiêu đề bài tập *</string>
-    <string name="hint_assignment_title">Nhập tiêu đề bài tập...</string>
-    <string name="label_assignment_description">Mô tả yêu cầu bài tập</string>
-    <string name="hint_assignment_description">Nhập hướng dẫn, yêu cầu bài tập...</string>
-    <string name="label_attachment_url">Đường dẫn tệp đính kèm / đề bài</string>
-    <string name="hint_attachment_url">https://... hoặc link drive đề bài</string>
-    <string name="label_due_date">Ngày hạn nộp *</string>
-    <string name="hint_due_date">Chọn ngày (yyyy-MM-dd)</string>
-    <string name="label_due_time">Giờ hạn nộp *</string>
-    <string name="hint_due_time">Chọn giờ (HH:mm)</string>
-    <string name="label_max_score">Thang điểm</string>
-    <string name="hint_max_score">10</string>
-    <string name="switch_notify_students">Gửi thông báo đến sinh viên</string>
-    <string name="desc_notify_students">Thông báo sẽ xuất hiện trên thiết bị sinh viên</string>
-    <string name="switch_allow_late">Cho phép nộp trễ</string>
-    <string name="desc_allow_late">Sinh viên vẫn có thể nộp sau thời hạn</string>
-    <string name="btn_submit_create_assignment">Tạo bài tập</string>
-    <string name="err_empty_assignment_title">Vui lòng nhập tiêu đề bài tập</string>
-    <string name="err_empty_due_date">Vui lòng chọn ngày hạn nộp</string>
-
+    <!-- Lecturer & Assignments & Attendance -->
     <string name="assignment_submissions_title">Danh sách bài nộp</string>
-    <string name="tab_all_submissions">Tất cả bài nộp</string>
-    <string name="tab_pending_grading">Chưa chấm</string>
-    <string name="status_on_time">Đúng hạn</string>
-    <string name="status_late">Nộp trễ</string>
-    <string name="status_not_submitted">Chưa nộp</string>
-    <string name="status_submitted_on_time">Đã nộp (Đúng hạn)</string>
+    <string name="submitted_ratio_format">Đã nộp: %1$d / %2$d sinh viên</string>
     <string name="status_graded_prefix">Đã chấm: </string>
-    <string name="submitted_ratio_format">Đã nộp: %1$d / %2$d</string>
-
-    <string name="grading_title">Chấm điểm bài nộp</string>
-    <string name="btn_prev_student">&lt; Trước</string>
-    <string name="btn_next_student">Sau &gt;</string>
-    <string name="submitted_file_title">Tệp bài nộp của sinh viên</string>
-    <string name="btn_open_file">Xem bài nộp</string>
-    <string name="label_grading_progress">Tiến độ chấm: %1$d/%2$d bài</string>
-    <string name="label_score">Điểm số *</string>
-    <string name="hint_score">0.0 - 10.0</string>
-    <string name="quick_score_title">Chọn điểm nhanh</string>
-    <string name="label_feedback">Nhận xét của giảng viên</string>
-    <string name="hint_feedback">Nhập nhận xét chi tiết cho bài làm...</string>
-    <string name="btn_save_draft">Lưu nháp</string>
-    <string name="btn_publish_grade">Công bố điểm</string>
-    <string name="toast_draft_saved">Đã lưu điểm nháp</string>
-    <string name="toast_grade_published">Điểm đã được công bố cho sinh viên</string>
+    <string name="status_late">Nộp trễ</string>
+    <string name="status_submitted_on_time">Nộp đúng hạn</string>
+    <string name="status_not_submitted">Chưa nộp</string>
+    <string name="create_assignment_title">Tạo bài tập mới</string>
+    <string name="label_due_date">Hạn nộp bài</string>
+    <string name="label_due_time">Giờ hạn nộp</string>
     <string name="toast_create_assignment_success">Tạo bài tập thành công!</string>
-    <string name="err_invalid_score">Điểm phải từ 0.0 đến 10.0</string>
-    <string name="dialog_publish_grade_title">Công bố điểm bài tập</string>
-    <string name="rb_publish_current">Chỉ công bố bài này cho sinh viên</string>
-    <string name="rb_publish_all">Công bố toàn bộ các bài đã chấm trong lớp</string>
+    <string name="err_empty_assignment_title">Vui lòng nhập tiêu đề bài tập</string>
+    <string name="err_empty_due_date">Vui lòng chọn hạn nộp bài</string>
+    <string name="grading_title">Chấm bài tập</string>
+    <string name="toast_draft_saved">Đã lưu nháp</string>
+    <string name="status_on_time">Đúng hạn</string>
+    <string name="label_grading_progress">Tiến độ chấm: %1$d / %2$d</string>
+    <string name="err_invalid_score">Điểm số không hợp lệ (0 - 10)</string>
+    <string name="no_file_attached">Chưa có tệp đính kèm</string>
     <string name="btn_confirm_publish">Xác nhận công bố</string>
-    <string name="no_file_attached">Sinh viên chưa đính kèm tệp bài làm</string>
-
-    <!-- Phase 4 Flow C: Dynamic QR Session, Live Attendance & Class Statistics -->
-    <string name="qr_session_title">Phiên điểm danh QR</string>
-    <string name="session_status_open">Phiên đang mở</string>
-    <string name="session_status_closed">Phiên đã kết thúc</string>
-    <string name="qr_refresh_countdown_format">Mã phiên tự động làm mới sau: %1$ds</string>
-    <string name="security_layer_title">3 lớp bảo mật chống gian lận</string>
-    <string name="security_layer_wifi">WiFi phòng học</string>
-    <string name="security_layer_wifi_desc">Khớp mạng BSSID phòng học</string>
-    <string name="security_layer_gps">Vị trí GPS phòng học</string>
-    <string name="security_layer_gps_desc">Bán kính tối đa 50m</string>
-    <string name="security_layer_device">Thiết bị duy nhất</string>
-    <string name="security_layer_device_desc">Chống điểm danh hộ, khóa 1 máy / 1 sinh viên</string>
-    <string name="btn_track_live">Theo dõi điểm danh</string>
-    <string name="btn_close_session">Chốt phiên điểm danh</string>
-    <string name="attendance_live_title">Theo dõi trực tiếp</string>
-    <string name="metric_present">Có mặt</string>
-    <string name="metric_absent">Vắng</string>
-    <string name="metric_total">Tổng số</string>
-    <string name="dialog_close_session_title">Chốt phiên điểm danh?</string>
-    <string name="dialog_close_session_msg">Sau khi chốt phiên, sinh viên sẽ không thể quét mã để điểm danh nữa. Tất cả sinh viên chưa quét mã sẽ được tính là VẮNG.</string>
-    <string name="btn_close_session_confirm">Chốt phiên</string>
-    <string name="dialog_cancel">Hủy</string>
+    <string name="toast_grade_published">Công bố điểm thành công!</string>
+    <string name="attendance_live_title">Điểm danh trực tiếp</string>
+    <string name="btn_close_session_confirm">Đóng phiên điểm danh</string>
+    <string name="dialog_close_session_msg">Bạn có chắc chắn muốn kết thúc phiên điểm danh này?</string>
+    <string name="dialog_close_session_title">Xác nhận đóng phiên</string>
+    <string name="session_status_closed">Đã đóng phiên điểm danh</string>
+    <string name="qr_refresh_countdown_format">Mã QR tự đổi sau: %d giây</string>
+    <string name="lecturer_class_detail_title">Chi tiết lớp học</string>
+    <string name="copied_invite_code">Đã sao chép mã mời</string>
+    <string name="create_class_success_title">Tạo lớp học thành công!</string>
+    <string name="share_code_format">Mã tham gia lớp học %1$s: %2$s</string>
+    <string name="share_code_subject">Tham gia lớp học trên EduLens</string>
     <string name="class_statistics_title">Thống kê lớp học</string>
-    <string name="status_active_pill">Đang mở</string>
-    <string name="status_archived_pill">Đã lưu trữ</string>
-    <string name="stat_attendance_rate">Chuyên cần</string>
-    <string name="stat_warning_absent">Vắng >20%</string>
-    <string name="stat_average_score">Điểm TB</string>
-    <string name="warning_students_title">Sinh viên vắng vượt ngưỡng (>20%)</string>
-    <string name="score_distribution_title">Phổ điểm tổng kết</string>
-    <string name="btn_archive_class">Lưu trữ lớp cuối kỳ</string>
-    <string name="btn_class_archived">Lớp đã được lưu trữ</string>
-    <string name="dialog_archive_class_title">Lưu trữ lớp học này?</string>
-    <string name="dialog_archive_class_msg">Lớp học sẽ chuyển sang trạng thái Đã lưu trữ (chỉ đọc). Sinh viên và giảng viên vẫn có thể xem lại dữ liệu nhưng không thể chỉnh sửa.</string>
     <string name="btn_archive_confirm">Lưu trữ lớp</string>
-    <string name="network_error">Lỗi kết nối mạng. Vui lòng thử lại sau.</string>
-    <string name="cannot_load_classes">Không thể tải thông tin lớp học</string>
-    <string name="btn_pick_file_from_device">Chọn tệp từ thiết bị</string>
-    <string name="msg_uploading_file">Đang tải tệp lên máy chủ...</string>
+    <string name="dialog_archive_class_msg">Bạn có chắc chắn muốn lưu trữ lớp học này không?</string>
+    <string name="dialog_archive_class_title">Xác nhận lưu trữ</string>
+    <string name="status_active_pill">Hoạt động</string>
+    <string name="status_archived_pill">Đã lưu trữ</string>
+    <string name="btn_class_archived">Lớp học đã lưu trữ</string>
+    <string name="create_class_title">Tạo lớp học mới</string>
+    <string name="lecturer_profile_title">Hồ sơ giảng viên</string>
+    <string name="format_absence_sessions">Vắng %1$d / %2$d buổi</string>
+    <string name="lecturer_members_title">Thành viên lớp học</string>
+    <string name="format_member_count">Tổng số: %d thành viên</string>
+    <string name="btn_confirm_remove">Xóa thành viên</string>
+    <string name="dialog_remove_member_title">Xác nhận xóa thành viên</string>
+    <string name="dialog_remove_member_message">Bạn có chắc chắn muốn xóa thành viên %s khỏi lớp không?</string>
+    <string name="msg_uploading_file">Đang tải tệp lên...</string>
+    <string name="label_attendance">Điểm danh</string>
+    <string name="label_pending">Cần xử lý</string>
 </resources>

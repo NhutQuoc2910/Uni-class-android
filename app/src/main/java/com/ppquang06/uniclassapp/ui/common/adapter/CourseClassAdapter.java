@@ -1,6 +1,7 @@
 package com.ppquang06.uniclassapp.ui.common.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -8,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.ItemCourseCardBinding;
-import com.ppquang06.uniclassapp.ui.common.UiBadgeHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,50 +76,47 @@ public class CourseClassAdapter extends RecyclerView.Adapter<CourseClassAdapter.
 
         void bind(CourseClassItem item, OnCourseClickListener listener) {
             String code = item.getCode() != null ? item.getCode() : "";
-            String semester = item.getSemester() != null ? item.getSemester() : "";
             String name = item.getName() != null ? item.getName() : "";
             String room = item.getRoom() != null ? item.getRoom().trim() : "";
             String lecturerName = item.getLecturerName() != null ? item.getLecturerName().trim() : "";
 
-            binding.tvCourseCode.setText(code);
-            binding.tvSemesterBadge.setText(semester);
+            // Calculate prefix for blue circle badge (e.g. "SE", "IT", "NT")
+            String prefix = "LH";
+            if (!code.isEmpty()) {
+                String letters = code.replaceAll("[^a-zA-Z]", "").toUpperCase();
+                if (letters.length() >= 2) {
+                    prefix = letters.substring(0, 2);
+                } else if (!letters.isEmpty()) {
+                    prefix = letters;
+                } else if (code.length() >= 2) {
+                    prefix = code.substring(0, 2).toUpperCase();
+                }
+            }
+            binding.tvCoursePrefix.setText(prefix);
+
             binding.tvCourseName.setText(name);
 
             if (!room.isEmpty()) {
-                binding.tvRoomSchedule.setText(
-                        semester.isEmpty() ? ("Phòng " + room) : ("Phòng " + room + " · " + semester)
-                );
+                binding.tvCodeAndSchedule.setText(code + " · " + room);
             } else {
-                binding.tvRoomSchedule.setText(semester);
+                binding.tvCodeAndSchedule.setText(code);
             }
 
             if (!lecturerName.isEmpty()) {
-                binding.tvLecturerOrCount.setText("GV: " + lecturerName + " · " + item.getEnrolledCount() + " SV");
+                if (!lecturerName.startsWith("GV:")) {
+                    binding.tvLecturerName.setText("GV: " + lecturerName);
+                } else {
+                    binding.tvLecturerName.setText(lecturerName);
+                }
             } else {
-                binding.tvLecturerOrCount.setText(item.getEnrolledCount() + " sinh viên");
+                binding.tvLecturerName.setText("GV: Chưa cập nhật");
             }
 
-            if (item.getInviteCode() != null && !item.getInviteCode().trim().isEmpty()) {
-                UiBadgeHelper.applyBadge(
-                        binding.chipAttendanceOrInvite,
-                        UiBadgeHelper.Status.OPEN,
-                        "Mã: " + item.getInviteCode().trim()
-                );
+            // Show unread red dot if progress < 50
+            if (item.getProgress() > 0 && item.getProgress() < 50) {
+                binding.viewUnreadDot.setVisibility(View.VISIBLE);
             } else {
-                int progress = item.getProgress();
-                UiBadgeHelper.Status badgeStatus;
-                if (progress >= 80) {
-                    badgeStatus = UiBadgeHelper.Status.PRESENT;
-                } else if (progress >= 60) {
-                    badgeStatus = UiBadgeHelper.Status.DUE_SOON;
-                } else {
-                    badgeStatus = UiBadgeHelper.Status.OVERDUE;
-                }
-                UiBadgeHelper.applyBadge(
-                        binding.chipAttendanceOrInvite,
-                        badgeStatus,
-                        "Chuyên cần: " + progress + "%"
-                );
+                binding.viewUnreadDot.setVisibility(View.GONE);
             }
 
             binding.getRoot().setOnClickListener(v -> {

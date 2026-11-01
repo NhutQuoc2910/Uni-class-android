@@ -4,45 +4,111 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background">
+    android:background="#F8FAFC">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <include
-            android:id="@+id/topAppBar"
-            layout="@layout/view_top_app_bar" />
+        <!-- Custom Header Bar matching reference image (A1 - Danh sách lớp đang học) -->
+        <RelativeLayout
+            android:id="@+id/headerBarRoot"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:background="@color/white"
+            android:elevation="1dp"
+            android:paddingHorizontal="16dp">
 
-        <!-- Semester & Class Count Header (Figma 54:52) -->
-        <LinearLayout
+            <!-- Right: Search Action Text ("Tìm") -->
+            <TextView
+                android:id="@+id/btnSearchHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:padding="6dp"
+                android:text="@string/search"
+                android:textColor="#2563EB"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <!-- Left: Avatar Badge ("SV") + Title ("Lớp học của tôi") -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/btnSearchHeader"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <FrameLayout
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:background="@drawable/bg_circle_blue">
+
+                    <TextView
+                        android:id="@+id/tvRoleAvatar"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/role_badge_student"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <TextView
+                    android:id="@+id/tvHeaderTitle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:text="@string/my_classes_title"
+                    android:textColor="#0F172A"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <!-- Divider Line -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#E2E8F0" />
+
+        <!-- Semester & Class Count Header Row -->
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_12">
-
-            <TextView
-                android:id="@+id/tvSemesterHeader"
-                style="@style/TextAppearance.EduLens.Headline"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="@string/classes_semester_header" />
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp">
 
             <TextView
                 android:id="@+id/tvClassCount"
-                style="@style/TextAppearance.EduLens.Badge"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_badge_pill"
-                android:paddingHorizontal="@dimen/space_12"
-                android:paddingVertical="4dp"
-                android:text="0 lớp"
-                android:textColor="@color/color_primary" />
-        </LinearLayout>
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:textColor="#64748B"
+                android:textSize="12sp"
+                tools:text="4 lớp đang học" />
+
+            <TextView
+                android:id="@+id/tvSemesterHeader"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:layout_toStartOf="@id/tvClassCount"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="Học kỳ 1 · 2026–2027" />
+
+        </RelativeLayout>
 
         <!-- Container for 4 states -->
         <FrameLayout
@@ -61,8 +127,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:clipToPadding="false"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:paddingTop="@dimen/space_4"
+                    android:paddingHorizontal="16dp"
+                    android:paddingTop="4dp"
                     android:paddingBottom="88dp" />
             </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
@@ -72,7 +138,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateTint="@color/color_primary"
+                android:indeterminateTint="#2563EB"
                 android:visibility="gone" />
 
             <!-- 3. Empty State -->
@@ -91,26 +157,29 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="top"
-                android:layout_marginHorizontal="@dimen/space_16"
-                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginHorizontal="16dp"
+                android:layout_marginTop="16dp"
                 android:visibility="gone" />
 
         </FrameLayout>
     </LinearLayout>
 
-    <!-- Extended FAB for joining class (Figma 54:157) -->
+    <!-- Extended FAB for joining class -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabJoinClass"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
-        android:layout_marginEnd="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_16"
-        android:contentDescription="@string/fab_join_class"
-        android:text="@string/fab_join_class"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="24dp"
+        android:contentDescription="@string/register_title"
+        android:text="+ Tham gia lớp"
+        android:textAllCaps="false"
         android:textColor="@color/white"
-        app:backgroundTint="@color/color_primary"
-        app:icon="@drawable/ic_add"
-        app:iconTint="@color/white" />
+        android:textSize="14sp"
+        android:textStyle="bold"
+        app:backgroundTint="#2563EB"
+        app:cornerRadius="24dp"
+        app:elevation="6dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
