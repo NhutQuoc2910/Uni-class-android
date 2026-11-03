@@ -1,3 +1,4 @@
+
 package com.ppquang06.uniclassapp.data.model.request;
 
 import com.google.gson.annotations.SerializedName;
@@ -18,14 +19,19 @@ public class RegisterRequest {
     @SerializedName("role")
     private String role;
 
+    @SerializedName("purpose")
+    private String purpose;
+
     public RegisterRequest() {}
 
-    public RegisterRequest(String email, String password, String fullName, String phone, String role) {
+    public RegisterRequest(String email, String password,
+                           String fullName, String phone, String role) {
         this.email = email;
         this.password = password;
         this.fullName = fullName;
         this.phone = phone;
         this.role = role;
+        this.purpose = "REGISTER";
     }
 
     public String getEmail() {
@@ -66,5 +72,13 @@ public class RegisterRequest {
 
     public void setRole(String role) {
         this.role = role;
+    }
+
+    public String getPurpose() {
+        return purpose;
+    }
+
+    public void setPurpose(String purpose) {
+        this.purpose = purpose;
     }
 }

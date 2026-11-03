@@ -150,7 +150,7 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
     private void observeViewModel() {
-        authViewModel.getRegisterState().observe(this, state -> {
+        authViewModel.getSendOtpState().observe(this, state -> {
             if (state == null || state.isIdle()) {
                 return;
             }
@@ -158,15 +158,26 @@ public class RegisterActivity extends AppCompatActivity {
                 setLoading(true);
             } else if (state.isSuccess()) {
                 setLoading(false);
-                authViewModel.resetRegisterState();
-                Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(RegisterActivity.this, RegisterSuccessActivity.class);
+                authViewModel.resetSendOtpState();
+                String email = binding.edtEmail.getText().toString().trim().toLowerCase();
+                Toast.makeText(RegisterActivity.this, "Mã OTP đã được gửi đến email của bạn!", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegisterActivity.this, VerifyOtpActivity.class);
+                intent.putExtra("email", email);
+                intent.putExtra("fullName",
+                        binding.edtFullName.getText().toString().trim());
+                intent.putExtra("phone",
+                        binding.edtPhone.getText().toString().trim());
+                intent.putExtra("password",
+                        binding.edtPassword.getText().toString());
+                intent.putExtra("role",
+                        "LECTURER".equals(selectedRole)
+                                ? "ROLE_LECTURER"
+                                : "ROLE_STUDENT");
                 startActivity(intent);
-                finish();
             } else if (state.isError()) {
                 setLoading(false);
-                String errorMsg = state.getMessage() != null ? state.getMessage() : "Đăng ký không thành công";
-                authViewModel.resetRegisterState();
+                String errorMsg = state.getMessage() != null ? state.getMessage() : "Gửi mã OTP thất bại";
+                authViewModel.resetSendOtpState();
                 Toast.makeText(RegisterActivity.this, errorMsg, Toast.LENGTH_LONG).show();
             }
         });
@@ -174,7 +185,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void performRegister() {
         String fullName = binding.edtFullName.getText() != null ? binding.edtFullName.getText().toString().trim() : "";
-        String contact = binding.edtContact.getText() != null ? binding.edtContact.getText().toString().trim() : "";
+        String email = binding.edtEmail.getText() != null ? binding.edtEmail.getText().toString().trim() : "";
+        String phone = binding.edtPhone.getText().toString().trim();
         String password = binding.edtPassword.getText() != null ? binding.edtPassword.getText().toString() : "";
         String confirmPassword = binding.edtConfirmPassword.getText() != null ? binding.edtConfirmPassword.getText().toString() : "";
 
@@ -184,22 +196,20 @@ public class RegisterActivity extends AppCompatActivity {
             return;
         }
 
-        if (TextUtils.isEmpty(contact)) {
-            binding.edtContact.setError("Vui lòng nhập email hoặc số điện thoại");
-            binding.edtContact.requestFocus();
+        if (TextUtils.isEmpty(email)) {
+            binding.edtEmail.setError("Vui lòng nhập email");
+            binding.edtEmail.requestFocus();
             return;
         }
-
-        String email = "";
-        String phone = "";
-        if (Patterns.EMAIL_ADDRESS.matcher(contact).matches()) {
-            email = contact.trim().toLowerCase();
-        } else if (contact.matches("^\\+?[0-9]{9,15}$")) {
-            phone = contact.trim();
-            email = phone + ("LECTURER".equalsIgnoreCase(selectedRole) ? "@lecturer.edulens.edu.vn" : "@student.edulens.edu.vn");
-        } else {
-            binding.edtContact.setError("Email hoặc số điện thoại không hợp lệ");
-            binding.edtContact.requestFocus();
+        if(!Patterns.EMAIL_ADDRESS.matcher(email).matches()){
+            binding.edtEmail.setError("Email không hợp lệ");
+            binding.edtEmail.requestFocus();
+            return;
+        }
+        if(!TextUtils.isEmpty(phone)
+            && !phone.matches("^\\+?[0-9]{9,15}$")){
+            binding.edtPhone.setError("Số điện thoại không hợp lệ");
+            binding.edtPhone.requestFocus();
             return;
         }
 
@@ -224,8 +234,8 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         String roleToSend = "LECTURER".equalsIgnoreCase(selectedRole) ? "ROLE_LECTURER" : "ROLE_STUDENT";
-        RegisterRequest request = new RegisterRequest(email, password, fullName, phone, roleToSend);
-        authViewModel.register(request);
+        RegisterRequest request = new RegisterRequest(email, password, fullName, TextUtils.isEmpty(phone) ? null: phone, roleToSend);
+        authViewModel.sendOtp(request);
     }
     private String validatePassword(String password){
         if(password.length() < 8){
@@ -249,5 +259,10 @@ public class RegisterActivity extends AppCompatActivity {
     private void setLoading(boolean isLoading) {
         binding.btnRegister.setEnabled(!isLoading);
         binding.btnRegister.setText(isLoading ? "Đang xử lý..." : getString(R.string.register_button));
+    }
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        binding = null;
     }
 }

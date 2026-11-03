@@ -28,7 +28,7 @@ public class AuthViewModel extends BaseViewModel {
     private final AuthRepository authRepository;
 
     private final MutableLiveData<UiState<AuthResponse>> loginState = new MutableLiveData<>(UiState.idle());
-    private final MutableLiveData<UiState<UserResponse>> registerState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<String>> sendOtpState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<String>> forgotPasswordState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<Map<String, Object>>> verifyOtpState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<String>> resetPasswordState = new MutableLiveData<>(UiState.idle());
@@ -50,8 +50,8 @@ public class AuthViewModel extends BaseViewModel {
         return loginState;
     }
 
-    public LiveData<UiState<UserResponse>> getRegisterState() {
-        return registerState;
+    public LiveData<UiState<String>> getSendOtpState() {
+        return sendOtpState;
     }
 
     public LiveData<UiState<String>> getForgotPasswordState() {
@@ -78,11 +78,11 @@ public class AuthViewModel extends BaseViewModel {
         );
     }
 
-    public void register(@NonNull RegisterRequest request) {
+    public void sendOtp(@NonNull RegisterRequest request) {
         executeCall(
-                authRepository.register(request),
-                registerState,
-                "Đăng ký không thành công"
+                authRepository.sendOtp(request),
+                sendOtpState,
+                "Gửi mã OTP thất bại"
         );
     }
 
@@ -99,9 +99,12 @@ public class AuthViewModel extends BaseViewModel {
     }
 
     public void verifyOtp(String email, String otp) {
-        verifyOtp(new VerifyOtpRequest(email, otp));
+        verifyOtp(new VerifyOtpRequest(email, otp, "FORGOT_PASSWORD"));
     }
 
+    public void verifyOtp(String email, String otp, String purpose){
+        verifyOtp(new VerifyOtpRequest(email, otp, purpose));
+    }
     public void verifyOtp(@NonNull VerifyOtpRequest request) {
         executeCall(
                 authRepository.verifyOtp(request),
@@ -126,8 +129,8 @@ public class AuthViewModel extends BaseViewModel {
         dispatchState(loginState, UiState.idle());
     }
 
-    public void resetRegisterState() {
-        dispatchState(registerState, UiState.idle());
+    public void resetSendOtpState() {
+        dispatchState(sendOtpState, UiState.idle());
     }
 
     public void resetForgotPasswordState() {

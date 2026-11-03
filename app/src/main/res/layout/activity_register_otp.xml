@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_forgot_pass_gradient"
     android:fillViewport="true"
-    tools:context=".RegisterOtpActivity">
+    tools:context=".VerifyOtpActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

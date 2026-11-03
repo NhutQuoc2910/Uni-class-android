@@ -464,4 +464,9 @@
     <string name="confirm_register_button">Hoàn tất đăng ký</string>
     <string name="back_to_register_step">Quay lại bước nhập thông tin</string>
     <string name="already_have_account_question">Đã có tài khoản? </string>
+    <string name="email">Email</string>
+    <string name="Nhap_email_register">Nhập địa chỉ email</string>
+    <string name="numberPhoneRegister">Số điện thoại (không bắt buộc)</string>
+    <string name="edt_numberPhoneRegister">Nhập số điện thoại</string>
+
 </resources>

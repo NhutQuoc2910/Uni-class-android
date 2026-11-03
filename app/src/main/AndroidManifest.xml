@@ -36,6 +36,8 @@
             android:windowSoftInputMode = "adjustResize"/>
         <activity android:name=".PassChangedSuccessActivity"/>
         <activity android:name=".RegisterSuccessActivity"/>
+        <activity android:name=".VerifyOtpActivity"
+            android:windowSoftInputMode = "adjustResize"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

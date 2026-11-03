@@ -19,8 +19,8 @@ public interface AuthApiService {
     @POST("auth/login")
     Call<ApiResponse<AuthResponse>> login(@Body LoginRequest request);
 
-    @POST("auth/register")
-    Call<ApiResponse<UserResponse>> register(@Body RegisterRequest request);
+    @POST("auth/send-otp")
+    Call<ApiResponse<String>> sendOtp(@Body RegisterRequest request);
 
     @POST("auth/forgot-password")
     Call<ApiResponse<String>> forgotPassword(@Body ForgotPasswordRequest request);

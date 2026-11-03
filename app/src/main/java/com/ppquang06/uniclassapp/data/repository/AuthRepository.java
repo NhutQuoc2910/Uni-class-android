@@ -38,8 +38,8 @@ public class AuthRepository {
         return authApiService.login(request);
     }
 
-    public Call<ApiResponse<UserResponse>> register(RegisterRequest request) {
-        return authApiService.register(request);
+    public Call<ApiResponse<String>> sendOtp(RegisterRequest request) {
+        return authApiService.sendOtp(request);
     }
 
     public Call<ApiResponse<String>> forgotPassword(ForgotPasswordRequest request) {

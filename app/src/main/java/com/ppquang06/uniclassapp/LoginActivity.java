@@ -113,7 +113,10 @@ public class LoginActivity extends AppCompatActivity {
                 setLoading(false);
                 AuthResponse auth = state.getData();
                 authViewModel.resetLoginState();
-                if (auth != null && auth.getToken().trim().isEmpty() && auth.getUser() != null) {
+                if (auth != null
+                        && auth.getToken() != null
+                        && !auth.getToken().trim().isEmpty()
+                        && auth.getUser() != null) {
                     SessionManager.getInstance(LoginActivity.this).saveAuth(auth.getToken(), auth.getUser());
 
                     String welcomeName = auth.getUser() != null ? auth.getUser().getFullName() : "";
@@ -158,6 +161,6 @@ public class LoginActivity extends AppCompatActivity {
         binding.edtEmail.setEnabled(!isLoading);
         binding.edtPassword.setEnabled(!isLoading);
         binding.btnLogin.setText(isLoading ? "Đang đăng nhập..." : getString(R.string.login_button));
-        binding.progressBar.setVisibility(!isLoading ? View.VISIBLE : View.GONE);
+        binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
     }
 }

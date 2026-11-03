@@ -9,11 +9,14 @@ public class VerifyOtpRequest {
     @SerializedName("otp")
     private String otp;
 
+    @SerializedName("purpose")
+    private String purpose;
     public VerifyOtpRequest() {}
 
-    public VerifyOtpRequest(String email, String otp) {
+    public VerifyOtpRequest(String email, String otp, String purpose) {
         this.email = email;
         this.otp = otp;
+        this.purpose = purpose;
     }
 
     public String getEmail() {
@@ -30,5 +33,11 @@ public class VerifyOtpRequest {
 
     public void setOtp(String otp) {
         this.otp = otp;
+    }
+    public String getPurpose(){
+        return purpose;
+    }
+    public void setPurpose(String purpose){
+        this.purpose = purpose;
     }
 }

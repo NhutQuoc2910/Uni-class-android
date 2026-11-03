@@ -177,25 +177,49 @@
                 android:textColorHint="@color/text_secondary"
                 android:textSize="14sp" />
 
-            <!-- Email or Phone -->
+            <!-- Email -->
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="@string/contact_label"
+                android:text="@string/email"
                 android:textColor="@color/text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
             <EditText
-                android:id="@+id/edt_contact"
+                android:id="@+id/edt_email"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginTop="8dp"
                 android:autofillHints="emailAddress"
                 android:background="@drawable/bg_input_field"
-                android:hint="@string/contact_hint"
-                android:inputType="text"
+                android:hint="@string/Nhap_email_register"
+                android:inputType="textEmailAddress"
+                android:paddingHorizontal="16dp"
+                android:textColor="@color/text_primary"
+                android:textColorHint="@color/text_secondary"
+                android:textSize="14sp" />
+
+            <!-- Phone (Optional) -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:text="@string/numberPhoneRegister"
+                android:textColor="@color/text_primary"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <EditText
+                android:id="@+id/edt_phone"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginTop="8dp"
+                android:autofillHints="phone"
+                android:background="@drawable/bg_input_field"
+                android:hint="@string/edt_numberPhoneRegister"
+                android:inputType="phone"
                 android:paddingHorizontal="16dp"
                 android:textColor="@color/text_primary"
                 android:textColorHint="@color/text_secondary"
