@@ -25,6 +25,9 @@ import com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
 import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.utils.SessionManager;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 import java.util.Collections;
 import java.util.List;
@@ -52,6 +55,7 @@ public class StudentHomeFragment extends Fragment {
         setupTopBar();
         setupMetricLabels();
         setupRecyclerViews();
+        updateTodayDate();
         setupListeners();
         bindUserData();
         observeViewModel();
@@ -63,6 +67,25 @@ public class StudentHomeFragment extends Fragment {
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
     }
 
+    private void updateTodayDate(){
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat formatter = new SimpleDateFormat(
+                "EEEE, dd/MM/yyyy",
+                new Locale("vi", "VN")
+        );
+        String formattedDate = formatter.format(calendar.getTime());
+        formattedDate = formattedDate.substring(0, 1).toUpperCase(new Locale("vi", "VN"))
+                + formattedDate.substring(1);
+        binding.tvTodayDate.setText(formattedDate);
+    }
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (binding != null) {
+            updateTodayDate();
+        }
+    }
     private void setupMetricLabels() {
         binding.metricCourses.tvMetricLabel.setText(R.string.label_courses);
         binding.metricAttendance.tvMetricLabel.setText(R.string.label_attendance);
@@ -143,10 +166,28 @@ public class StudentHomeFragment extends Fragment {
     }
 
     private void bindUserData() {
-        if (getContext() == null) return;
+        if (getContext() == null || binding == null) return;
+
         UserResponse user = SessionManager.getInstance(requireContext()).getUser();
+
         if (user != null && !TextUtils.isEmpty(user.getFullName())) {
-            binding.tvGreetingUser.setText("Chào buổi sáng, " + user.getFullName() + "!");
+
+            Calendar calendar = Calendar.getInstance();
+            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+
+            String greeting;
+
+            if (hour >= 5 && hour < 12) {
+                greeting = "Chào buổi sáng";
+            } else if (hour >= 12 && hour < 18) {
+                greeting = "Chào buổi chiều";
+            } else {
+                greeting = "Chào buổi tối";
+            }
+
+            binding.tvGreetingUser.setText(
+                    greeting + ", " + user.getFullName() + "!"
+            );
         }
     }
 
