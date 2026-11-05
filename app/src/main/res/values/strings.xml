@@ -469,4 +469,8 @@
     <string name="numberPhoneRegister">Số điện thoại (không bắt buộc)</string>
     <string name="edt_numberPhoneRegister">Nhập số điện thoại</string>
 
+    <!-- Today Schedule -->
+    <string name="today_schedule_title">Lịch học hôm nay</string>
+    <string name="empty_today_schedule_message">Hôm nay bạn không có lịch học nào</string>
+
 </resources>

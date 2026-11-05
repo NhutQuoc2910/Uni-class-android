@@ -23,6 +23,7 @@ import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 
 import java.util.List;
@@ -54,6 +55,9 @@ public interface UserClassApiService {
 
     @GET("home/summary")
     Call<ApiResponse<HomeSummaryResponse>> getHomeSummary();
+
+    @GET("home/today-schedule")
+    Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule();
 
     @GET("classes")
     Call<ApiResponse<List<CourseClassItem>>> getClasses();

@@ -8,20 +8,22 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.data.repository.UserRepository;
 
 import java.util.List;
 
 /**
- * ViewModel managing home summary (with offline Room caching), notifications,
- * and current user profile state.
+ * ViewModel managing home summary (with offline Room caching), today's schedule,
+ * notifications, and current user profile state.
  */
 public class HomeViewModel extends BaseViewModel {
 
     private final UserRepository userRepository;
 
     private final MutableLiveData<UiState<HomeSummaryResponse>> homeSummaryState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<List<TodayScheduleItem>>> todayScheduleState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<List<NotificationItemResponse>>> notificationsState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<UserResponse>> currentUserState = new MutableLiveData<>(UiState.idle());
 
@@ -42,6 +44,10 @@ public class HomeViewModel extends BaseViewModel {
         return homeSummaryState;
     }
 
+    public LiveData<UiState<List<TodayScheduleItem>>> getTodayScheduleState() {
+        return todayScheduleState;
+    }
+
     public LiveData<UiState<List<NotificationItemResponse>>> getNotificationsState() {
         return notificationsState;
     }
@@ -52,6 +58,14 @@ public class HomeViewModel extends BaseViewModel {
 
     public void loadHomeSummary() {
         userRepository.fetchHomeSummaryOfflineFirst(homeSummaryState, getActiveCallsMutable());
+    }
+
+    public void loadTodaySchedule() {
+        executeCall(
+                userRepository.getTodaySchedule(),
+                todayScheduleState,
+                "Không thể tải lịch học hôm nay"
+        );
     }
 
     public void loadNotifications() {

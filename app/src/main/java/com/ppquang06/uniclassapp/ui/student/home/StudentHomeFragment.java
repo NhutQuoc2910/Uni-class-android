@@ -18,11 +18,13 @@ import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
+import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentHomeBinding;
 import com.ppquang06.uniclassapp.ui.common.HomeViewModel;
 import com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
+import com.ppquang06.uniclassapp.ui.common.adapter.TodayScheduleAdapter;
 import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 import java.text.SimpleDateFormat;
@@ -38,6 +40,8 @@ public class StudentHomeFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private CourseClassAdapter courseAdapter;
     private AssignmentAdapter assignmentAdapter;
+    private TodayScheduleAdapter todayScheduleAdapter;
+    private boolean hasTodayScheduleHero = false;
 
     @Nullable
     @Override
@@ -131,6 +135,25 @@ public class StudentHomeFragment extends Fragment {
         });
         binding.rvDueSoonAssignments.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvDueSoonAssignments.setAdapter(assignmentAdapter);
+
+        todayScheduleAdapter = new TodayScheduleAdapter(item -> {
+            if (item == null || TextUtils.isEmpty(item.getClassId())) return;
+            Bundle bundle = new Bundle();
+            bundle.putString("classId", item.getClassId());
+            bundle.putString("classCode", item.getClassCode());
+            bundle.putString("className", item.getClassName());
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_class_detail, bundle);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(StudentHomeFragment.this)
+                            .navigate(R.id.nav_student_class_detail, bundle);
+                } catch (Exception ignored) {}
+            }
+        });
+        binding.rvTodaySchedule.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvTodaySchedule.setAdapter(todayScheduleAdapter);
     }
 
     private void setupListeners() {
@@ -212,11 +235,48 @@ public class StudentHomeFragment extends Fragment {
                 }
             }
         });
+
+        homeViewModel.getTodayScheduleState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || state.isIdle() || binding == null) {
+                return;
+            }
+            if (state.isSuccess()) {
+                bindTodaySchedule(state.getData());
+            } else if (state.isError()) {
+                bindTodaySchedule(state.getData());
+            }
+        });
     }
 
     private void loadHomeSummary() {
         if (homeViewModel != null) {
             homeViewModel.loadHomeSummary();
+            homeViewModel.loadTodaySchedule();
+        }
+    }
+
+    private void bindTodaySchedule(@Nullable List<TodayScheduleItem> schedules) {
+        if (schedules != null && !schedules.isEmpty()) {
+            hasTodayScheduleHero = true;
+            todayScheduleAdapter.submitList(schedules);
+            binding.rvTodaySchedule.setVisibility(View.VISIBLE);
+            binding.tvEmptyTodaySchedule.setVisibility(View.GONE);
+
+            TodayScheduleItem first = schedules.get(0);
+            binding.heroCard.setVisibility(View.VISIBLE);
+            binding.tvHeroTag.setText(first.getScheduleTypeLabel().toUpperCase(new Locale("vi", "VN")));
+            String heroTitle = !TextUtils.isEmpty(first.getClassCode())
+                    ? (first.getClassCode() + " - " + (first.getClassName() != null ? first.getClassName() : ""))
+                    : (first.getClassName() != null ? first.getClassName() : "");
+            binding.tvHeroCourseName.setText(heroTitle);
+            String roomPart = !TextUtils.isEmpty(first.getRoom()) ? ("Phòng " + first.getRoom()) : "Chưa xếp phòng";
+            String timePart = first.getFormattedTimeRange();
+            binding.tvHeroRoomSchedule.setText(!TextUtils.isEmpty(timePart) ? (roomPart + " · " + timePart) : roomPart);
+        } else {
+            hasTodayScheduleHero = false;
+            todayScheduleAdapter.submitList(Collections.emptyList());
+            binding.rvTodaySchedule.setVisibility(View.GONE);
+            binding.tvEmptyTodaySchedule.setVisibility(View.VISIBLE);
         }
     }
 
@@ -227,19 +287,24 @@ public class StudentHomeFragment extends Fragment {
 
         List<CourseClassItem> courses = data.getCourses();
         if (courses != null && !courses.isEmpty()) {
-            CourseClassItem first = courses.get(0);
-            binding.heroCard.setVisibility(View.VISIBLE);
-            binding.tvHeroCourseName.setText(first.getName());
-            String roomText = !TextUtils.isEmpty(first.getRoom())
-                    ? ("Phòng " + first.getRoom() + " · " + (first.getSemester() != null ? first.getSemester() : ""))
-                    : (first.getSemester() != null ? first.getSemester() : "");
-            binding.tvHeroRoomSchedule.setText(roomText);
+            if (!hasTodayScheduleHero) {
+                CourseClassItem first = courses.get(0);
+                binding.heroCard.setVisibility(View.VISIBLE);
+                binding.tvHeroTag.setText(R.string.hero_today_class_tag);
+                binding.tvHeroCourseName.setText(first.getName());
+                String roomText = !TextUtils.isEmpty(first.getRoom())
+                        ? ("Phòng " + first.getRoom() + " · " + (first.getSemester() != null ? first.getSemester() : ""))
+                        : (first.getSemester() != null ? first.getSemester() : "");
+                binding.tvHeroRoomSchedule.setText(roomText);
+            }
 
             courseAdapter.submitList(courses);
             binding.rvMyCourses.setVisibility(View.VISIBLE);
             binding.tvEmptyCourses.setVisibility(View.GONE);
         } else {
-            binding.heroCard.setVisibility(View.GONE);
+            if (!hasTodayScheduleHero) {
+                binding.heroCard.setVisibility(View.GONE);
+            }
             courseAdapter.submitList(Collections.emptyList());
             binding.rvMyCourses.setVisibility(View.GONE);
             binding.tvEmptyCourses.setVisibility(View.VISIBLE);

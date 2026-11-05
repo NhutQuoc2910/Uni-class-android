@@ -38,6 +38,7 @@ import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.data.repository.AssignmentRepository;
 import com.ppquang06.uniclassapp.data.repository.ClassRepository;
@@ -228,6 +229,9 @@ public class RepositoryOfflineCachingTest {
 
         @Override
         public Call<ApiResponse<HomeSummaryResponse>> getHomeSummary() { return homeSummaryCall; }
+
+        @Override
+        public Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule() { return null; }
 
         @Override
         public Call<ApiResponse<List<CourseClassItem>>> getClasses() { return classesCall; }

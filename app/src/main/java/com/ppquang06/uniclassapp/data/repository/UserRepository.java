@@ -24,6 +24,7 @@ import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.ui.common.UiState;
 
@@ -94,6 +95,10 @@ public class UserRepository {
 
     public Call<ApiResponse<HomeSummaryResponse>> getHomeSummary() {
         return apiService.getHomeSummary();
+    }
+
+    public Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule() {
+        return apiService.getTodaySchedule();
     }
 
     public Call<ApiResponse<List<NotificationItemResponse>>> getNotifications() {

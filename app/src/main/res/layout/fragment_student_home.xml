@@ -140,6 +140,40 @@
                         android:layout_weight="1" />
                 </LinearLayout>
 
+                <!-- Today Schedule Section -->
+                <LinearLayout
+                    android:id="@+id/sectionTodaySchedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/TextAppearance.EduLens.Subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/today_schedule_title" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTodaySchedule"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyTodaySchedule"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/space_12"
+                        android:text="@string/empty_today_schedule_message"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
+                </LinearLayout>
+
                 <!-- Assignments Section -->
                 <LinearLayout
                     android:id="@+id/sectionAssignments"

@@ -23,6 +23,7 @@ import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.data.model.response.AuthResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
+import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.repository.AssignmentRepository;
 import com.ppquang06.uniclassapp.data.repository.AttendanceRepository;
 import com.ppquang06.uniclassapp.data.repository.AuthRepository;
@@ -217,6 +218,36 @@ public class ViewModelMigrationTest {
         assertNotNull(state);
         assertEquals(UiState.Status.SUCCESS, state.getStatus());
         assertEquals(5, state.getData().getActiveCoursesCount());
+    }
+
+    @Test
+    public void homeViewModel_loadTodaySchedule_emitsSuccessState() {
+        TodayScheduleItem item = new TodayScheduleItem();
+        item.setClassId("class-1");
+        item.setClassCode("NT118.Q11");
+        item.setClassName("Phat trien ung dung tren thiet bi di dong");
+        item.setStartTime("07:30:00");
+        item.setEndTime("11:30:00");
+        item.setRoom("B3.10");
+        item.setScheduleType("REGULAR");
+
+        UserClassApiService api = createMockUserClassApi((proxy, method, args) -> {
+            if ("getTodaySchedule".equals(method.getName())) {
+                return new FakeCall<>(createSuccess(java.util.Collections.singletonList(item)));
+            }
+            return null;
+        });
+
+        HomeViewModel viewModel = new HomeViewModel(new UserRepository(api));
+        viewModel.loadTodaySchedule();
+
+        UiState<java.util.List<TodayScheduleItem>> state = viewModel.getTodayScheduleState().getValue();
+        assertNotNull(state);
+        assertTrue(state.isSuccess());
+        assertNotNull(state.getData());
+        assertEquals(1, state.getData().size());
+        assertEquals("07:30 - 11:30", state.getData().get(0).getFormattedTimeRange());
+        assertEquals("Lịch định kỳ", state.getData().get(0).getScheduleTypeLabel());
     }
 
     @Test
