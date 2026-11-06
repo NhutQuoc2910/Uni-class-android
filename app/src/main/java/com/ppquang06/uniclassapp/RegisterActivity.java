@@ -117,7 +117,7 @@ public class RegisterActivity extends AppCompatActivity {
             binding.tvStepBadge.setText(R.string.nordic_reg_step2_badge);
             binding.viewSegment1.setBackgroundResource(R.drawable.bg_nordic_segment_active);
             binding.viewSegment2.setBackgroundResource(R.drawable.bg_nordic_segment_active);
-            binding.tvSelectedRolePill.setText("STUDENT".equals(selectedRole) ? "🎓 Sinh viên" : "👨‍🏫 Giảng viên");
+            binding.tvSelectedRolePill.setText("STUDENT".equals(selectedRole) ? "Sinh viên" : "Giảng viên");
         }
     }
 
@@ -315,7 +315,7 @@ public class RegisterActivity extends AppCompatActivity {
         }
 
         if (!AuthUiHelper.isPasswordValid(password)) {
-            showError(binding.containerPassword, binding.tvErrorPassword, "Mật khẩu chưa đáp ứng đủ 5 tiêu chuẩn bảo mật", binding.edtPassword);
+            showError(binding.containerPassword, binding.tvErrorPassword, "Mật khẩu chưa đáp ứng đầy đủ yêu cầu bảo mật", binding.edtPassword);
             return;
         }
 

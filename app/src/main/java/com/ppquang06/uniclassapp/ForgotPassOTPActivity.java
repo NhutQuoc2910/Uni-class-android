@@ -220,7 +220,7 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
                 showVerifiedSuccessUI();
                 Toast.makeText(ForgotPassOTPActivity.this, "Xác thực OTP thành công!", Toast.LENGTH_SHORT).show();
 
-                binding.btnConfirmOtp.postDelayed(() -> {
+                binding.layoutOtpBoxes.postDelayed(() -> {
                     Intent intent = new Intent(ForgotPassOTPActivity.this, ForgotPassNewActivity.class);
                     intent.putExtra(Constants.EXTRA_EMAIL, email);
                     intent.putExtra(Constants.EXTRA_OTP, pendingOtp);
@@ -253,7 +253,6 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
     private void setupListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEditEmail.setOnClickListener(v -> finish());
-        binding.btnConfirmOtp.setOnClickListener(v -> verifyOtp());
         binding.tvBackToLogin.setOnClickListener(v -> navigateToLogin());
 
         binding.btnPasteOtp.setOnClickListener(v -> {
@@ -306,7 +305,6 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
     }
 
     private void setLoading(boolean isLoading) {
-        binding.btnConfirmOtp.setEnabled(!isLoading);
         binding.btnPasteOtp.setEnabled(!isLoading);
         binding.btnEditEmail.setEnabled(!isLoading);
         binding.btnBack.setEnabled(!isLoading);
@@ -319,15 +317,9 @@ public class ForgotPassOTPActivity extends AppCompatActivity {
             binding.layoutIdleStatus.setVisibility(View.GONE);
             binding.layoutVerifiedBanner.setVisibility(View.GONE);
             binding.layoutVerifyingBanner.setVisibility(View.VISIBLE);
-            binding.tvBtnConfirmLabel.setVisibility(View.GONE);
-            binding.ivBtnConfirmArrow.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.VISIBLE);
         } else {
             binding.layoutVerifyingBanner.setVisibility(View.GONE);
             binding.layoutIdleStatus.setVisibility(View.VISIBLE);
-            binding.tvBtnConfirmLabel.setVisibility(View.VISIBLE);
-            binding.ivBtnConfirmArrow.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.GONE);
         }
     }
 

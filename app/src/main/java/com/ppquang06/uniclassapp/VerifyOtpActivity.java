@@ -219,7 +219,6 @@ public class VerifyOtpActivity extends AppCompatActivity {
     private void setupClickListeners() {
         binding.btnBack.setOnClickListener(v -> finish());
         binding.btnEditEmail.setOnClickListener(v -> finish());
-        binding.btnConfirmRegisterOtp.setOnClickListener(v -> verifyOtp());
         binding.tvResendTimer.setOnClickListener(v -> resendOtp());
 
         binding.btnPasteOtp.setOnClickListener(v -> {
@@ -381,7 +380,6 @@ public class VerifyOtpActivity extends AppCompatActivity {
     }
 
     private void setVerifyLoading(boolean isLoading) {
-        binding.btnConfirmRegisterOtp.setEnabled(!isLoading);
         binding.btnPasteOtp.setEnabled(!isLoading);
         binding.btnEditEmail.setEnabled(!isLoading);
         binding.btnBack.setEnabled(!isLoading);
@@ -394,15 +392,9 @@ public class VerifyOtpActivity extends AppCompatActivity {
             binding.layoutIdleStatus.setVisibility(View.GONE);
             binding.layoutVerifiedBanner.setVisibility(View.GONE);
             binding.layoutVerifyingBanner.setVisibility(View.VISIBLE);
-            binding.tvBtnConfirmLabel.setVisibility(View.GONE);
-            binding.ivBtnConfirmArrow.setVisibility(View.GONE);
-            binding.progressBar.setVisibility(View.VISIBLE);
         } else {
             binding.layoutVerifyingBanner.setVisibility(View.GONE);
             binding.layoutIdleStatus.setVisibility(View.VISIBLE);
-            binding.tvBtnConfirmLabel.setVisibility(View.VISIBLE);
-            binding.ivBtnConfirmArrow.setVisibility(View.VISIBLE);
-            binding.progressBar.setVisibility(View.GONE);
         }
     }
 

@@ -60,7 +60,7 @@
             android:ellipsize="end"
             android:maxLines="1"
             android:textColor="@color/text_secondary"
-            tools:text="21520001 · nva@uit.edu.vn" />
+            tools:text="21520001 · nva@uniclass.app" />
 
         <LinearLayout
             android:layout_width="match_parent"

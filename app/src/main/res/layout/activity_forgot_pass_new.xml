@@ -262,84 +262,76 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/nordic_security_title"
-                    android:textColor="@color/nordic_muted_steel"
-                    android:textSize="11sp"
+                    android:textColor="@color/nordic_midnight_slate"
+                    android:textSize="12sp"
                     android:textStyle="bold" />
 
-                <!-- Chips Row 1 -->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:orientation="horizontal">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/chipRuleMinLength"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:background="@drawable/bg_nordic_chip_security_idle"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:text="○ Từ 8 ký tự"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:text="○ Tối thiểu 8 ký tự"
                         android:textColor="@color/nordic_muted_steel"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/chipRuleUppercase"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/bg_nordic_chip_security_idle"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:text="○ Chữ in hoa"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:text="○ Có ít nhất 1 chữ in hoa (A-Z)"
                         android:textColor="@color/nordic_muted_steel"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/chipRuleLowercase"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/bg_nordic_chip_security_idle"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:text="○ Chữ thường"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:text="○ Có ít nhất 1 chữ thường (a-z)"
                         android:textColor="@color/nordic_muted_steel"
                         android:textSize="11sp"
                         android:textStyle="bold" />
-                </LinearLayout>
-
-                <!-- Chips Row 2 -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:orientation="horizontal">
 
                     <TextView
                         android:id="@+id/chipRuleDigit"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/bg_nordic_chip_security_idle"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:text="○ Chữ số (0-9)"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:text="○ Có ít nhất 1 chữ số (0-9)"
                         android:textColor="@color/nordic_muted_steel"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
                     <TextView
                         android:id="@+id/chipRuleSpecial"
-                        android:layout_width="wrap_content"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/bg_nordic_chip_security_idle"
-                        android:paddingHorizontal="8dp"
-                        android:paddingVertical="4dp"
-                        android:text="○ Ký tự đặc biệt"
+                        android:paddingHorizontal="10dp"
+                        android:paddingVertical="5dp"
+                        android:text="○ Có ít nhất 1 ký tự đặc biệt (!@#$...)"
                         android:textColor="@color/nordic_muted_steel"
                         android:textSize="11sp"
                         android:textStyle="bold" />

@@ -558,7 +558,7 @@
     <string name="toast_schedule_empty_export">Chưa có dữ liệu lịch học để lưu</string>
 
     <!-- Nordic Slate Auth UI Redesign -->
-    <string name="nordic_login_hero_tag">UniClass • UIT</string>
+    <string name="nordic_login_hero_tag">UniClass</string>
     <string name="nordic_login_hero_qr_live">QR Live</string>
     <string name="nordic_login_hero_greeting">Chào mừng bạn trở lại! 👋</string>
     <string name="nordic_login_hero_subtitle">Điểm danh QR động, theo dõi lịch học &amp; bài tập thời gian thực.</string>
@@ -570,16 +570,16 @@
     <string name="nordic_prompt_register_btn">Đăng ký →</string>
     <string name="nordic_reg_step1_badge">Bước 1/2</string>
     <string name="nordic_reg_step2_badge">Bước 2/2</string>
-    <string name="nordic_reg_eyebrow">🎓 Cá nhân hóa trải nghiệm</string>
+    <string name="nordic_reg_eyebrow">Cá nhân hóa trải nghiệm</string>
     <string name="nordic_reg_step1_title">Bạn tham gia với vai trò nào?</string>
     <string name="nordic_reg_step1_subtitle">UniClass sẽ thiết lập không gian lớp học và công cụ điểm danh phù hợp với bạn.</string>
     <string name="nordic_role_popular_badge">Phổ biến</string>
-    <string name="nordic_role_student_chip1">📷 Quét QR điểm danh</string>
-    <string name="nordic_role_student_chip2">📚 Nộp bài &amp; Tài liệu</string>
-    <string name="nordic_role_student_chip3">📊 Xem bảng điểm</string>
-    <string name="nordic_role_lecturer_chip1">📡 Phát QR Realtime</string>
-    <string name="nordic_role_lecturer_chip2">📝 Giao &amp; Chấm bài</string>
-    <string name="nordic_role_lecturer_chip3">📈 Thống kê chuyên cần</string>
+    <string name="nordic_role_student_chip1">Quét QR điểm danh</string>
+    <string name="nordic_role_student_chip2">Nộp bài &amp; Tài liệu</string>
+    <string name="nordic_role_student_chip3">Xem bảng điểm</string>
+    <string name="nordic_role_lecturer_chip1">Phát QR Realtime</string>
+    <string name="nordic_role_lecturer_chip2">Giao &amp; Chấm bài</string>
+    <string name="nordic_role_lecturer_chip3">Thống kê chuyên cần</string>
     <string name="nordic_reg_role_pill_label">Vai trò:</string>
     <string name="nordic_reg_change_role">Đổi vai trò</string>
     <string name="nordic_reg_step1_continue_student">Tiếp tục với vai trò Sinh viên →</string>
@@ -590,12 +590,12 @@
     <string name="nordic_reg_label_phone">Số điện thoại (không bắt buộc)</string>
     <string name="nordic_reg_label_pass">Tạo mật khẩu</string>
     <string name="nordic_reg_label_pass_confirm">Xác nhận lại mật khẩu</string>
-    <string name="nordic_security_title">Tiêu chuẩn bảo mật</string>
-    <string name="nordic_sec_rule_len">Từ 8 ký tự</string>
-    <string name="nordic_sec_rule_upper">Chữ in hoa</string>
-    <string name="nordic_sec_rule_lower">Chữ thường</string>
-    <string name="nordic_sec_rule_num">Chữ số (0-9)</string>
-    <string name="nordic_sec_rule_special">Ký tự đặc biệt</string>
+    <string name="nordic_security_title">Yêu cầu mật khẩu</string>
+    <string name="nordic_sec_rule_len">Tối thiểu 8 ký tự</string>
+    <string name="nordic_sec_rule_upper">Có ít nhất 1 chữ in hoa (A-Z)</string>
+    <string name="nordic_sec_rule_lower">Có ít nhất 1 chữ thường (a-z)</string>
+    <string name="nordic_sec_rule_num">Có ít nhất 1 chữ số (0-9)</string>
+    <string name="nordic_sec_rule_special">Có ít nhất 1 ký tự đặc biệt (!@#$...)</string>
     <string name="nordic_sec_rule_match">Mật khẩu khớp nhau</string>
     <string name="nordic_reg_cta">Tiếp tục &amp; Nhận mã OTP →</string>
     <string name="nordic_otp_title">Nhập mã xác thực OTP</string>

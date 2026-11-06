@@ -53,15 +53,15 @@ public class AuthUiHelperTest {
         long cooldown = 60_000L;
 
         // Same email within 60s -> should reuse
-        assertTrue(AuthUiHelper.shouldReuseActiveOtpCooldown("user@uit.edu.vn", "user@uit.edu.vn", now, sentAt, cooldown));
+        assertTrue(AuthUiHelper.shouldReuseActiveOtpCooldown("user@uniclass.app", "user@uniclass.app", now, sentAt, cooldown));
         assertEquals(30, AuthUiHelper.getRemainingCooldownSeconds(now, sentAt, cooldown));
 
         // Different email -> do not reuse
-        assertFalse(AuthUiHelper.shouldReuseActiveOtpCooldown("new@uit.edu.vn", "user@uit.edu.vn", now, sentAt, cooldown));
+        assertFalse(AuthUiHelper.shouldReuseActiveOtpCooldown("new@uniclass.app", "user@uniclass.app", now, sentAt, cooldown));
 
         // Expired -> do not reuse
         long expiredSentAt = 30_000L; // 70s ago
-        assertFalse(AuthUiHelper.shouldReuseActiveOtpCooldown("user@uit.edu.vn", "user@uit.edu.vn", now, expiredSentAt, cooldown));
+        assertFalse(AuthUiHelper.shouldReuseActiveOtpCooldown("user@uniclass.app", "user@uniclass.app", now, expiredSentAt, cooldown));
         assertEquals(0, AuthUiHelper.getRemainingCooldownSeconds(now, expiredSentAt, cooldown));
     }
 }

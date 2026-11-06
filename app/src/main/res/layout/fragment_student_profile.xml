@@ -99,7 +99,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_4"
                     android:gravity="center"
-                    android:text="Sinh viên · student@uit.edu.vn"
+                    android:text="Sinh viên · student@uniclass.app"
                     android:textColor="@color/text_secondary" />
 
                 <TextView

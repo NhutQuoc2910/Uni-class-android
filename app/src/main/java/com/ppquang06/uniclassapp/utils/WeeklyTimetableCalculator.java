@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Calculator for the UIT-style Weekly Timetable Grid (Tiết 1 - Tiết 10, Thứ 2 - Chủ nhật).
+ * Calculator for the Weekly Timetable Grid (Tiết 1 - Tiết 10, Thứ 2 - Chủ nhật).
  * Merges recurring {@link ClassScheduleItem} and {@link ScheduleExceptionItem} for any chosen week.
  */
 public final class WeeklyTimetableCalculator {

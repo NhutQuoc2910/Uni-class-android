@@ -194,7 +194,7 @@ public class ForgotPassNewActivity extends AppCompatActivity {
         }
 
         if (!AuthUiHelper.isPasswordValid(newPassword)) {
-            showError(binding.containerNewPassword, binding.tvErrorNewPassword, "Mật khẩu chưa đáp ứng đủ 5 tiêu chuẩn bảo mật", binding.edtNewPassword);
+            showError(binding.containerNewPassword, binding.tvErrorNewPassword, "Mật khẩu chưa đáp ứng đầy đủ yêu cầu bảo mật", binding.edtNewPassword);
             return;
         }
 

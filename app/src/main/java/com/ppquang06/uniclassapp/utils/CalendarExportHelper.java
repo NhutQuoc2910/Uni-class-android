@@ -97,7 +97,7 @@ public final class CalendarExportHelper {
                 rrule.append(";UNTIL=").append(endDate.format(ICS_DATE_FORMAT)).append("T235959Z");
             }
 
-            String uid = "uniclass-reg-" + (reg.getId() != null ? reg.getId() : (reg.getClassId() + "-" + dayOfWeek + "-" + dtStart)) + "@uniclass.uit.edu.vn";
+            String uid = "uniclass-reg-" + (reg.getId() != null ? reg.getId() : (reg.getClassId() + "-" + dayOfWeek + "-" + dtStart)) + "@uniclass.app";
             String summary = formatEventTitle(reg.getClassCode(), reg.getClassName(), null);
             String location = formatRoom(reg.getRoom());
             String description = "Lịch học định kỳ môn " + safeStr(reg.getClassName()) + " (" + safeStr(reg.getClassCode()) + ") " + SYNC_MARKER;
@@ -156,7 +156,7 @@ public final class CalendarExportHelper {
                     ? "Lý do: " + ex.getReason().trim() + " - "
                     : "";
             String description = reason + SYNC_MARKER;
-            String uid = "uniclass-ex-" + (ex.getId() != null ? ex.getId() : (ex.getClassId() + "-" + dtStart)) + "@uniclass.uit.edu.vn";
+            String uid = "uniclass-ex-" + (ex.getId() != null ? ex.getId() : (ex.getClassId() + "-" + dtStart)) + "@uniclass.app";
 
             sb.append("BEGIN:VEVENT\r\n");
             sb.append("UID:").append(escapeIcsText(uid)).append("\r\n");
