@@ -322,8 +322,8 @@ public class LecturerHomeFragment extends Fragment {
             String tagPrefix = heroItem.isOngoing(nowMinutes) ? "ĐANG DIỄN RA · " : "SẮP DIỄN RA · ";
             binding.tvHeroTag.setText((tagPrefix + heroItem.getScheduleTypeLabel()).toUpperCase(new Locale("vi", "VN")));
             String courseName = !TextUtils.isEmpty(heroItem.getClassCode())
-                    ? (heroItem.getClassCode() + " - " + heroItem.getClassName())
-                    : heroItem.getClassName();
+                    ? (heroItem.getClassCode() + " - " + (heroItem.getClassName() != null ? heroItem.getClassName() : ""))
+                    : (heroItem.getClassName() != null ? heroItem.getClassName() : "");
             binding.tvHeroCourseName.setText(courseName);
             String roomPart = !TextUtils.isEmpty(heroItem.getRoom()) ? ("Phòng " + heroItem.getRoom()) : "Chưa xếp phòng";
             binding.tvHeroRoomSchedule.setText(roomPart + " · " + heroItem.getFormattedTimeRange());

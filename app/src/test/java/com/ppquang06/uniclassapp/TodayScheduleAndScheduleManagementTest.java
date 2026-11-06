@@ -503,4 +503,61 @@ public class TodayScheduleAndScheduleManagementTest {
         }
         assertEquals(null, hero);
     }
+
+    @Test
+    public void testSemesterScheduleAdapterDateFormatting() {
+        assertEquals("15/09/2026", com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDate("2026-09-15"));
+        assertEquals("15/09/2026", com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDate("15/09/2026"));
+        assertEquals("", com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDate(null));
+        assertEquals("", com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDate(""));
+
+        assertEquals("Áp dụng: 15/09/2026 - 15/01/2027",
+                com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDateRange("2026-09-15", "2027-01-15"));
+        assertEquals("Áp dụng từ: 15/09/2026",
+                com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDateRange("2026-09-15", null));
+        assertEquals("Áp dụng đến: 15/01/2027",
+                com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDateRange(null, "2027-01-15"));
+        assertEquals("",
+                com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter.formatDateRange(null, null));
+    }
+
+    @Test
+    public void testSemesterScheduleAdapterFilteringByDay() {
+        com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter adapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter();
+
+        List<ClassScheduleItem> items = new ArrayList<>();
+        items.add(new ClassScheduleItem("s1", "c1", "CS101", "Mon Class", 1, "07:30", "11:30", "A101", "2026-09-15", "2027-01-15"));
+        items.add(new ClassScheduleItem("s2", "c2", "CS102", "Wed Class", 3, "13:00", "17:00", "B202", "2026-09-15", "2027-01-15"));
+        items.add(new ClassScheduleItem("s3", "c3", "CS103", "Fri Class", 5, "07:30", "11:30", "C303", "2026-09-15", "2027-01-15"));
+
+        adapter.submitList(items);
+        assertEquals(3, adapter.getItemCount());
+        assertEquals(0, adapter.getCurrentDayFilter());
+
+        // Filter by Monday (1)
+        adapter.filterByDayOfWeek(1);
+        assertEquals(1, adapter.getItemCount());
+        assertEquals("CS101", adapter.getFilteredItems().get(0).getClassCode());
+
+        // Filter by Tuesday (2) - none
+        adapter.filterByDayOfWeek(2);
+        assertEquals(0, adapter.getItemCount());
+
+        // Filter by Wednesday (3)
+        adapter.filterByDayOfWeek(3);
+        assertEquals(1, adapter.getItemCount());
+        assertEquals("CS102", adapter.getFilteredItems().get(0).getClassCode());
+
+        // Reset to all (0)
+        adapter.filterByDayOfWeek(0);
+        assertEquals(3, adapter.getItemCount());
+    }
+
+    @Test
+    public void testScheduleExceptionAdapterDateFormatting() {
+        assertEquals("20/10/2026", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate("2026-10-20"));
+        assertEquals("20/10/2026", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate("20/10/2026"));
+        assertEquals("", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate(null));
+    }
 }

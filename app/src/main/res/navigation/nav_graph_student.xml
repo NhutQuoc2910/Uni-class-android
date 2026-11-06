@@ -161,4 +161,14 @@
             android:defaultValue="" />
     </fragment>
 
+    <fragment
+        android:id="@+id/nav_student_semester_schedule"
+        android:name="com.ppquang06.uniclassapp.ui.common.SemesterScheduleFragment"
+        android:label="Thời khóa biểu học kỳ"
+        tools:layout="@layout/fragment_semester_schedule">
+        <action
+            android:id="@+id/action_semester_schedule_to_class_detail"
+            app:destination="@id/nav_student_class_detail" />
+    </fragment>
+
 </navigation>

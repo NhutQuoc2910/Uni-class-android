@@ -1,0 +1,176 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/color_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <include
+            android:id="@+id/topAppBar"
+            layout="@layout/view_top_app_bar" />
+
+        <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+            android:id="@+id/swipeRefresh"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.core.widget.NestedScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="@dimen/space_16">
+
+                    <!-- Day of Week Filtering -->
+                    <HorizontalScrollView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:overScrollMode="never"
+                        android:scrollbars="none">
+
+                        <com.google.android.material.chip.ChipGroup
+                            android:id="@+id/chipGroupFilter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            app:selectionRequired="true"
+                            app:singleLine="true"
+                            app:singleSelection="true">
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipAll"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="true"
+                                android:text="@string/filter_day_all" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipMon"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_mon" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipTue"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_tue" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipWed"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_wed" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipThu"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_thu" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipFri"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_fri" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipSat"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_sat" />
+
+                            <com.google.android.material.chip.Chip
+                                android:id="@+id/chipSun"
+                                style="@style/Widget.Material3.Chip.Filter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/filter_day_sun" />
+                        </com.google.android.material.chip.ChipGroup>
+                    </HorizontalScrollView>
+
+                    <!-- Section: Regular Schedules -->
+                    <TextView
+                        android:id="@+id/tvRegularSectionTitle"
+                        style="@style/TextAppearance.EduLens.Subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/regular_schedules_section_title" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRegularSchedules"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_semester_schedule" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyRegularSchedules"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="24dp"
+                        android:text="@string/empty_regular_schedules_message"
+                        android:textColor="#64748B"
+                        android:visibility="gone" />
+
+                    <!-- Section: Schedule Exceptions -->
+                    <TextView
+                        android:id="@+id/tvExceptionsSectionTitle"
+                        style="@style/TextAppearance.EduLens.Subtitle"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="8dp"
+                        android:text="@string/schedule_exceptions_section_title" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvScheduleExceptions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_schedule_exception" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyExceptions"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:padding="24dp"
+                        android:text="@string/empty_schedule_exceptions_message"
+                        android:textColor="#64748B"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+            </androidx.core.widget.NestedScrollView>
+        </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+    </LinearLayout>
+
+    <ProgressBar
+        android:id="@+id/pbLoading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone" />
+
+</FrameLayout>

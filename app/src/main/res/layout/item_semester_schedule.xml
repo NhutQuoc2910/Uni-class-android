@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cardSemesterScheduleRoot"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="10dp"
+    app:cardBackgroundColor="@color/white"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="0dp"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:padding="14dp">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_badge_pill"
+            android:gravity="center"
+            android:minWidth="92dp"
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:id="@+id/tvScheduleDayOfWeek"
+                style="@style/TextAppearance.EduLens.Caption"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/color_primary"
+                android:textStyle="bold"
+                tools:text="Thứ Hai" />
+
+            <TextView
+                android:id="@+id/tvScheduleTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="#64748B"
+                android:textSize="11sp"
+                tools:text="07:30 - 11:30" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tvCourseTitle"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="2"
+                android:textColor="#0F172A"
+                android:textSize="14sp"
+                android:textStyle="bold"
+                tools:text="NT118.Q11 - Phát triển ứng dụng di động" />
+
+            <TextView
+                android:id="@+id/tvScheduleRoom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:textColor="#64748B"
+                android:textSize="12sp"
+                tools:text="Phòng B3.10" />
+
+            <TextView
+                android:id="@+id/tvScheduleDateRange"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:textColor="#94A3B8"
+                android:textSize="11sp"
+                tools:text="Áp dụng: 15/09/2026 - 15/01/2027" />
+        </LinearLayout>
+
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

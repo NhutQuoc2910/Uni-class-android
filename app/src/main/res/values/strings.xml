@@ -486,4 +486,19 @@
     <string name="lecturer_today_schedule_title">Lịch dạy hôm nay</string>
     <string name="empty_lecturer_today_schedule_message">Hôm nay không có ca dạy nào</string>
 
+    <!-- Semester Schedule -->
+    <string name="semester_schedule_title">Thời khóa biểu học kỳ</string>
+    <string name="regular_schedules_section_title">Lịch định kỳ</string>
+    <string name="schedule_exceptions_section_title">Báo nghỉ / Học bù / Thay đổi lịch</string>
+    <string name="empty_regular_schedules_message">Không có lịch định kỳ nào</string>
+    <string name="empty_schedule_exceptions_message">Không có thay đổi lịch nào</string>
+    <string name="filter_day_all">Tất cả</string>
+    <string name="filter_day_mon">Thứ 2</string>
+    <string name="filter_day_tue">Thứ 3</string>
+    <string name="filter_day_wed">Thứ 4</string>
+    <string name="filter_day_thu">Thứ 5</string>
+    <string name="filter_day_fri">Thứ 6</string>
+    <string name="filter_day_sat">Thứ 7</string>
+    <string name="filter_day_sun">Chủ nhật</string>
+
 </resources>

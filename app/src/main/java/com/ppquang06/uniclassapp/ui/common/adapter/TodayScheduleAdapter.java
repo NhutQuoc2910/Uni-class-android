@@ -91,6 +91,9 @@ public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdap
             } else if (item.isOngoing(nowMinutes)) {
                 binding.tvScheduleTypeBadge.setTextColor(Color.parseColor("#16A34A"));
                 binding.tvScheduleTime.setTextColor(primaryColor);
+            } else if (item.isUpcoming(nowMinutes)) {
+                binding.tvScheduleTypeBadge.setTextColor(Color.parseColor("#D97706"));
+                binding.tvScheduleTime.setTextColor(primaryColor);
             } else {
                 binding.tvScheduleTypeBadge.setTextColor(Color.parseColor("#64748B"));
                 binding.tvScheduleTime.setTextColor(primaryColor);
