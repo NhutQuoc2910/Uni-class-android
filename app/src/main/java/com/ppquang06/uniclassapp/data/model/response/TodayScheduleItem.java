@@ -106,6 +106,72 @@ public class TodayScheduleItem {
         this.scheduleType = scheduleType;
     }
 
+    public boolean isCancelled() {
+        return scheduleType != null && "CANCELLED".equalsIgnoreCase(scheduleType.trim());
+    }
+
+    public String getScheduleTypeLabel() {
+        if (scheduleType == null) {
+            return "Lịch định kỳ";
+        }
+        switch (scheduleType.trim().toUpperCase()) {
+            case "CANCELLED":
+                return "Báo nghỉ";
+            case "MAKEUP":
+                return "Học bù";
+            case "MODIFIED":
+            case "RESCHEDULED":
+            case "ROOM_CHANGE":
+                return "Thay đổi lịch";
+            case "REGULAR":
+            default:
+                return "Lịch định kỳ";
+        }
+    }
+
+    public int getStartMinutes() {
+        return parseTimeToMinutes(startTime);
+    }
+
+    public int getEndMinutes() {
+        return parseTimeToMinutes(endTime);
+    }
+
+    public boolean isOngoing(int nowMinutes) {
+        int start = getStartMinutes();
+        int end = getEndMinutes();
+        return !isCancelled() && start >= 0 && end >= 0 && nowMinutes >= start && nowMinutes <= end;
+    }
+
+    public boolean isUpcoming(int nowMinutes) {
+        int start = getStartMinutes();
+        return !isCancelled() && start >= 0 && nowMinutes < start;
+    }
+
+    public boolean canOpenOrScanQr(int nowMinutes) {
+        int start = getStartMinutes();
+        int end = getEndMinutes();
+        return !isCancelled() && start >= 0 && end >= 0 && (nowMinutes >= (start - 15) && nowMinutes <= end);
+    }
+
+    public String getRealTimeStatusLabel(int nowMinutes) {
+        if (isCancelled()) {
+            return "Báo nghỉ";
+        }
+        int start = getStartMinutes();
+        int end = getEndMinutes();
+        if (start < 0 || end < 0) {
+            return "";
+        }
+        if (nowMinutes >= start && nowMinutes <= end) {
+            return "Đang diễn ra";
+        }
+        if (nowMinutes < start) {
+            return "Sắp tới";
+        }
+        return "Đã kết thúc";
+    }
+
     public String getFormattedTimeRange() {
         String start = formatShortTime(startTime);
         String end = formatShortTime(endTime);
@@ -115,20 +181,23 @@ public class TodayScheduleItem {
         return start + end;
     }
 
-    public String getScheduleTypeLabel() {
-        if (scheduleType == null) {
-            return "Lịch định kỳ";
+    private int parseTimeToMinutes(String rawTime) {
+        if (rawTime == null || rawTime.trim().isEmpty()) {
+            return -1;
         }
-        switch (scheduleType.toUpperCase()) {
-            case "MAKEUP":
-                return "Học bù";
-            case "RESCHEDULED":
-                return "Đổi lịch";
-            case "ROOM_CHANGE":
-                return "Đổi phòng";
-            case "REGULAR":
-            default:
-                return "Lịch định kỳ";
+        try {
+            String[] parts = rawTime.trim().split(":");
+            if (parts.length < 2) {
+                return -1;
+            }
+            int h = Integer.parseInt(parts[0].trim());
+            int m = Integer.parseInt(parts[1].trim());
+            if (h < 0 || h > 23 || m < 0 || m > 59) {
+                return -1;
+            }
+            return h * 60 + m;
+        } catch (Exception e) {
+            return -1;
         }
     }
 

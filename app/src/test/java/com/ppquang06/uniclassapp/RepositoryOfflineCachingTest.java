@@ -19,7 +19,9 @@ import com.ppquang06.uniclassapp.data.model.request.AttendanceCheckInRequest;
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateClassScheduleRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateScheduleExceptionRequest;
 import com.ppquang06.uniclassapp.data.model.request.GradeSubmissionRequest;
 import com.ppquang06.uniclassapp.data.model.request.JoinClassRequest;
 import com.ppquang06.uniclassapp.data.model.request.OpenQrSessionRequest;
@@ -32,12 +34,15 @@ import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
+import com.ppquang06.uniclassapp.data.model.response.SemesterScheduleResponse;
 import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.data.repository.AssignmentRepository;
@@ -295,6 +300,30 @@ public class RepositoryOfflineCachingTest {
 
         @Override
         public Call<ApiResponse<LiveAttendanceSessionResponse>> closeAttendanceSession(String sessionId) { return null; }
+
+        @Override
+        public Call<ApiResponse<SemesterScheduleResponse>> getSemesterSchedule() { return null; }
+
+        @Override
+        public Call<ApiResponse<List<ClassScheduleItem>>> getClassSchedules(String classId) { return null; }
+
+        @Override
+        public Call<ApiResponse<ClassScheduleItem>> createClassSchedule(String classId, CreateClassScheduleRequest request) { return null; }
+
+        @Override
+        public Call<ApiResponse<ClassScheduleItem>> updateClassSchedule(String classId, String scheduleId, CreateClassScheduleRequest request) { return null; }
+
+        @Override
+        public Call<ApiResponse<List<ScheduleExceptionItem>>> getClassScheduleExceptions(String classId) { return null; }
+
+        @Override
+        public Call<ApiResponse<ScheduleExceptionItem>> createScheduleException(String classId, CreateScheduleExceptionRequest request) { return null; }
+
+        @Override
+        public Call<ApiResponse<ScheduleExceptionItem>> publishScheduleException(String classId, String exceptionId) { return null; }
+
+        @Override
+        public Call<ApiResponse<ScheduleExceptionItem>> revokeScheduleException(String classId, String exceptionId) { return null; }
     }
 
     private InMemoryClassDao classDao;

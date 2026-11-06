@@ -8,12 +8,16 @@ import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
 import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateClassScheduleRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateScheduleExceptionRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
+import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
 import com.ppquang06.uniclassapp.data.repository.ClassRepository;
 import com.ppquang06.uniclassapp.ui.common.BaseViewModel;
 import com.ppquang06.uniclassapp.ui.common.UiState;
@@ -40,6 +44,11 @@ public class LecturerManagementViewModel extends BaseViewModel {
     private final MutableLiveData<UiState<ClassDetailResponse.MaterialItem>> createMaterialState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<FileUploadResponse>> uploadFileState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<ClassStatisticsResponse>> statisticsState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<List<ClassScheduleItem>>> classSchedulesState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<ClassScheduleItem>> createScheduleState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<List<ScheduleExceptionItem>>> classExceptionsState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<ScheduleExceptionItem>> createExceptionState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<ScheduleExceptionItem>> exceptionActionState = new MutableLiveData<>(UiState.idle());
 
     public LecturerManagementViewModel(@NonNull Application application) {
         this(application, new ClassRepository(application));
@@ -89,6 +98,26 @@ public class LecturerManagementViewModel extends BaseViewModel {
 
     public LiveData<UiState<ClassStatisticsResponse>> getStatisticsState() {
         return statisticsState;
+    }
+
+    public LiveData<UiState<List<ClassScheduleItem>>> getClassSchedulesState() {
+        return classSchedulesState;
+    }
+
+    public LiveData<UiState<ClassScheduleItem>> getCreateScheduleState() {
+        return createScheduleState;
+    }
+
+    public LiveData<UiState<List<ScheduleExceptionItem>>> getClassExceptionsState() {
+        return classExceptionsState;
+    }
+
+    public LiveData<UiState<ScheduleExceptionItem>> getCreateExceptionState() {
+        return createExceptionState;
+    }
+
+    public LiveData<UiState<ScheduleExceptionItem>> getExceptionActionState() {
+        return exceptionActionState;
     }
 
     public void loadClasses() {
@@ -162,6 +191,62 @@ public class LecturerManagementViewModel extends BaseViewModel {
         );
     }
 
+    public void loadClassSchedules(@NonNull String classId) {
+        executeCall(
+                classRepository.getClassSchedules(classId),
+                classSchedulesState,
+                "Không thể tải lịch học của lớp"
+        );
+    }
+
+    public void createClassSchedule(@NonNull String classId, @NonNull CreateClassScheduleRequest request) {
+        executeCall(
+                classRepository.createClassSchedule(classId, request),
+                createScheduleState,
+                "Không thể tạo lịch học"
+        );
+    }
+
+    public void updateClassSchedule(@NonNull String classId, @NonNull String scheduleId, @NonNull CreateClassScheduleRequest request) {
+        executeCall(
+                classRepository.updateClassSchedule(classId, scheduleId, request),
+                createScheduleState,
+                "Không thể cập nhật lịch học"
+        );
+    }
+
+    public void loadClassExceptions(@NonNull String classId) {
+        executeCall(
+                classRepository.getClassScheduleExceptions(classId),
+                classExceptionsState,
+                "Không thể tải danh sách ngoại lệ lịch học"
+        );
+    }
+
+    public void createScheduleException(@NonNull String classId, @NonNull CreateScheduleExceptionRequest request) {
+        executeCall(
+                classRepository.createScheduleException(classId, request),
+                createExceptionState,
+                "Không thể tạo ngoại lệ lịch học"
+        );
+    }
+
+    public void publishScheduleException(@NonNull String classId, @NonNull String exceptionId) {
+        executeCall(
+                classRepository.publishScheduleException(classId, exceptionId),
+                exceptionActionState,
+                "Không thể công bố ngoại lệ lịch học"
+        );
+    }
+
+    public void revokeScheduleException(@NonNull String classId, @NonNull String exceptionId) {
+        executeCall(
+                classRepository.revokeScheduleException(classId, exceptionId),
+                exceptionActionState,
+                "Không thể thu hồi ngoại lệ lịch học"
+        );
+    }
+
     public void resetCreateClassState() {
         dispatchState(createClassState, UiState.idle());
     }
@@ -180,5 +265,17 @@ public class LecturerManagementViewModel extends BaseViewModel {
 
     public void resetUploadFileState() {
         dispatchState(uploadFileState, UiState.idle());
+    }
+
+    public void resetCreateScheduleState() {
+        dispatchState(createScheduleState, UiState.idle());
+    }
+
+    public void resetCreateExceptionState() {
+        dispatchState(createExceptionState, UiState.idle());
+    }
+
+    public void resetExceptionActionState() {
+        dispatchState(exceptionActionState, UiState.idle());
     }
 }

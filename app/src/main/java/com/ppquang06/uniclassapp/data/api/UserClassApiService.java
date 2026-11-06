@@ -5,7 +5,9 @@ import com.ppquang06.uniclassapp.data.model.request.AttendanceCheckInRequest;
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateClassScheduleRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateScheduleExceptionRequest;
 import com.ppquang06.uniclassapp.data.model.request.GradeSubmissionRequest;
 import com.ppquang06.uniclassapp.data.model.request.JoinClassRequest;
 import com.ppquang06.uniclassapp.data.model.request.OpenQrSessionRequest;
@@ -17,12 +19,15 @@ import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.LiveAttendanceSessionResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
+import com.ppquang06.uniclassapp.data.model.response.SemesterScheduleResponse;
 import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 
@@ -35,6 +40,7 @@ import retrofit2.http.Body;
 import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
+import retrofit2.http.PATCH;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Part;
@@ -58,6 +64,9 @@ public interface UserClassApiService {
 
     @GET("home/today-schedule")
     Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule();
+
+    @GET("home/semester-schedule")
+    Call<ApiResponse<SemesterScheduleResponse>> getSemesterSchedule();
 
     @GET("classes")
     Call<ApiResponse<List<CourseClassItem>>> getClasses();
@@ -129,4 +138,29 @@ public interface UserClassApiService {
 
     @PUT("attendance-sessions/{sessionId}/close")
     Call<ApiResponse<LiveAttendanceSessionResponse>> closeAttendanceSession(@Path("sessionId") String sessionId);
+
+    // ==========================================
+    // Class Schedule & Exceptions
+    // ==========================================
+
+    @GET("classes/{classId}/schedules")
+    Call<ApiResponse<List<ClassScheduleItem>>> getClassSchedules(@Path("classId") String classId);
+
+    @POST("classes/{classId}/schedules")
+    Call<ApiResponse<ClassScheduleItem>> createClassSchedule(@Path("classId") String classId, @Body CreateClassScheduleRequest request);
+
+    @PUT("classes/{classId}/schedules/{scheduleId}")
+    Call<ApiResponse<ClassScheduleItem>> updateClassSchedule(@Path("classId") String classId, @Path("scheduleId") String scheduleId, @Body CreateClassScheduleRequest request);
+
+    @GET("classes/{classId}/schedule-exceptions")
+    Call<ApiResponse<List<ScheduleExceptionItem>>> getClassScheduleExceptions(@Path("classId") String classId);
+
+    @POST("classes/{classId}/schedule-exceptions")
+    Call<ApiResponse<ScheduleExceptionItem>> createScheduleException(@Path("classId") String classId, @Body CreateScheduleExceptionRequest request);
+
+    @PATCH("classes/{classId}/schedule-exceptions/{exceptionId}/publish")
+    Call<ApiResponse<ScheduleExceptionItem>> publishScheduleException(@Path("classId") String classId, @Path("exceptionId") String exceptionId);
+
+    @PATCH("classes/{classId}/schedule-exceptions/{exceptionId}/revoke")
+    Call<ApiResponse<ScheduleExceptionItem>> revokeScheduleException(@Path("classId") String classId, @Path("exceptionId") String exceptionId);
 }

@@ -8,6 +8,7 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.ppquang06.uniclassapp.data.model.response.HomeSummaryResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.SemesterScheduleResponse;
 import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.data.repository.UserRepository;
@@ -24,6 +25,7 @@ public class HomeViewModel extends BaseViewModel {
 
     private final MutableLiveData<UiState<HomeSummaryResponse>> homeSummaryState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<List<TodayScheduleItem>>> todayScheduleState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<SemesterScheduleResponse>> semesterScheduleState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<List<NotificationItemResponse>>> notificationsState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<UserResponse>> currentUserState = new MutableLiveData<>(UiState.idle());
 
@@ -48,6 +50,10 @@ public class HomeViewModel extends BaseViewModel {
         return todayScheduleState;
     }
 
+    public LiveData<UiState<SemesterScheduleResponse>> getSemesterScheduleState() {
+        return semesterScheduleState;
+    }
+
     public LiveData<UiState<List<NotificationItemResponse>>> getNotificationsState() {
         return notificationsState;
     }
@@ -65,6 +71,14 @@ public class HomeViewModel extends BaseViewModel {
                 userRepository.getTodaySchedule(),
                 todayScheduleState,
                 "Không thể tải lịch học hôm nay"
+        );
+    }
+
+    public void loadSemesterSchedule() {
+        executeCall(
+                userRepository.getSemesterSchedule(),
+                semesterScheduleState,
+                "Không thể tải thời khóa biểu học kỳ"
         );
     }
 

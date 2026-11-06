@@ -18,14 +18,18 @@ import com.ppquang06.uniclassapp.data.local.entity.AssignmentEntity;
 import com.ppquang06.uniclassapp.data.local.entity.ClassEntity;
 import com.ppquang06.uniclassapp.data.model.ApiResponse;
 import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateClassScheduleRequest;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
+import com.ppquang06.uniclassapp.data.model.request.CreateScheduleExceptionRequest;
 import com.ppquang06.uniclassapp.data.model.request.JoinClassRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassGradesResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassMemberItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.ClassStatisticsResponse;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
+import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
 import com.ppquang06.uniclassapp.ui.common.UiState;
 
 import java.util.ArrayList;
@@ -126,6 +130,34 @@ public class ClassRepository {
 
     public Call<ApiResponse<FileUploadResponse>> uploadFile(MultipartBody.Part file, RequestBody folder) {
         return apiService.uploadFile(file, folder);
+    }
+
+    public Call<ApiResponse<List<ClassScheduleItem>>> getClassSchedules(String classId) {
+        return apiService.getClassSchedules(classId);
+    }
+
+    public Call<ApiResponse<ClassScheduleItem>> createClassSchedule(String classId, CreateClassScheduleRequest request) {
+        return apiService.createClassSchedule(classId, request);
+    }
+
+    public Call<ApiResponse<ClassScheduleItem>> updateClassSchedule(String classId, String scheduleId, CreateClassScheduleRequest request) {
+        return apiService.updateClassSchedule(classId, scheduleId, request);
+    }
+
+    public Call<ApiResponse<List<ScheduleExceptionItem>>> getClassScheduleExceptions(String classId) {
+        return apiService.getClassScheduleExceptions(classId);
+    }
+
+    public Call<ApiResponse<ScheduleExceptionItem>> createScheduleException(String classId, CreateScheduleExceptionRequest request) {
+        return apiService.createScheduleException(classId, request);
+    }
+
+    public Call<ApiResponse<ScheduleExceptionItem>> publishScheduleException(String classId, String exceptionId) {
+        return apiService.publishScheduleException(classId, exceptionId);
+    }
+
+    public Call<ApiResponse<ScheduleExceptionItem>> revokeScheduleException(String classId, String exceptionId) {
+        return apiService.revokeScheduleException(classId, exceptionId);
     }
 
     /**
