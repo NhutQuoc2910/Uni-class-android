@@ -31,135 +31,466 @@
                     android:orientation="vertical"
                     android:padding="@dimen/space_16">
 
-                    <!-- Day of Week Filtering -->
-                    <HorizontalScrollView
+                    <!-- Mode Switcher (Theo ĐKHP | Lịch tuần) + Export Calendar Button -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:overScrollMode="never"
-                        android:scrollbars="none">
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/chipGroupFilter"
+                        <com.google.android.material.card.MaterialCardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:selectionRequired="true"
-                            app:singleLine="true"
-                            app:singleSelection="true">
+                            app:cardBackgroundColor="#0F172A"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#334155"
+                            app:strokeWidth="1dp">
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipAll"
-                                style="@style/Widget.Material3.Chip.Filter"
+                            <LinearLayout
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:checked="true"
-                                android:text="@string/filter_day_all" />
+                                android:orientation="horizontal"
+                                android:padding="3dp">
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipMon"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_mon" />
+                                <TextView
+                                    android:id="@+id/btnModeList"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@android:color/transparent"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:paddingHorizontal="12dp"
+                                    android:paddingVertical="7dp"
+                                    android:text="@string/tab_mode_list"
+                                    android:textColor="#94A3B8"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipTue"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_tue" />
+                                <TextView
+                                    android:id="@+id/btnModeWeekly"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_badge_pill"
+                                    android:backgroundTint="#1E293B"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:paddingHorizontal="12dp"
+                                    android:paddingVertical="7dp"
+                                    android:text="@string/tab_mode_weekly"
+                                    android:textColor="#F8FAFC"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipWed"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_wed" />
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipThu"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_thu" />
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnExportCalendar"
+                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            android:layout_width="wrap_content"
+                            android:layout_height="38dp"
+                            android:insetTop="0dp"
+                            android:insetBottom="0dp"
+                            android:paddingHorizontal="12dp"
+                            android:text="@string/btn_export_calendar"
+                            android:textAllCaps="false"
+                            android:textColor="@color/color_primary"
+                            android:textSize="12sp"
+                            app:cornerRadius="8dp"
+                            app:icon="@android:drawable/ic_menu_my_calendar"
+                            app:iconSize="16dp"
+                            app:iconTint="@color/color_primary"
+                            app:strokeColor="@color/color_primary" />
+                    </LinearLayout>
 
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipFri"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_fri" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipSat"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_sat" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chipSun"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/filter_day_sun" />
-                        </com.google.android.material.chip.ChipGroup>
-                    </HorizontalScrollView>
-
-                    <!-- Section: Regular Schedules -->
-                    <TextView
-                        android:id="@+id/tvRegularSectionTitle"
-                        style="@style/TextAppearance.EduLens.Subtitle"
+                    <!-- ==================== MODE 1: WEEKLY TIMETABLE GRID (LỊCH TUẦN) ==================== -->
+                    <LinearLayout
+                        android:id="@+id/layoutWeeklyMode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="@string/regular_schedules_section_title" />
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        android:visibility="visible">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvRegularSchedules"
+                        <!-- Legend Bar (Chú thích) -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            app:cardBackgroundColor="#0F172A"
+                            app:cardCornerRadius="10dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#1E293B"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal"
+                                android:paddingHorizontal="12dp"
+                                android:paddingVertical="10dp">
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="8dp"
+                                    android:text="@string/legend_label"
+                                    android:textColor="#94A3B8"
+                                    android:textSize="12sp" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="6dp"
+                                    android:background="@drawable/bg_badge_pill"
+                                    android:backgroundTint="#1E3A8A"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="3dp"
+                                    android:text="@string/legend_regular"
+                                    android:textColor="#93C5FD"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginEnd="6dp"
+                                    android:background="@drawable/bg_badge_pill"
+                                    android:backgroundTint="#065F46"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="3dp"
+                                    android:text="@string/legend_makeup"
+                                    android:textColor="#6EE7B7"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_badge_pill"
+                                    android:backgroundTint="#7F1D1D"
+                                    android:paddingHorizontal="8dp"
+                                    android:paddingVertical="3dp"
+                                    android:text="@string/legend_cancelled"
+                                    android:textColor="#FCA5A5"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold" />
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+
+                        <!-- Week Navigator + Timetable Grid Container -->
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            app:cardBackgroundColor="#0F172A"
+                            app:cardCornerRadius="12dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#1E293B"
+                            app:strokeWidth="1dp">
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical">
+
+                                <!-- Week Navigation Header -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:gravity="center_vertical"
+                                    android:orientation="horizontal"
+                                    android:paddingHorizontal="12dp"
+                                    android:paddingVertical="10dp">
+
+                                    <TextView
+                                        android:id="@+id/btnPrevWeek"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"
+                                        android:padding="6dp"
+                                        android:text="@string/btn_prev_week"
+                                        android:textColor="#E2E8F0"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+
+                                    <LinearLayout
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:gravity="center"
+                                        android:orientation="vertical">
+
+                                        <TextView
+                                            android:id="@+id/tvWeekRange"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:textColor="#F8FAFC"
+                                            android:textSize="13sp"
+                                            android:textStyle="bold"
+                                            tools:text="Tuần 09/11 – 15/11/2026" />
+
+                                        <TextView
+                                            android:id="@+id/tvCurrentWeek"
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:layout_marginTop="2dp"
+                                            android:background="?attr/selectableItemBackground"
+                                            android:clickable="true"
+                                            android:focusable="true"
+                                            android:paddingHorizontal="6dp"
+                                            android:paddingVertical="1dp"
+                                            android:text="@string/btn_current_week"
+                                            android:textColor="#60A5FA"
+                                            android:textSize="11sp" />
+                                    </LinearLayout>
+
+                                    <TextView
+                                        android:id="@+id/btnNextWeek"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:background="?attr/selectableItemBackground"
+                                        android:clickable="true"
+                                        android:focusable="true"
+                                        android:padding="6dp"
+                                        android:text="@string/btn_next_week"
+                                        android:textColor="#E2E8F0"
+                                        android:textSize="12sp"
+                                        android:textStyle="bold" />
+                                </LinearLayout>
+
+                                <View
+                                    android:layout_width="match_parent"
+                                    android:layout_height="1dp"
+                                    android:background="#1E293B" />
+
+                                <!-- Grid Area: Left Fixed Period Column + Right Horizontally Scrollable 7 Days -->
+                                <LinearLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:orientation="horizontal">
+
+                                    <!-- Fixed Period Column (Tiết 1 .. Tiết 10) -->
+                                    <LinearLayout
+                                        android:id="@+id/llPeriodColumn"
+                                        android:layout_width="64dp"
+                                        android:layout_height="wrap_content"
+                                        android:background="#0B1120"
+                                        android:orientation="vertical">
+
+                                        <!-- Top-left corner header ("Tiết") -->
+                                        <TextView
+                                            android:layout_width="match_parent"
+                                            android:layout_height="48dp"
+                                            android:gravity="center"
+                                            android:text="@string/col_period_header"
+                                            android:textColor="#94A3B8"
+                                            android:textSize="11sp"
+                                            android:textStyle="bold" />
+
+                                        <View
+                                            android:layout_width="match_parent"
+                                            android:layout_height="1dp"
+                                            android:background="#1E293B" />
+
+                                        <LinearLayout
+                                            android:id="@+id/llPeriodLabelsContainer"
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical" />
+                                    </LinearLayout>
+
+                                    <View
+                                        android:layout_width="1dp"
+                                        android:layout_height="match_parent"
+                                        android:background="#1E293B" />
+
+                                    <!-- Horizontally Scrollable 7 Day Columns (Thứ 2 .. Chủ nhật) -->
+                                    <HorizontalScrollView
+                                        android:id="@+id/hsvTimetableGrid"
+                                        android:layout_width="0dp"
+                                        android:layout_height="wrap_content"
+                                        android:layout_weight="1"
+                                        android:overScrollMode="never"
+                                        android:scrollbars="horizontal">
+
+                                        <LinearLayout
+                                            android:layout_width="wrap_content"
+                                            android:layout_height="wrap_content"
+                                            android:orientation="vertical">
+
+                                            <!-- 7 Day Headers Row -->
+                                            <LinearLayout
+                                                android:id="@+id/llDayHeadersRow"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="48dp"
+                                                android:background="#0B1120"
+                                                android:orientation="horizontal" />
+
+                                            <View
+                                                android:layout_width="match_parent"
+                                                android:layout_height="1dp"
+                                                android:background="#1E293B" />
+
+                                            <!-- 7 Day Columns Container -->
+                                            <LinearLayout
+                                                android:id="@+id/llDayColumnsContainer"
+                                                android:layout_width="wrap_content"
+                                                android:layout_height="wrap_content"
+                                                android:orientation="horizontal" />
+                                        </LinearLayout>
+                                    </HorizontalScrollView>
+                                </LinearLayout>
+                            </LinearLayout>
+                        </com.google.android.material.card.MaterialCardView>
+                    </LinearLayout>
+
+                    <!-- ==================== MODE 2: LIST VIEW (THEO ĐKHP) ==================== -->
+                    <LinearLayout
+                        android:id="@+id/layoutListMode"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_semester_schedule" />
+                        android:layout_marginTop="12dp"
+                        android:orientation="vertical"
+                        android:visibility="gone">
 
-                    <TextView
-                        android:id="@+id/tvEmptyRegularSchedules"
-                        style="@style/TextAppearance.EduLens.Body"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="24dp"
-                        android:text="@string/empty_regular_schedules_message"
-                        android:textColor="#64748B"
-                        android:visibility="gone" />
+                        <!-- Day of Week Filtering -->
+                        <HorizontalScrollView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:overScrollMode="never"
+                            android:scrollbars="none">
 
-                    <!-- Section: Schedule Exceptions -->
-                    <TextView
-                        android:id="@+id/tvExceptionsSectionTitle"
-                        style="@style/TextAppearance.EduLens.Subtitle"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="8dp"
-                        android:text="@string/schedule_exceptions_section_title" />
+                            <com.google.android.material.chip.ChipGroup
+                                android:id="@+id/chipGroupFilter"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                app:selectionRequired="true"
+                                app:singleLine="true"
+                                app:singleSelection="true">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvScheduleExceptions"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:nestedScrollingEnabled="false"
-                        tools:listitem="@layout/item_schedule_exception" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipAll"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:checked="true"
+                                    android:text="@string/filter_day_all" />
 
-                    <TextView
-                        android:id="@+id/tvEmptyExceptions"
-                        style="@style/TextAppearance.EduLens.Body"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center"
-                        android:padding="24dp"
-                        android:text="@string/empty_schedule_exceptions_message"
-                        android:textColor="#64748B"
-                        android:visibility="gone" />
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipMon"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_mon" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipTue"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_tue" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipWed"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_wed" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipThu"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_thu" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipFri"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_fri" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipSat"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_sat" />
+
+                                <com.google.android.material.chip.Chip
+                                    android:id="@+id/chipSun"
+                                    style="@style/Widget.Material3.Chip.Filter"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/filter_day_sun" />
+                            </com.google.android.material.chip.ChipGroup>
+                        </HorizontalScrollView>
+
+                        <!-- Section: Regular Schedules -->
+                        <TextView
+                            android:id="@+id/tvRegularSectionTitle"
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="16dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/regular_schedules_section_title" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvRegularSchedules"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_semester_schedule" />
+
+                        <TextView
+                            android:id="@+id/tvEmptyRegularSchedules"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="24dp"
+                            android:text="@string/empty_regular_schedules_message"
+                            android:textColor="#64748B"
+                            android:visibility="gone" />
+
+                        <!-- Section: Schedule Exceptions -->
+                        <TextView
+                            android:id="@+id/tvExceptionsSectionTitle"
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="8dp"
+                            android:text="@string/schedule_exceptions_section_title" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvScheduleExceptions"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:nestedScrollingEnabled="false"
+                            tools:listitem="@layout/item_schedule_exception" />
+
+                        <TextView
+                            android:id="@+id/tvEmptyExceptions"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center"
+                            android:padding="24dp"
+                            android:text="@string/empty_schedule_exceptions_message"
+                            android:textColor="#64748B"
+                            android:visibility="gone" />
+                    </LinearLayout>
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

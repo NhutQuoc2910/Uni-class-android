@@ -535,4 +535,26 @@
     <string name="toast_create_schedule_success">Lưu lịch học thành công!</string>
     <string name="toast_create_exception_success">Tạo thay đổi lịch thành công!</string>
 
+    <!-- Weekly Timetable & Calendar Export -->
+    <string name="tab_mode_list">Theo ĐKHP</string>
+    <string name="tab_mode_weekly">Lịch tuần</string>
+    <string name="btn_export_calendar">Lưu vào Lịch</string>
+    <string name="legend_label">Chú thích:</string>
+    <string name="legend_regular">Lịch thường</string>
+    <string name="legend_makeup">Lịch bù</string>
+    <string name="legend_cancelled">Báo nghỉ</string>
+    <string name="btn_prev_week">&lt; Tuần trước</string>
+    <string name="btn_next_week">Tuần sau &gt;</string>
+    <string name="btn_current_week">Về tuần này</string>
+    <string name="col_period_header">Tiết</string>
+    <string name="dialog_calendar_export_title">Lưu Thời khóa biểu vào Lịch</string>
+    <string name="dialog_calendar_option_direct">Đồng bộ trực tiếp vào Lịch điện thoại (1 chạm)</string>
+    <string name="dialog_calendar_option_ics">Tải tệp .ics &amp; Mở bằng Google Calendar</string>
+    <string name="toast_calendar_sync_success">Đã đồng bộ %d lịch học vào ứng dụng Lịch trên máy!</string>
+    <string name="toast_calendar_sync_error">Không thể đồng bộ vào Lịch. Vui lòng thử tải tệp .ics.</string>
+    <string name="toast_calendar_permission_denied">Cần cấp quyền truy cập Lịch để đồng bộ trực tiếp</string>
+    <string name="toast_ics_saved_success">Đã lưu tệp .ics vào thư mục Tải xuống (Downloads/UniClass)</string>
+    <string name="toast_ics_saved_error">Không thể tạo tệp .ics</string>
+    <string name="toast_schedule_empty_export">Chưa có dữ liệu lịch học để lưu</string>
+
 </resources>
