@@ -122,11 +122,17 @@ public interface UserClassApiService {
     @POST("classes/{classId}/materials")
     Call<ApiResponse<ClassDetailResponse.MaterialItem>> createMaterial(@Path("classId") String classId, @Body CreateMaterialRequest request);
 
+    @DELETE("classes/{classId}/materials/{materialId}")
+    Call<ApiResponse<Void>> deleteMaterial(@Path("classId") String classId, @Path("materialId") String materialId);
+
     @GET("classes/{classId}/statistics")
     Call<ApiResponse<ClassStatisticsResponse>> getClassStatistics(@Path("classId") String classId);
 
     @POST("classes/{classId}/assignments")
     Call<ApiResponse<ClassDetailResponse.ClassAssignmentItem>> createAssignment(@Path("classId") String classId, @Body CreateAssignmentRequest request);
+
+    @DELETE("classes/{classId}/assignments/{assignmentId}")
+    Call<ApiResponse<Void>> deleteAssignment(@Path("classId") String classId, @Path("assignmentId") String assignmentId);
 
     @GET("assignments/{assignmentId}/submissions")
     Call<ApiResponse<AssignmentSubmissionListResponse>> getAssignmentSubmissions(@Path("assignmentId") String assignmentId);
@@ -155,6 +161,9 @@ public interface UserClassApiService {
 
     @PUT("classes/{classId}/schedules/{scheduleId}")
     Call<ApiResponse<ClassScheduleItem>> updateClassSchedule(@Path("classId") String classId, @Path("scheduleId") String scheduleId, @Body CreateClassScheduleRequest request);
+
+    @DELETE("classes/{classId}/schedules/{scheduleId}")
+    Call<ApiResponse<Void>> deleteClassSchedule(@Path("classId") String classId, @Path("scheduleId") String scheduleId);
 
     @GET("classes/{classId}/schedule-exceptions")
     Call<ApiResponse<List<ScheduleExceptionItem>>> getClassScheduleExceptions(@Path("classId") String classId);

@@ -327,6 +327,15 @@ public class RepositoryOfflineCachingTest {
 
         @Override
         public Call<ApiResponse<ScheduleExceptionItem>> revokeScheduleException(String classId, String exceptionId) { return null; }
+
+        @Override
+        public Call<ApiResponse<Void>> deleteMaterial(String classId, String materialId) { return null; }
+
+        @Override
+        public Call<ApiResponse<Void>> deleteAssignment(String classId, String assignmentId) { return null; }
+
+        @Override
+        public Call<ApiResponse<Void>> deleteClassSchedule(String classId, String scheduleId) { return null; }
     }
 
     private InMemoryClassDao classDao;

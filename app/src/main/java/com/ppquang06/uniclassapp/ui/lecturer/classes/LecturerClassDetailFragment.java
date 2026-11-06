@@ -141,11 +141,39 @@ public class LecturerClassDetailFragment extends Fragment {
     private void setupRecyclerViews() {
         // Announcements
         announcementAdapter = new NotificationAdapter();
+        announcementAdapter.setOnDeleteNotificationListener(item -> {
+            if (item == null || item.getId() == null) return;
+            if (item.getId().startsWith("mat-")) {
+                String materialId = item.getId().substring(4);
+                showDeleteConfirmDialog("Xác nhận xóa thông báo", "Bạn có chắc chắn muốn xóa thông báo này không?", () -> {
+                    viewModel.deleteMaterial(classId, materialId);
+                });
+            } else if (item.getId().startsWith("assign-")) {
+                String assignmentId = item.getId().substring(7);
+                showDeleteConfirmDialog("Xác nhận xóa bài tập", "Thông báo này thuộc bài tập. Bạn có chắc chắn muốn xóa bài tập này và toàn bộ bài nộp liên quan không?", () -> {
+                    viewModel.deleteAssignment(classId, assignmentId);
+                });
+            } else if (item.getId().startsWith("att-")) {
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Thông báo từ phiên điểm danh không thể xóa trực tiếp", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                showDeleteConfirmDialog("Xác nhận xóa thông báo", "Bạn có chắc chắn muốn xóa thông báo này không?", () -> {
+                    viewModel.deleteMaterial(classId, item.getId());
+                });
+            }
+        });
         binding.rvAnnouncements.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvAnnouncements.setAdapter(announcementAdapter);
 
         // Materials
         materialAdapter = new MaterialAdapter();
+        materialAdapter.setOnDeleteMaterialListener(item -> {
+            if (item == null || item.getId() == null) return;
+            showDeleteConfirmDialog("Xác nhận xóa tài liệu", "Bạn có chắc chắn muốn xóa tài liệu này không?", () -> {
+                viewModel.deleteMaterial(classId, item.getId());
+            });
+        });
         binding.rvMaterials.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvMaterials.setAdapter(materialAdapter);
 
@@ -164,6 +192,12 @@ public class LecturerClassDetailFragment extends Fragment {
                 }
             }
         });
+        assignmentAdapter.setOnDeleteAssignmentListener(item -> {
+            if (item == null || item.getId() == null) return;
+            showDeleteConfirmDialog("Xác nhận xóa bài tập", "Bạn có chắc chắn muốn xóa bài tập này và toàn bộ bài nộp liên quan?", () -> {
+                viewModel.deleteAssignment(classId, item.getId());
+            });
+        });
         binding.rvAssignments.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvAssignments.setAdapter(assignmentAdapter);
 
@@ -172,6 +206,12 @@ public class LecturerClassDetailFragment extends Fragment {
             CreateScheduleBottomSheetDialogFragment dialog = CreateScheduleBottomSheetDialogFragment.newInstanceForEdit(classId, item);
             dialog.setOnScheduleSavedListener(() -> viewModel.loadClassSchedules(classId));
             dialog.show(getChildFragmentManager(), "EditScheduleBottomSheet");
+        });
+        classScheduleAdapter.setOnDeleteScheduleListener(item -> {
+            if (item == null || item.getId() == null) return;
+            showDeleteConfirmDialog("Xác nhận xóa lịch học", "Bạn có chắc chắn muốn xóa lịch học định kỳ này?", () -> {
+                viewModel.deleteClassSchedule(classId, item.getId());
+            });
         });
         binding.rvClassSchedules.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvClassSchedules.setAdapter(classScheduleAdapter);
@@ -198,6 +238,20 @@ public class LecturerClassDetailFragment extends Fragment {
         );
         binding.rvClassExceptions.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvClassExceptions.setAdapter(classExceptionAdapter);
+    }
+
+    private void showDeleteConfirmDialog(String title, String message, Runnable onConfirm) {
+        if (getContext() == null) return;
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(title)
+                .setMessage(message)
+                .setNegativeButton(R.string.btn_cancel, null)
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    if (onConfirm != null) {
+                        onConfirm.run();
+                    }
+                })
+                .show();
     }
 
     private void showRevokeConfirmDialog(ScheduleExceptionItem item) {
@@ -413,6 +467,31 @@ public class LecturerClassDetailFragment extends Fragment {
                     viewModel.resetExceptionActionState();
                     String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
                             ? state.getMessage() : "Thao tác ngoại lệ lịch thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getDeleteItemState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    viewModel.resetDeleteItemState();
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Đã xóa thành công!", Toast.LENGTH_SHORT).show();
+                    }
+                    loadClassDetail();
+                    break;
+                case ERROR:
+                    viewModel.resetDeleteItemState();
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Xóa thất bại";
                     if (getContext() != null) {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                     }

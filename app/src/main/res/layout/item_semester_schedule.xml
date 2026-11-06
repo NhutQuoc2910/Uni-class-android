@@ -85,5 +85,18 @@
                 tools:text="Áp dụng: 15/09/2026 - 15/01/2027" />
         </LinearLayout>
 
+        <ImageButton
+            android:id="@+id/btnDeleteSchedule"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginStart="8dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete"
+            android:visibility="gone"
+            app:tint="@color/color_error" />
+
     </LinearLayout>
 </com.google.android.material.card.MaterialCardView>

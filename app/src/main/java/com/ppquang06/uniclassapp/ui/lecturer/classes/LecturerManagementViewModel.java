@@ -49,6 +49,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
     private final MutableLiveData<UiState<List<ScheduleExceptionItem>>> classExceptionsState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<ScheduleExceptionItem>> createExceptionState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<ScheduleExceptionItem>> exceptionActionState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<Void>> deleteItemState = new MutableLiveData<>(UiState.idle());
 
     public LecturerManagementViewModel(@NonNull Application application) {
         this(application, new ClassRepository(application));
@@ -118,6 +119,10 @@ public class LecturerManagementViewModel extends BaseViewModel {
 
     public LiveData<UiState<ScheduleExceptionItem>> getExceptionActionState() {
         return exceptionActionState;
+    }
+
+    public LiveData<UiState<Void>> getDeleteItemState() {
+        return deleteItemState;
     }
 
     public void loadClasses() {
@@ -247,6 +252,30 @@ public class LecturerManagementViewModel extends BaseViewModel {
         );
     }
 
+    public void deleteMaterial(@NonNull String classId, @NonNull String materialId) {
+        executeCall(
+                classRepository.deleteMaterial(classId, materialId),
+                deleteItemState,
+                "Không thể xóa tài liệu"
+        );
+    }
+
+    public void deleteAssignment(@NonNull String classId, @NonNull String assignmentId) {
+        executeCall(
+                classRepository.deleteAssignment(classId, assignmentId),
+                deleteItemState,
+                "Không thể xóa bài tập"
+        );
+    }
+
+    public void deleteClassSchedule(@NonNull String classId, @NonNull String scheduleId) {
+        executeCall(
+                classRepository.deleteClassSchedule(classId, scheduleId),
+                deleteItemState,
+                "Không thể xóa lịch học"
+        );
+    }
+
     public void resetCreateClassState() {
         dispatchState(createClassState, UiState.idle());
     }
@@ -277,5 +306,9 @@ public class LecturerManagementViewModel extends BaseViewModel {
 
     public void resetExceptionActionState() {
         dispatchState(exceptionActionState, UiState.idle());
+    }
+
+    public void resetDeleteItemState() {
+        dispatchState(deleteItemState, UiState.idle());
     }
 }

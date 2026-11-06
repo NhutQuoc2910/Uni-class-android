@@ -2,6 +2,7 @@ package com.ppquang06.uniclassapp.ui.common.adapter;
 
 import android.content.res.ColorStateList;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -24,8 +25,13 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.Materi
         void onMaterialClick(ClassDetailResponse.MaterialItem item);
     }
 
+    public interface OnDeleteMaterialListener {
+        void onDeleteMaterial(ClassDetailResponse.MaterialItem item);
+    }
+
     private final List<ClassDetailResponse.MaterialItem> items = new ArrayList<>();
     private OnMaterialClickListener listener;
+    private OnDeleteMaterialListener deleteListener;
 
     public MaterialAdapter() {}
 
@@ -33,8 +39,17 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.Materi
         this.listener = listener;
     }
 
+    public MaterialAdapter(OnMaterialClickListener listener, OnDeleteMaterialListener deleteListener) {
+        this.listener = listener;
+        this.deleteListener = deleteListener;
+    }
+
     public void setOnMaterialClickListener(OnMaterialClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnDeleteMaterialListener(OnDeleteMaterialListener listener) {
+        this.deleteListener = listener;
     }
 
     public void submitList(List<ClassDetailResponse.MaterialItem> newItems) {
@@ -63,7 +78,7 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.Materi
     @Override
     public void onBindViewHolder(@NonNull MaterialViewHolder holder, int position) {
         ClassDetailResponse.MaterialItem item = items.get(position);
-        holder.bind(item, listener);
+        holder.bind(item, listener, deleteListener);
     }
 
     @Override
@@ -79,7 +94,7 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.Materi
             this.binding = binding;
         }
 
-        void bind(ClassDetailResponse.MaterialItem item, OnMaterialClickListener listener) {
+        void bind(ClassDetailResponse.MaterialItem item, OnMaterialClickListener listener, OnDeleteMaterialListener deleteListener) {
             String rawType = item.getFileType() != null ? item.getFileType().trim() : "";
             String ext = rawType.isEmpty() ? "FILE" : rawType.toUpperCase(Locale.ROOT);
             String title = item.getTitle() != null ? item.getTitle() : "";
@@ -110,6 +125,14 @@ public class MaterialAdapter extends RecyclerView.Adapter<MaterialAdapter.Materi
                     binding.flFileTypeBadge,
                     ColorStateList.valueOf(ContextCompat.getColor(binding.getRoot().getContext(), bgColorRes))
             );
+
+            if (deleteListener != null) {
+                binding.btnDeleteDoc.setVisibility(View.VISIBLE);
+                binding.btnDeleteDoc.setOnClickListener(v -> deleteListener.onDeleteMaterial(item));
+            } else {
+                binding.btnDeleteDoc.setVisibility(View.GONE);
+                binding.btnDeleteDoc.setOnClickListener(null);
+            }
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

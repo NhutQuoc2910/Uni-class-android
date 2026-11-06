@@ -120,6 +120,14 @@ public class ClassRepository {
         return apiService.createMaterial(classId, request);
     }
 
+    public Call<ApiResponse<Void>> deleteMaterial(String classId, String materialId) {
+        return apiService.deleteMaterial(classId, materialId);
+    }
+
+    public Call<ApiResponse<Void>> deleteAssignment(String classId, String assignmentId) {
+        return apiService.deleteAssignment(classId, assignmentId);
+    }
+
     public Call<ApiResponse<ClassStatisticsResponse>> getClassStatistics(String classId) {
         return apiService.getClassStatistics(classId);
     }
@@ -142,6 +150,10 @@ public class ClassRepository {
 
     public Call<ApiResponse<ClassScheduleItem>> updateClassSchedule(String classId, String scheduleId, CreateClassScheduleRequest request) {
         return apiService.updateClassSchedule(classId, scheduleId, request);
+    }
+
+    public Call<ApiResponse<Void>> deleteClassSchedule(String classId, String scheduleId) {
+        return apiService.deleteClassSchedule(classId, scheduleId);
     }
 
     public Call<ApiResponse<List<ScheduleExceptionItem>>> getClassScheduleExceptions(String classId) {

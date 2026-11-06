@@ -21,8 +21,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         void onNotificationClick(NotificationItemResponse item);
     }
 
+    public interface OnDeleteNotificationListener {
+        void onDeleteNotification(NotificationItemResponse item);
+    }
+
     private final List<NotificationItemResponse> items = new ArrayList<>();
     private OnNotificationClickListener listener;
+    private OnDeleteNotificationListener deleteListener;
 
     public NotificationAdapter() {}
 
@@ -30,8 +35,17 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.listener = listener;
     }
 
+    public NotificationAdapter(OnNotificationClickListener listener, OnDeleteNotificationListener deleteListener) {
+        this.listener = listener;
+        this.deleteListener = deleteListener;
+    }
+
     public void setOnNotificationClickListener(OnNotificationClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnDeleteNotificationListener(OnDeleteNotificationListener listener) {
+        this.deleteListener = listener;
     }
 
     public void submitList(List<NotificationItemResponse> newItems) {
@@ -91,7 +105,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         NotificationItemResponse item = items.get(position);
-        holder.bind(item, listener);
+        holder.bind(item, listener, deleteListener);
     }
 
     @Override
@@ -107,7 +121,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             this.binding = binding;
         }
 
-        void bind(NotificationItemResponse item, OnNotificationClickListener listener) {
+        void bind(NotificationItemResponse item, OnNotificationClickListener listener, OnDeleteNotificationListener deleteListener) {
             String title = item.getTitle() != null ? item.getTitle() : "";
             String body = item.getBody() != null ? item.getBody() : "";
             String courseCode = item.getCourseCode() != null ? item.getCourseCode().trim() : "";
@@ -128,6 +142,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 binding.tvUrgentTag.setVisibility(View.VISIBLE);
             } else {
                 binding.tvUrgentTag.setVisibility(View.GONE);
+            }
+
+            if (deleteListener != null) {
+                binding.btnDeleteNotif.setVisibility(View.VISIBLE);
+                binding.btnDeleteNotif.setOnClickListener(v -> deleteListener.onDeleteNotification(item));
+            } else {
+                binding.btnDeleteNotif.setVisibility(View.GONE);
+                binding.btnDeleteNotif.setOnClickListener(null);
             }
 
             binding.getRoot().setOnClickListener(v -> {

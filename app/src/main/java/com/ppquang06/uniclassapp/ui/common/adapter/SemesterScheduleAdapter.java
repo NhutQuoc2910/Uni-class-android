@@ -23,17 +23,31 @@ public class SemesterScheduleAdapter extends RecyclerView.Adapter<SemesterSchedu
         void onScheduleClick(ClassScheduleItem item);
     }
 
+    public interface OnDeleteScheduleListener {
+        void onDeleteSchedule(ClassScheduleItem item);
+    }
+
     private final List<ClassScheduleItem> allItems = new ArrayList<>();
     private final List<ClassScheduleItem> filteredItems = new ArrayList<>();
     private int currentDayFilter = 0; // 0 = Tất cả, 1 = Thứ 2, ..., 7 = Chủ nhật
     private final OnScheduleClickListener listener;
+    private OnDeleteScheduleListener deleteListener;
 
     public SemesterScheduleAdapter() {
         this(null);
     }
 
     public SemesterScheduleAdapter(OnScheduleClickListener listener) {
+        this(listener, null);
+    }
+
+    public SemesterScheduleAdapter(OnScheduleClickListener listener, OnDeleteScheduleListener deleteListener) {
         this.listener = listener;
+        this.deleteListener = deleteListener;
+    }
+
+    public void setOnDeleteScheduleListener(OnDeleteScheduleListener deleteListener) {
+        this.deleteListener = deleteListener;
     }
 
     public void submitList(List<ClassScheduleItem> newItems) {
@@ -88,7 +102,7 @@ public class SemesterScheduleAdapter extends RecyclerView.Adapter<SemesterSchedu
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(filteredItems.get(position), listener);
+        holder.bind(filteredItems.get(position), listener, deleteListener);
     }
 
     @Override
@@ -143,7 +157,7 @@ public class SemesterScheduleAdapter extends RecyclerView.Adapter<SemesterSchedu
             this.binding = binding;
         }
 
-        void bind(ClassScheduleItem item, OnScheduleClickListener listener) {
+        void bind(ClassScheduleItem item, OnScheduleClickListener listener, OnDeleteScheduleListener deleteListener) {
             binding.tvScheduleDayOfWeek.setText(item.getDayOfWeekLabel());
 
             String timeRange = item.getFormattedTimeRange();
@@ -163,6 +177,14 @@ public class SemesterScheduleAdapter extends RecyclerView.Adapter<SemesterSchedu
                 binding.tvScheduleDateRange.setText(dateRange);
             } else {
                 binding.tvScheduleDateRange.setVisibility(View.GONE);
+            }
+
+            if (deleteListener != null) {
+                binding.btnDeleteSchedule.setVisibility(View.VISIBLE);
+                binding.btnDeleteSchedule.setOnClickListener(v -> deleteListener.onDeleteSchedule(item));
+            } else {
+                binding.btnDeleteSchedule.setVisibility(View.GONE);
+                binding.btnDeleteSchedule.setOnClickListener(null);
             }
 
             binding.getRoot().setOnClickListener(v -> {

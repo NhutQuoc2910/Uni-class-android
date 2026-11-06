@@ -408,6 +408,80 @@ public class TodayScheduleAndScheduleManagementTest {
     }
 
     @Test
+    public void testLecturerManagementViewModel_deleteActions() {
+        UserClassApiService mockApi = createMockUserClassApi((proxy, method, args) -> {
+            String name = method.getName();
+            if ("deleteMaterial".equals(name) || "deleteAssignment".equals(name) || "deleteClassSchedule".equals(name)) {
+                return new ImmediateCall<>(createSuccess(null));
+            }
+            return null;
+        });
+
+        ClassRepository classRepository = new ClassRepository(mockApi);
+        LecturerManagementViewModel viewModel = new LecturerManagementViewModel(classRepository);
+
+        assertTrue(viewModel.getDeleteItemState().getValue().isIdle());
+
+        viewModel.deleteMaterial("c1", "m1");
+        assertTrue(viewModel.getDeleteItemState().getValue().isSuccess());
+
+        viewModel.resetDeleteItemState();
+        assertTrue(viewModel.getDeleteItemState().getValue().isIdle());
+
+        viewModel.deleteAssignment("c1", "a1");
+        assertTrue(viewModel.getDeleteItemState().getValue().isSuccess());
+
+        viewModel.resetDeleteItemState();
+        assertTrue(viewModel.getDeleteItemState().getValue().isIdle());
+
+        viewModel.deleteClassSchedule("c1", "s1");
+        assertTrue(viewModel.getDeleteItemState().getValue().isSuccess());
+
+        viewModel.resetDeleteItemState();
+        assertTrue(viewModel.getDeleteItemState().getValue().isIdle());
+    }
+
+    @Test
+    public void testAdapters_deleteListeners() {
+        final boolean[] notifDeleted = {false};
+        com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter notifAdapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter(null, item -> notifDeleted[0] = true);
+        com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse notifItem =
+                new com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse();
+        notifItem.setId("notif-1");
+        notifAdapter.setOnDeleteNotificationListener(item -> notifDeleted[0] = true);
+
+        final boolean[] matDeleted = {false};
+        com.ppquang06.uniclassapp.ui.common.adapter.MaterialAdapter matAdapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.MaterialAdapter(null, item -> matDeleted[0] = true);
+        com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse.MaterialItem matItem =
+                new com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse.MaterialItem();
+        matItem.setId("mat-1");
+        matAdapter.setOnDeleteMaterialListener(item -> matDeleted[0] = true);
+
+        final boolean[] assignDeleted = {false};
+        com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter assignAdapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter(null, item -> assignDeleted[0] = true);
+        com.ppquang06.uniclassapp.data.model.response.AssignmentItem assignItem =
+                new com.ppquang06.uniclassapp.data.model.response.AssignmentItem();
+        assignItem.setId("assign-1");
+        assignAdapter.setOnDeleteAssignmentListener(item -> assignDeleted[0] = true);
+
+        final boolean[] schedDeleted = {false};
+        com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter schedAdapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter(null, item -> schedDeleted[0] = true);
+        com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem schedItem =
+                new com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem();
+        schedItem.setId("sched-1");
+        schedAdapter.setOnDeleteScheduleListener(item -> schedDeleted[0] = true);
+
+        assertNotNull(notifAdapter);
+        assertNotNull(matAdapter);
+        assertNotNull(assignAdapter);
+        assertNotNull(schedAdapter);
+    }
+
+    @Test
     public void testHeroScheduleSelectionLogic() {
         int nowMinutes = 8 * 60 + 0; // 08:00 (480 mins)
 

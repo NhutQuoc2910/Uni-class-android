@@ -1,6 +1,7 @@
 package com.ppquang06.uniclassapp.ui.common.adapter;
 
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -20,8 +21,13 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         void onAssignmentClick(AssignmentItem item);
     }
 
+    public interface OnDeleteAssignmentListener {
+        void onDeleteAssignment(AssignmentItem item);
+    }
+
     private final List<AssignmentItem> items = new ArrayList<>();
     private OnAssignmentClickListener listener;
+    private OnDeleteAssignmentListener deleteListener;
 
     public AssignmentAdapter() {}
 
@@ -29,8 +35,17 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
         this.listener = listener;
     }
 
+    public AssignmentAdapter(OnAssignmentClickListener listener, OnDeleteAssignmentListener deleteListener) {
+        this.listener = listener;
+        this.deleteListener = deleteListener;
+    }
+
     public void setOnAssignmentClickListener(OnAssignmentClickListener listener) {
         this.listener = listener;
+    }
+
+    public void setOnDeleteAssignmentListener(OnDeleteAssignmentListener listener) {
+        this.deleteListener = listener;
     }
 
     public void submitList(List<AssignmentItem> newItems) {
@@ -85,7 +100,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
     @Override
     public void onBindViewHolder(@NonNull AssignmentViewHolder holder, int position) {
         AssignmentItem item = items.get(position);
-        holder.bind(item, listener);
+        holder.bind(item, listener, deleteListener);
     }
 
     @Override
@@ -101,7 +116,7 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             this.binding = binding;
         }
 
-        void bind(AssignmentItem item, OnAssignmentClickListener listener) {
+        void bind(AssignmentItem item, OnAssignmentClickListener listener, OnDeleteAssignmentListener deleteListener) {
             String title = item.getTitle() != null ? item.getTitle() : "";
             String className = item.getClassName() != null ? item.getClassName().trim() : "";
             String formattedDue = UiBadgeHelper.formatIsoDateShort(item.getDueDate());
@@ -123,6 +138,14 @@ public class AssignmentAdapter extends RecyclerView.Adapter<AssignmentAdapter.As
             );
             String label = UiBadgeHelper.getAssignmentStatusLabel(status);
             UiBadgeHelper.applyBadge(binding.tvDeadlineBadge, status, label);
+
+            if (deleteListener != null) {
+                binding.btnDeleteAssignment.setVisibility(View.VISIBLE);
+                binding.btnDeleteAssignment.setOnClickListener(v -> deleteListener.onDeleteAssignment(item));
+            } else {
+                binding.btnDeleteAssignment.setVisibility(View.GONE);
+                binding.btnDeleteAssignment.setOnClickListener(null);
+            }
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {
