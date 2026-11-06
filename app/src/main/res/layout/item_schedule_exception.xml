@@ -97,6 +97,43 @@
                 android:textColor="#64748B"
                 android:textSize="12sp"
                 tools:text="Lý do: Giảng viên đi công tác" />
+
+            <LinearLayout
+                android:id="@+id/llLecturerActions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="end"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnRevokeException"
+                    style="@style/Widget.EduLens.Button.Outlined"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:minHeight="36dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="0dp"
+                    android:text="@string/btn_revoke_exception"
+                    android:textColor="#DC2626"
+                    android:textSize="12sp"
+                    android:visibility="gone"
+                    app:strokeColor="#DC2626" />
+
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPublishException"
+                    style="@style/Widget.EduLens.Button.Filled"
+                    android:layout_width="wrap_content"
+                    android:layout_height="36dp"
+                    android:layout_marginStart="8dp"
+                    android:minHeight="36dp"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="0dp"
+                    android:text="@string/btn_publish_exception"
+                    android:textSize="12sp"
+                    android:visibility="gone" />
+            </LinearLayout>
         </LinearLayout>
 
     </LinearLayout>

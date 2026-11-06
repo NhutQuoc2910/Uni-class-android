@@ -400,6 +400,98 @@
                         android:text="Chưa có bài tập nào trong lớp"
                         android:textColor="@color/text_muted"
                         android:visibility="gone" />
+
+                    <!-- Section: Class Schedules -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_20"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/section_class_schedules"
+                            android:textColor="@color/text_primary" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnAddSchedule"
+                            style="@style/Widget.EduLens.Button.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:minHeight="32dp"
+                            android:paddingHorizontal="@dimen/space_8"
+                            android:paddingVertical="0dp"
+                            android:text="@string/btn_add_schedule"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvClassSchedules"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_semester_schedule" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyClassSchedules"
+                        style="@style/TextAppearance.EduLens.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        android:text="@string/empty_class_schedules"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
+
+                    <!-- Section: Schedule Exceptions -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_20"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/section_class_exceptions"
+                            android:textColor="@color/text_primary" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnCreateScheduleException"
+                            style="@style/Widget.EduLens.Button.Text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="32dp"
+                            android:minHeight="32dp"
+                            android:paddingHorizontal="@dimen/space_8"
+                            android:paddingVertical="0dp"
+                            android:text="@string/btn_create_schedule_exception"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvClassExceptions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false"
+                        tools:listitem="@layout/item_schedule_exception" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyClassExceptions"
+                        style="@style/TextAppearance.EduLens.Caption"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_4"
+                        android:text="@string/empty_class_exceptions"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

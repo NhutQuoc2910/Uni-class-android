@@ -16,15 +16,20 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
+import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerClassDetailBinding;
 import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.common.adapter.AssignmentAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.MaterialAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter;
+import com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter;
+import com.ppquang06.uniclassapp.ui.common.adapter.SemesterScheduleAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +42,9 @@ public class LecturerClassDetailFragment extends Fragment {
     private NotificationAdapter announcementAdapter;
     private MaterialAdapter materialAdapter;
     private AssignmentAdapter assignmentAdapter;
+    private SemesterScheduleAdapter classScheduleAdapter;
+    private ScheduleExceptionAdapter classExceptionAdapter;
+    private final List<ClassScheduleItem> currentSchedules = new ArrayList<>();
 
     private String classId = "";
     private String classCode = "";
@@ -158,6 +166,50 @@ public class LecturerClassDetailFragment extends Fragment {
         });
         binding.rvAssignments.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvAssignments.setAdapter(assignmentAdapter);
+
+        // Class Schedules
+        classScheduleAdapter = new SemesterScheduleAdapter(item -> {
+            CreateScheduleBottomSheetDialogFragment dialog = CreateScheduleBottomSheetDialogFragment.newInstanceForEdit(classId, item);
+            dialog.setOnScheduleSavedListener(() -> viewModel.loadClassSchedules(classId));
+            dialog.show(getChildFragmentManager(), "EditScheduleBottomSheet");
+        });
+        binding.rvClassSchedules.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvClassSchedules.setAdapter(classScheduleAdapter);
+
+        // Schedule Exceptions
+        classExceptionAdapter = new ScheduleExceptionAdapter(
+                null,
+                true,
+                new ScheduleExceptionAdapter.OnExceptionActionListener() {
+                    @Override
+                    public void onPublishClick(ScheduleExceptionItem item) {
+                        if (item != null && item.getId() != null) {
+                            viewModel.publishScheduleException(classId, item.getId());
+                        }
+                    }
+
+                    @Override
+                    public void onRevokeClick(ScheduleExceptionItem item) {
+                        if (item != null && item.getId() != null) {
+                            showRevokeConfirmDialog(item);
+                        }
+                    }
+                }
+        );
+        binding.rvClassExceptions.setLayoutManager(new LinearLayoutManager(requireContext()));
+        binding.rvClassExceptions.setAdapter(classExceptionAdapter);
+    }
+
+    private void showRevokeConfirmDialog(ScheduleExceptionItem item) {
+        if (getContext() == null) return;
+        new MaterialAlertDialogBuilder(requireContext())
+                .setTitle(R.string.dialog_revoke_exception_title)
+                .setMessage(R.string.dialog_revoke_exception_msg)
+                .setNegativeButton(R.string.btn_cancel, null)
+                .setPositiveButton(R.string.btn_revoke_exception, (dialog, which) -> {
+                    viewModel.revokeScheduleException(classId, item.getId());
+                })
+                .show();
     }
 
     private void setupActionButtons() {
@@ -233,6 +285,19 @@ public class LecturerClassDetailFragment extends Fragment {
                 }
             }
         });
+
+        binding.btnAddSchedule.setOnClickListener(v -> {
+            CreateScheduleBottomSheetDialogFragment dialog = CreateScheduleBottomSheetDialogFragment.newInstance(classId);
+            dialog.setOnScheduleSavedListener(() -> viewModel.loadClassSchedules(classId));
+            dialog.show(getChildFragmentManager(), "CreateScheduleBottomSheet");
+        });
+
+        binding.btnCreateScheduleException.setOnClickListener(v -> {
+            CreateScheduleExceptionBottomSheetDialogFragment dialog =
+                    CreateScheduleExceptionBottomSheetDialogFragment.newInstance(classId, currentSchedules);
+            dialog.setOnExceptionSavedListener(() -> viewModel.loadClassExceptions(classId));
+            dialog.show(getChildFragmentManager(), "CreateScheduleExceptionBottomSheet");
+        });
     }
 
     private void setupSwipeRefresh() {
@@ -272,11 +337,94 @@ public class LecturerClassDetailFragment extends Fragment {
                     break;
             }
         });
+
+        viewModel.getClassSchedulesState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    List<ClassScheduleItem> schedules = state.getData();
+                    currentSchedules.clear();
+                    if (schedules != null && !schedules.isEmpty()) {
+                        currentSchedules.addAll(schedules);
+                        classScheduleAdapter.submitList(schedules);
+                        binding.rvClassSchedules.setVisibility(View.VISIBLE);
+                        binding.tvEmptyClassSchedules.setVisibility(View.GONE);
+                    } else {
+                        classScheduleAdapter.submitList(new ArrayList<>());
+                        binding.rvClassSchedules.setVisibility(View.GONE);
+                        binding.tvEmptyClassSchedules.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case ERROR:
+                    if (currentSchedules.isEmpty()) {
+                        binding.rvClassSchedules.setVisibility(View.GONE);
+                        binding.tvEmptyClassSchedules.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getClassExceptionsState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    List<ScheduleExceptionItem> exceptions = state.getData();
+                    if (exceptions != null && !exceptions.isEmpty()) {
+                        classExceptionAdapter.submitList(exceptions);
+                        binding.rvClassExceptions.setVisibility(View.VISIBLE);
+                        binding.tvEmptyClassExceptions.setVisibility(View.GONE);
+                    } else {
+                        classExceptionAdapter.submitList(new ArrayList<>());
+                        binding.rvClassExceptions.setVisibility(View.GONE);
+                        binding.tvEmptyClassExceptions.setVisibility(View.VISIBLE);
+                    }
+                    break;
+                case ERROR:
+                    binding.rvClassExceptions.setVisibility(View.GONE);
+                    binding.tvEmptyClassExceptions.setVisibility(View.VISIBLE);
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getExceptionActionState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    break;
+                case SUCCESS:
+                    viewModel.resetExceptionActionState();
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), R.string.toast_publish_exception_success, Toast.LENGTH_SHORT).show();
+                    }
+                    viewModel.loadClassExceptions(classId);
+                    break;
+                case ERROR:
+                    viewModel.resetExceptionActionState();
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Thao tác ngoại lệ lịch thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void loadClassDetail() {
         if (getContext() == null || binding == null) return;
         viewModel.loadClassDetail(classId, classCode, className, semester);
+        viewModel.loadClassSchedules(classId);
+        viewModel.loadClassExceptions(classId);
     }
 
     private void bindDetailData(ClassDetailResponse detail) {

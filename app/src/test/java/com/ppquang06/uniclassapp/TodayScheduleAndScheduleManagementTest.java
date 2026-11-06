@@ -3,6 +3,7 @@ package com.ppquang06.uniclassapp;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import androidx.annotation.NonNull;
@@ -559,5 +560,116 @@ public class TodayScheduleAndScheduleManagementTest {
         assertEquals("20/10/2026", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate("2026-10-20"));
         assertEquals("20/10/2026", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate("20/10/2026"));
         assertEquals("", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate(null));
+    }
+
+    @Test
+    public void testScheduleExceptionAdapterManagementModeAndActionListener() {
+        final boolean[] published = {false};
+        final boolean[] revoked = {false};
+
+        com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.OnExceptionActionListener actionListener =
+                new com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.OnExceptionActionListener() {
+                    @Override
+                    public void onPublishClick(ScheduleExceptionItem item) {
+                        published[0] = true;
+                    }
+
+                    @Override
+                    public void onRevokeClick(ScheduleExceptionItem item) {
+                        revoked[0] = true;
+                    }
+                };
+
+        com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter adapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter(true, actionListener);
+
+        assertTrue(adapter.isManagementMode());
+        assertEquals(actionListener, adapter.getActionListener());
+
+        ScheduleExceptionItem draftItem = new ScheduleExceptionItem();
+        draftItem.setId("e1");
+        draftItem.setStatus("DRAFT");
+        draftItem.setExceptionType("CANCELLED");
+
+        adapter.getActionListener().onPublishClick(draftItem);
+        assertTrue(published[0]);
+
+        ScheduleExceptionItem pubItem = new ScheduleExceptionItem();
+        pubItem.setId("e2");
+        pubItem.setStatus("PUBLISHED");
+        adapter.getActionListener().onRevokeClick(pubItem);
+        assertTrue(revoked[0]);
+
+        adapter.setManagementMode(false);
+        assertFalse(adapter.isManagementMode());
+    }
+
+    @Test
+    public void testCreateClassScheduleRequest() {
+        CreateClassScheduleRequest request = new CreateClassScheduleRequest(
+                2, "07:30", "11:30", "B3.10", "2026-09-01", "2027-01-15"
+        );
+        assertEquals(Integer.valueOf(2), request.getDayOfWeek());
+        assertEquals("07:30", request.getStartTime());
+        assertEquals("11:30", request.getEndTime());
+        assertEquals("B3.10", request.getRoom());
+        assertEquals("2026-09-01", request.getStartDate());
+        assertEquals("2027-01-15", request.getEndDate());
+
+        request.setDayOfWeek(4);
+        request.setRoom("C1.05");
+        assertEquals(Integer.valueOf(4), request.getDayOfWeek());
+        assertEquals("C1.05", request.getRoom());
+    }
+
+    @Test
+    public void testCreateScheduleExceptionRequest() {
+        CreateScheduleExceptionRequest request = new CreateScheduleExceptionRequest(
+                "sched-1", "2026-10-20", null, "CANCELLED", null, null, null, "Công tác", null
+        );
+        assertEquals("sched-1", request.getClassScheduleId());
+        assertEquals("2026-10-20", request.getOriginalDate());
+        assertNull(request.getOccurrenceDate());
+        assertEquals("CANCELLED", request.getExceptionType());
+        assertEquals("Công tác", request.getReason());
+
+        request.setExceptionType("MAKEUP");
+        request.setOccurrenceDate("2026-10-25");
+        request.setStartTime("13:00");
+        request.setEndTime("17:00");
+        request.setRoom("A2.01");
+        assertEquals("MAKEUP", request.getExceptionType());
+        assertEquals("2026-10-25", request.getOccurrenceDate());
+        assertEquals("13:00", request.getStartTime());
+        assertEquals("17:00", request.getEndTime());
+        assertEquals("A2.01", request.getRoom());
+    }
+
+    @Test
+    public void testSerializationOfScheduleModels() throws Exception {
+        ClassScheduleItem originalSched = new ClassScheduleItem("s1", "c1", "CS101", "Name", 1, "07:30", "11:30", "A1", "2026-09-01", "2027-01-01");
+        java.io.ByteArrayOutputStream baosSched = new java.io.ByteArrayOutputStream();
+        java.io.ObjectOutputStream oosSched = new java.io.ObjectOutputStream(baosSched);
+        oosSched.writeObject(originalSched);
+        oosSched.close();
+
+        java.io.ObjectInputStream oisSched = new java.io.ObjectInputStream(new java.io.ByteArrayInputStream(baosSched.toByteArray()));
+        ClassScheduleItem desSched = (ClassScheduleItem) oisSched.readObject();
+        assertEquals("s1", desSched.getId());
+        assertEquals(Integer.valueOf(1), desSched.getDayOfWeek());
+        assertEquals("07:30", desSched.getStartTime());
+
+        ScheduleExceptionItem originalEx = new ScheduleExceptionItem("e1", "c1", "CS101", "Name", "s1", "2026-10-20", null, "CANCELLED", "DRAFT", null, null, null, "Bận việc", null);
+        java.io.ByteArrayOutputStream baosEx = new java.io.ByteArrayOutputStream();
+        java.io.ObjectOutputStream oosEx = new java.io.ObjectOutputStream(baosEx);
+        oosEx.writeObject(originalEx);
+        oosEx.close();
+
+        java.io.ObjectInputStream oisEx = new java.io.ObjectInputStream(new java.io.ByteArrayInputStream(baosEx.toByteArray()));
+        ScheduleExceptionItem desEx = (ScheduleExceptionItem) oisEx.readObject();
+        assertEquals("e1", desEx.getId());
+        assertEquals("CANCELLED", desEx.getExceptionType());
+        assertEquals("DRAFT", desEx.getStatus());
+        assertEquals("Bận việc", desEx.getReason());
     }
 }

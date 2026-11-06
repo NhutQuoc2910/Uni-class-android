@@ -24,15 +24,48 @@ public class ScheduleExceptionAdapter extends RecyclerView.Adapter<ScheduleExcep
         void onExceptionClick(ScheduleExceptionItem item);
     }
 
+    public interface OnExceptionActionListener {
+        void onPublishClick(ScheduleExceptionItem item);
+        void onRevokeClick(ScheduleExceptionItem item);
+    }
+
     private final List<ScheduleExceptionItem> items = new ArrayList<>();
     private final OnExceptionClickListener listener;
+    private boolean isManagementMode = false;
+    private OnExceptionActionListener actionListener;
 
     public ScheduleExceptionAdapter() {
-        this(null);
+        this(null, false, null);
     }
 
     public ScheduleExceptionAdapter(OnExceptionClickListener listener) {
+        this(listener, false, null);
+    }
+
+    public ScheduleExceptionAdapter(boolean isManagementMode, OnExceptionActionListener actionListener) {
+        this(null, isManagementMode, actionListener);
+    }
+
+    public ScheduleExceptionAdapter(OnExceptionClickListener listener, boolean isManagementMode, OnExceptionActionListener actionListener) {
         this.listener = listener;
+        this.isManagementMode = isManagementMode;
+        this.actionListener = actionListener;
+    }
+
+    public boolean isManagementMode() {
+        return isManagementMode;
+    }
+
+    public void setManagementMode(boolean managementMode) {
+        this.isManagementMode = managementMode;
+    }
+
+    public OnExceptionActionListener getActionListener() {
+        return actionListener;
+    }
+
+    public void setActionListener(OnExceptionActionListener actionListener) {
+        this.actionListener = actionListener;
     }
 
     public void submitList(List<ScheduleExceptionItem> newItems) {
@@ -60,7 +93,7 @@ public class ScheduleExceptionAdapter extends RecyclerView.Adapter<ScheduleExcep
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.bind(items.get(position), listener);
+        holder.bind(items.get(position), listener, isManagementMode, actionListener);
     }
 
     @Override
@@ -102,7 +135,8 @@ public class ScheduleExceptionAdapter extends RecyclerView.Adapter<ScheduleExcep
             this.binding = binding;
         }
 
-        void bind(ScheduleExceptionItem item, OnExceptionClickListener listener) {
+        void bind(ScheduleExceptionItem item, OnExceptionClickListener listener,
+                  boolean isManagementMode, OnExceptionActionListener actionListener) {
             binding.tvExceptionTypeBadge.setText(item.getExceptionTypeLabel());
 
             String type = item.getExceptionType() != null ? item.getExceptionType().trim().toUpperCase() : "";
@@ -174,6 +208,37 @@ public class ScheduleExceptionAdapter extends RecyclerView.Adapter<ScheduleExcep
                 binding.tvExceptionReason.setText("Lý do: " + item.getReason());
             } else {
                 binding.tvExceptionReason.setVisibility(View.GONE);
+            }
+
+            if (!isManagementMode) {
+                binding.llLecturerActions.setVisibility(View.GONE);
+            } else {
+                String status = item.getStatus() != null ? item.getStatus().trim() : "";
+                if ("DRAFT".equalsIgnoreCase(status)) {
+                    binding.llLecturerActions.setVisibility(View.VISIBLE);
+                    binding.btnPublishException.setVisibility(View.VISIBLE);
+                    binding.btnRevokeException.setVisibility(View.GONE);
+                } else if ("PUBLISHED".equalsIgnoreCase(status)) {
+                    binding.llLecturerActions.setVisibility(View.VISIBLE);
+                    binding.btnPublishException.setVisibility(View.GONE);
+                    binding.btnRevokeException.setVisibility(View.VISIBLE);
+                } else if ("REVOKED".equalsIgnoreCase(status)) {
+                    binding.llLecturerActions.setVisibility(View.GONE);
+                } else {
+                    binding.llLecturerActions.setVisibility(View.GONE);
+                }
+
+                binding.btnPublishException.setOnClickListener(v -> {
+                    if (actionListener != null) {
+                        actionListener.onPublishClick(item);
+                    }
+                });
+
+                binding.btnRevokeException.setOnClickListener(v -> {
+                    if (actionListener != null) {
+                        actionListener.onRevokeClick(item);
+                    }
+                });
             }
 
             binding.getRoot().setOnClickListener(v -> {

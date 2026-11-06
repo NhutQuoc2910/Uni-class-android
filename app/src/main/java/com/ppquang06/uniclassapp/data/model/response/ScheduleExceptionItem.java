@@ -2,7 +2,11 @@ package com.ppquang06.uniclassapp.data.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ScheduleExceptionItem {
+import java.io.Serializable;
+
+public class ScheduleExceptionItem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @SerializedName("id")
     private String id;

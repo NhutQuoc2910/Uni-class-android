@@ -2,7 +2,11 @@ package com.ppquang06.uniclassapp.data.model.response;
 
 import com.google.gson.annotations.SerializedName;
 
-public class ClassScheduleItem {
+import java.io.Serializable;
+
+public class ClassScheduleItem implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     @SerializedName("id")
     private String id;
