@@ -172,7 +172,7 @@ public class CreateScheduleBottomSheetDialogFragment extends BottomSheetDialogFr
         TimePickerDialog dialog = new TimePickerDialog(
                 requireContext(),
                 (view, hourOfDay, minuteOfHour) -> {
-                    String formatted = String.format(Locale.getDefault(), "%02d:%02d", hourOfDay, minuteOfHour);
+                    String formatted = String.format(Locale.US, "%02d:%02d", hourOfDay, minuteOfHour);
                     if (isStart) {
                         binding.edtStartTime.setText(formatted);
                         binding.tilStartTime.setError(null);
@@ -210,7 +210,7 @@ public class CreateScheduleBottomSheetDialogFragment extends BottomSheetDialogFr
         DatePickerDialog dialog = new DatePickerDialog(
                 requireContext(),
                 (view, year, month, dayOfMonth) -> {
-                    String formatted = String.format(Locale.getDefault(), "%04d-%02d-%02d", year, month + 1, dayOfMonth);
+                    String formatted = String.format(Locale.US, "%04d-%02d-%02d", year, month + 1, dayOfMonth);
                     if (isStart) {
                         binding.edtStartDate.setText(formatted);
                         binding.tilStartDate.setError(null);

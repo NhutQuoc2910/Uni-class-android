@@ -402,7 +402,10 @@ public class LecturerClassDetailFragment extends Fragment {
                 case SUCCESS:
                     viewModel.resetExceptionActionState();
                     if (getContext() != null) {
-                        Toast.makeText(requireContext(), R.string.toast_publish_exception_success, Toast.LENGTH_SHORT).show();
+                        int toastRes = (state.getData() != null && "REVOKED".equalsIgnoreCase(state.getData().getStatus()))
+                                ? R.string.toast_revoke_exception_success
+                                : R.string.toast_publish_exception_success;
+                        Toast.makeText(requireContext(), toastRes, Toast.LENGTH_SHORT).show();
                     }
                     viewModel.loadClassExceptions(classId);
                     break;
