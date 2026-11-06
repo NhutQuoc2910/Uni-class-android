@@ -1,5 +1,7 @@
 package com.ppquang06.uniclassapp.ui.student.classes;
 
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentClassTabListBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter;
+import com.ppquang06.uniclassapp.utils.QrCodeGenerator;
+import com.ppquang06.uniclassapp.utils.QrImageStorageHelper;
 
 import java.util.Collections;
 import java.util.List;
@@ -49,9 +53,32 @@ public class ClassAnnouncementsTabFragment extends Fragment {
                 Toast.makeText(requireContext(), item.getTitle(), Toast.LENGTH_SHORT).show();
             }
         });
+        adapter.setOnDownloadQrClickListener(this::handleDownloadQr);
         binding.rvTabItems.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvTabItems.setAdapter(adapter);
         binding.tvEmptyMessage.setText(R.string.empty_announcements);
+    }
+
+    private void handleDownloadQr(NotificationItemResponse item) {
+        if (item == null || item.getId() == null || getContext() == null) {
+            return;
+        }
+        String sessionId = item.getId().startsWith("att-") ? item.getId().substring(4) : item.getId();
+        String courseCode = (item.getCourseCode() != null && !item.getCourseCode().trim().isEmpty())
+                ? item.getCourseCode().trim()
+                : "CLASS";
+        String payload = "UNICLASS:" + courseCode + ":" + sessionId + ":" + System.currentTimeMillis();
+        Bitmap qrBitmap = QrCodeGenerator.generateQrBitmap(payload, 512);
+        Uri savedUri = QrImageStorageHelper.saveQrBitmapToGallery(
+                requireContext(),
+                qrBitmap,
+                "QR_" + (item.getCourseCode() != null ? item.getCourseCode() : "Attendance")
+        );
+        if (savedUri != null) {
+            Toast.makeText(requireContext(), "Đã lưu ảnh mã QR vào Thư viện ảnh!", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(requireContext(), "Không thể lưu ảnh QR", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void setupListeners() {

@@ -4,10 +4,17 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.util.Log;
 
+import androidx.annotation.VisibleForTesting;
+
 import com.google.zxing.BarcodeFormat;
+import com.google.zxing.BinaryBitmap;
 import com.google.zxing.EncodeHintType;
+import com.google.zxing.RGBLuminanceSource;
+import com.google.zxing.Result;
 import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
+import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.nio.charset.StandardCharsets;
@@ -16,12 +23,29 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Utility for generating real ISO/IEC 18004 QR code bitmaps using ZXing for attendance sessions.
+ * Utility for generating and decoding real ISO/IEC 18004 QR code bitmaps using ZXing for attendance sessions.
  */
 public final class QrCodeGenerator {
 
     private static final String TAG = "QrCodeGenerator";
     private static final int MATRIX_SIZE = 29;
+
+    public interface TestBitmapCreator {
+        Bitmap create(int width, int height, int[] pixels);
+    }
+
+    public interface TestPixelExtractor {
+        int[] extract(Bitmap bitmap);
+    }
+
+    private static TestBitmapCreator sTestBitmapCreator = null;
+    private static TestPixelExtractor sTestPixelExtractor = null;
+
+    @VisibleForTesting
+    public static void setTestBitmapBridge(TestBitmapCreator creator, TestPixelExtractor extractor) {
+        sTestBitmapCreator = creator;
+        sTestPixelExtractor = extractor;
+    }
 
     private QrCodeGenerator() {}
 
@@ -51,7 +75,6 @@ public final class QrCodeGenerator {
             int width = bitMatrix.getWidth();
             int height = bitMatrix.getHeight();
 
-            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             int[] pixels = new int[width * height];
             int darkColor = 0xFF0F172A; // Dark Slate #0F172A matching EduLens text_primary
             int lightColor = Color.WHITE;
@@ -62,13 +85,88 @@ public final class QrCodeGenerator {
                     pixels[offset + x] = bitMatrix.get(x, y) ? darkColor : lightColor;
                 }
             }
-            bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+
+            if (sTestBitmapCreator != null) {
+                return sTestBitmapCreator.create(width, height, pixels);
+            }
+
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            if (bitmap != null) {
+                bitmap.setPixels(pixels, 0, width, 0, 0, width, height);
+            }
             return bitmap;
         } catch (WriterException e) {
             Log.e(TAG, "Error encoding QR code with ZXing", e);
+            if (sTestBitmapCreator != null) {
+                return sTestBitmapCreator.create(dimensionPx, dimensionPx, new int[dimensionPx * dimensionPx]);
+            }
             Bitmap fallback = Bitmap.createBitmap(dimensionPx, dimensionPx, Bitmap.Config.ARGB_8888);
-            fallback.eraseColor(Color.WHITE);
+            if (fallback != null) {
+                fallback.eraseColor(Color.WHITE);
+            }
             return fallback;
+        }
+    }
+
+    /**
+     * Decodes a QR code payload from a given Bitmap using ZXing QRCodeReader.
+     *
+     * @param bitmap Bitmap containing a 2D QR code.
+     * @return Decoded payload string, or null if decoding fails or bitmap is null.
+     */
+    public static String decodeQrBitmap(Bitmap bitmap) {
+        if (bitmap == null) {
+            return null;
+        }
+        try {
+            int width = bitmap.getWidth();
+            int height = bitmap.getHeight();
+            int[] pixels;
+
+            if (sTestPixelExtractor != null) {
+                pixels = sTestPixelExtractor.extract(bitmap);
+                if (pixels == null) {
+                    return null;
+                }
+                if (width <= 0 || height <= 0) {
+                    width = (int) Math.sqrt(pixels.length);
+                    height = width;
+                }
+            } else {
+                if (width <= 0 || height <= 0) {
+                    return null;
+                }
+                pixels = new int[width * height];
+                bitmap.getPixels(pixels, 0, width, 0, 0, width, height);
+            }
+
+            return decodeQrPixels(pixels, width, height);
+        } catch (Exception e) {
+            Log.w(TAG, "Failed to decode QR bitmap: " + e.getMessage());
+            return null;
+        }
+    }
+
+    /**
+     * Decodes a QR code directly from pixel luminance data using ZXing.
+     *
+     * @param pixels Array of ARGB pixel colors.
+     * @param width Image width.
+     * @param height Image height.
+     * @return Decoded QR payload string, or null if decoding fails.
+     */
+    public static String decodeQrPixels(int[] pixels, int width, int height) {
+        if (pixels == null || width <= 0 || height <= 0) {
+            return null;
+        }
+        try {
+            RGBLuminanceSource source = new RGBLuminanceSource(width, height, pixels);
+            BinaryBitmap binaryBitmap = new BinaryBitmap(new HybridBinarizer(source));
+            QRCodeReader reader = new QRCodeReader();
+            Result result = reader.decode(binaryBitmap);
+            return result != null ? result.getText() : null;
+        } catch (Exception e) {
+            return null;
         }
     }
 

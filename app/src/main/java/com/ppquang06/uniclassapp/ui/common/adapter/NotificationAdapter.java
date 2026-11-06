@@ -25,9 +25,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         void onDeleteNotification(NotificationItemResponse item);
     }
 
+    public interface OnDownloadQrClickListener {
+        void onDownloadQrClick(NotificationItemResponse item);
+    }
+
     private final List<NotificationItemResponse> items = new ArrayList<>();
     private OnNotificationClickListener listener;
     private OnDeleteNotificationListener deleteListener;
+    private OnDownloadQrClickListener downloadQrClickListener;
 
     public NotificationAdapter() {}
 
@@ -40,12 +45,46 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.deleteListener = deleteListener;
     }
 
+    public NotificationAdapter(
+            OnNotificationClickListener listener,
+            OnDeleteNotificationListener deleteListener,
+            OnDownloadQrClickListener downloadQrClickListener
+    ) {
+        this.listener = listener;
+        this.deleteListener = deleteListener;
+        this.downloadQrClickListener = downloadQrClickListener;
+    }
+
     public void setOnNotificationClickListener(OnNotificationClickListener listener) {
         this.listener = listener;
     }
 
     public void setOnDeleteNotificationListener(OnDeleteNotificationListener listener) {
         this.deleteListener = listener;
+    }
+
+    public void setOnDownloadQrClickListener(OnDownloadQrClickListener listener) {
+        this.downloadQrClickListener = listener;
+    }
+
+    public OnNotificationClickListener getOnNotificationClickListener() {
+        return listener;
+    }
+
+    public OnDeleteNotificationListener getOnDeleteNotificationListener() {
+        return deleteListener;
+    }
+
+    public OnDownloadQrClickListener getOnDownloadQrClickListener() {
+        return downloadQrClickListener;
+    }
+
+    public static boolean shouldShowDownloadQr(NotificationItemResponse item, OnDownloadQrClickListener listener) {
+        return item != null && item.getId() != null && item.getId().startsWith("att-") && listener != null;
+    }
+
+    public static boolean shouldShowDelete(OnDeleteNotificationListener deleteListener) {
+        return deleteListener != null;
     }
 
     public void submitList(List<NotificationItemResponse> newItems) {
@@ -105,7 +144,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         NotificationItemResponse item = items.get(position);
-        holder.bind(item, listener, deleteListener);
+        holder.bind(item, listener, deleteListener, downloadQrClickListener);
     }
 
     @Override
@@ -113,19 +152,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return items.size();
     }
 
-    static class NotificationViewHolder extends RecyclerView.ViewHolder {
-        private final ItemNotificationRowBinding binding;
+    public static class NotificationViewHolder extends RecyclerView.ViewHolder {
+        final ItemNotificationRowBinding binding;
 
-        NotificationViewHolder(ItemNotificationRowBinding binding) {
+        public NotificationViewHolder(ItemNotificationRowBinding binding) {
             super(binding.getRoot());
             this.binding = binding;
         }
 
-        void bind(NotificationItemResponse item, OnNotificationClickListener listener, OnDeleteNotificationListener deleteListener) {
-            String title = item.getTitle() != null ? item.getTitle() : "";
-            String body = item.getBody() != null ? item.getBody() : "";
-            String courseCode = item.getCourseCode() != null ? item.getCourseCode().trim() : "";
-            String formattedDate = UiBadgeHelper.formatIsoDateShort(item.getCreatedAt());
+        public void bind(
+                NotificationItemResponse item,
+                OnNotificationClickListener listener,
+                OnDeleteNotificationListener deleteListener,
+                OnDownloadQrClickListener downloadQrClickListener
+        ) {
+            String title = item != null && item.getTitle() != null ? item.getTitle() : "";
+            String body = item != null && item.getBody() != null ? item.getBody() : "";
+            String courseCode = item != null && item.getCourseCode() != null ? item.getCourseCode().trim() : "";
+            String formattedDate = item != null ? UiBadgeHelper.formatIsoDateShort(item.getCreatedAt()) : "";
 
             binding.tvNotifTitle.setText(title);
             binding.tvNotifContent.setText(body);
@@ -138,18 +182,34 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 binding.tvNotifTime.setText(formattedDate);
             }
 
-            if ("URGENT".equalsIgnoreCase(item.getCategory())) {
+            if (item != null && "URGENT".equalsIgnoreCase(item.getCategory())) {
                 binding.tvUrgentTag.setVisibility(View.VISIBLE);
             } else {
                 binding.tvUrgentTag.setVisibility(View.GONE);
             }
 
-            if (deleteListener != null) {
+            if (shouldShowDelete(deleteListener)) {
                 binding.btnDeleteNotif.setVisibility(View.VISIBLE);
-                binding.btnDeleteNotif.setOnClickListener(v -> deleteListener.onDeleteNotification(item));
+                binding.btnDeleteNotif.setOnClickListener(v -> {
+                    if (deleteListener != null) {
+                        deleteListener.onDeleteNotification(item);
+                    }
+                });
             } else {
                 binding.btnDeleteNotif.setVisibility(View.GONE);
                 binding.btnDeleteNotif.setOnClickListener(null);
+            }
+
+            if (shouldShowDownloadQr(item, downloadQrClickListener)) {
+                binding.btnDownloadQr.setVisibility(View.VISIBLE);
+                binding.btnDownloadQr.setOnClickListener(v -> {
+                    if (downloadQrClickListener != null) {
+                        downloadQrClickListener.onDownloadQrClick(item);
+                    }
+                });
+            } else {
+                binding.btnDownloadQr.setVisibility(View.GONE);
+                binding.btnDownloadQr.setOnClickListener(null);
             }
 
             binding.getRoot().setOnClickListener(v -> {

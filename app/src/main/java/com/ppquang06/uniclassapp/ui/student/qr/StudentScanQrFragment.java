@@ -5,6 +5,11 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.ImageDecoder;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -35,7 +40,9 @@ import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentScanQrBinding;
+import com.ppquang06.uniclassapp.utils.QrCodeGenerator;
 
+import java.io.InputStream;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -75,6 +82,13 @@ public class StudentScanQrFragment extends Fragment {
                 }
             });
 
+    private final ActivityResultLauncher<String> pickQrImageLauncher =
+            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
+                if (uri != null) {
+                    processPickedImageUri(uri);
+                }
+            });
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -90,6 +104,7 @@ public class StudentScanQrFragment extends Fragment {
         setupScanLineAnimation();
         setupQuickScan();
         setupSimulationMenu();
+        setupUploadQrButton();
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera();
@@ -107,6 +122,85 @@ public class StudentScanQrFragment extends Fragment {
                 startCamera();
             } else {
                 bindCameraUseCases();
+            }
+        }
+    }
+
+    private void setupUploadQrButton() {
+        if (binding != null && binding.btnUploadQrImage != null) {
+            binding.btnUploadQrImage.setOnClickListener(v -> pickQrImageLauncher.launch("image/*"));
+        }
+    }
+
+    private void processPickedImageUri(Uri uri) {
+        if (uri == null || getContext() == null) {
+            return;
+        }
+
+        try {
+            Bitmap bitmap = null;
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                ImageDecoder.Source source = ImageDecoder.createSource(requireContext().getContentResolver(), uri);
+                bitmap = ImageDecoder.decodeBitmap(source, (decoder, info, src) -> decoder.setMutableRequired(true));
+            } else {
+                try (InputStream is = requireContext().getContentResolver().openInputStream(uri)) {
+                    if (is != null) {
+                        bitmap = BitmapFactory.decodeStream(is);
+                    }
+                }
+            }
+
+            String decodedPayload = null;
+            if (bitmap != null) {
+                decodedPayload = QrCodeGenerator.decodeQrBitmap(bitmap);
+            }
+
+            if (decodedPayload != null && decodedPayload.startsWith("UNICLASS:")) {
+                if (isScanned.compareAndSet(false, true)) {
+                    onBarcodeDetected(decodedPayload);
+                }
+                return;
+            }
+
+            // Fallback via ML Kit InputImage
+            try {
+                InputImage image = InputImage.fromFilePath(requireContext(), uri);
+                if (barcodeScanner == null) {
+                    BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
+                            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
+                            .build();
+                    barcodeScanner = BarcodeScanning.getClient(options);
+                }
+                barcodeScanner.process(image)
+                        .addOnSuccessListener(barcodes -> {
+                            boolean found = false;
+                            for (Barcode barcode : barcodes) {
+                                String raw = barcode.getRawValue();
+                                if (raw != null && raw.startsWith("UNICLASS:") && isScanned.compareAndSet(false, true)) {
+                                    found = true;
+                                    onBarcodeDetected(raw);
+                                    break;
+                                }
+                            }
+                            if (!found && getContext() != null) {
+                                Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
+                            }
+                        })
+                        .addOnFailureListener(e -> {
+                            if (getContext() != null) {
+                                Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+            } catch (Exception mlEx) {
+                Log.e(TAG, "ML Kit fallback error", mlEx);
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
+                }
+            }
+        } catch (Exception e) {
+            Log.e(TAG, "Error decoding picked image URI", e);
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -147,26 +241,26 @@ public class StudentScanQrFragment extends Fragment {
         imageAnalysis.setAnalyzer(cameraExecutor, imageProxy -> {
             try {
                 @androidx.annotation.OptIn(markerClass = androidx.camera.core.ExperimentalGetImage.class)
-            android.media.Image mediaImage = imageProxy.getImage();
-            if (mediaImage != null && !isScanned.get()) {
-                InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
-                barcodeScanner.process(image)
-                        .addOnSuccessListener(barcodes -> {
-                            for (Barcode barcode : barcodes) {
-                                String rawValue = barcode.getRawValue();
-                                if (rawValue != null && rawValue.startsWith("UNICLASS:") && isScanned.compareAndSet(false, true)) {
-                                    if (getActivity() != null) {
-                                        getActivity().runOnUiThread(() -> onBarcodeDetected(rawValue));
+                android.media.Image mediaImage = imageProxy.getImage();
+                if (mediaImage != null && !isScanned.get()) {
+                    InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+                    barcodeScanner.process(image)
+                            .addOnSuccessListener(barcodes -> {
+                                for (Barcode barcode : barcodes) {
+                                    String rawValue = barcode.getRawValue();
+                                    if (rawValue != null && rawValue.startsWith("UNICLASS:") && isScanned.compareAndSet(false, true)) {
+                                        if (getActivity() != null) {
+                                            getActivity().runOnUiThread(() -> onBarcodeDetected(rawValue));
+                                        }
+                                        break;
                                     }
-                                    break;
                                 }
-                            }
-                        })
-                        .addOnFailureListener(e -> Log.e(TAG, "Error processing barcode image", e))
-                        .addOnCompleteListener(task -> imageProxy.close());
-            } else {
-                imageProxy.close();
-            }
+                            })
+                            .addOnFailureListener(e -> Log.e(TAG, "Error processing barcode image", e))
+                            .addOnCompleteListener(task -> imageProxy.close());
+                } else {
+                    imageProxy.close();
+                }
             } catch (Exception e) {
                 Log.e(TAG, "Error analyzing image", e);
                 imageProxy.close();
@@ -304,7 +398,7 @@ public class StudentScanQrFragment extends Fragment {
     }
 
     public static Bundle createVerifyingBundle(String sessionId, String wifiBssid, String latitude,
-                                               String longitude, String deviceId, String simulationMode) {
+                                                String longitude, String deviceId, String simulationMode) {
         Bundle bundle = new Bundle();
         bundle.putString(ARG_SESSION_ID, sessionId);
         bundle.putString(ARG_WIFI_BSSID, wifiBssid);

@@ -91,4 +91,22 @@
         android:ellipsize="end"
         android:maxLines="2"
         android:text="@string/edu_lens_subtitle" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/btnDownloadQr"
+        style="@style/Widget.EduLens.Button.Filled"
+        android:layout_width="wrap_content"
+        android:layout_height="36dp"
+        android:layout_marginTop="@dimen/space_8"
+        android:minHeight="36dp"
+        android:paddingHorizontal="@dimen/space_12"
+        android:paddingVertical="0dp"
+        android:text="Tải mã QR về máy"
+        android:textSize="12sp"
+        android:visibility="gone"
+        app:icon="@drawable/ic_download"
+        app:iconGravity="textStart"
+        app:iconPadding="@dimen/space_4"
+        app:iconSize="16dp"
+        app:iconTint="@color/white" />
 </LinearLayout>
