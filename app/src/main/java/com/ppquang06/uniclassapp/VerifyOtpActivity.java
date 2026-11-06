@@ -18,8 +18,12 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ppquang06.uniclassapp.data.model.request.RegisterRequest;
 import com.ppquang06.uniclassapp.data.model.request.VerifyOtpRequest;
+import com.ppquang06.uniclassapp.data.model.response.AuthResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityRegisterOtpBinding;
 import com.ppquang06.uniclassapp.ui.auth.AuthViewModel;
+import com.ppquang06.uniclassapp.utils.FcmTokenHelper;
+import com.ppquang06.uniclassapp.utils.RoleRouter;
+import com.ppquang06.uniclassapp.utils.SessionManager;
 
 public class VerifyOtpActivity extends AppCompatActivity {
 
@@ -215,28 +219,19 @@ public class VerifyOtpActivity extends AppCompatActivity {
             } else if (state.isSuccess()) {
 
                 isVerifying = false;
-                setVerifyLoading(false);
-
                 authViewModel.resetVerifyOtpState();
 
-                Toast.makeText(
-                        this,
-                        "Xác thực thành công! Tài khoản đã được tạo.",
-                        Toast.LENGTH_LONG
-                ).show();
-
-                Intent intent = new Intent(
-                        VerifyOtpActivity.this,
-                        RegisterSuccessActivity.class
-                );
-
-                intent.setFlags(
-                        Intent.FLAG_ACTIVITY_NEW_TASK
-                                | Intent.FLAG_ACTIVITY_CLEAR_TASK
-                );
-
-                startActivity(intent);
-                finish();
+                if (password != null && !password.trim().isEmpty()) {
+                    setLoadingStatus("Đang đăng nhập vào hệ thống...");
+                    authViewModel.login(email, password);
+                } else {
+                    Toast.makeText(
+                            this,
+                            "Xác thực thành công! Tài khoản đã được tạo.",
+                            Toast.LENGTH_LONG
+                    ).show();
+                    navigateToLoginFallback();
+                }
 
             } else if (state.isError()) {
 
@@ -304,6 +299,39 @@ public class VerifyOtpActivity extends AppCompatActivity {
 
                 binding.tvResendTimer.setEnabled(true);
                 binding.tvResendTimer.setText("Gửi lại mã");
+            }
+        });
+
+        // Theo dõi kết quả tự động đăng nhập sau khi xác thực OTP thành công
+        authViewModel.getLoginState().observe(this, state -> {
+            if (state == null || state.isIdle()) {
+                return;
+            }
+            if (state.isLoading()) {
+                setLoadingStatus("Đang đăng nhập vào hệ thống...");
+            } else if (state.isSuccess()) {
+                setVerifyLoading(false);
+                AuthResponse auth = state.getData();
+                authViewModel.resetLoginState();
+                if (auth != null
+                        && auth.getToken() != null
+                        && !auth.getToken().trim().isEmpty()
+                        && auth.getUser() != null) {
+                    SessionManager.getInstance(VerifyOtpActivity.this).saveAuth(auth.getToken(), auth.getUser());
+                    FcmTokenHelper.syncFcmToken(VerifyOtpActivity.this);
+
+                    String welcomeName = auth.getUser().getFullName() != null ? auth.getUser().getFullName() : "";
+                    Toast.makeText(VerifyOtpActivity.this, "Đăng ký thành công! Chào mừng " + welcomeName, Toast.LENGTH_SHORT).show();
+
+                    RoleRouter.navigateToHomeByRole(VerifyOtpActivity.this);
+                } else {
+                    navigateToLoginFallback();
+                }
+            } else if (state.isError()) {
+                setVerifyLoading(false);
+                authViewModel.resetLoginState();
+                Toast.makeText(VerifyOtpActivity.this, "Đăng ký thành công! Vui lòng đăng nhập để tiếp tục.", Toast.LENGTH_LONG).show();
+                navigateToLoginFallback();
             }
         });
     }
@@ -437,6 +465,21 @@ public class VerifyOtpActivity extends AppCompatActivity {
         for (EditText editText : otpInputs) {
             editText.setEnabled(!loading);
         }
+    }
+
+    private void setLoadingStatus(String message) {
+        binding.btnConfirmRegisterOtp.setEnabled(false);
+        binding.btnConfirmRegisterOtp.setText(message);
+        for (EditText editText : otpInputs) {
+            editText.setEnabled(false);
+        }
+    }
+
+    private void navigateToLoginFallback() {
+        Intent intent = new Intent(VerifyOtpActivity.this, LoginActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        startActivity(intent);
+        finish();
     }
 
     @Override
