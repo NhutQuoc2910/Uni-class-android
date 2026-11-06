@@ -1,10 +1,16 @@
 package com.ppquang06.uniclassapp.ui.student;
 
+import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -13,12 +19,18 @@ import com.ppquang06.uniclassapp.LoginActivity;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityStudentMainBinding;
+import com.ppquang06.uniclassapp.utils.FcmTokenHelper;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
 public class StudentMainActivity extends AppCompatActivity {
 
     private ActivityStudentMainBinding binding;
+
+    private final ActivityResultLauncher<String> notificationPermissionLauncher =
+            registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
+                FcmTokenHelper.syncFcmToken(this);
+            });
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +54,20 @@ public class StudentMainActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         setupNavigation();
+        requestNotificationPermissionAndSyncToken();
+    }
+
+    private void requestNotificationPermissionAndSyncToken() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS);
+            } else {
+                FcmTokenHelper.syncFcmToken(this);
+            }
+        } else {
+            FcmTokenHelper.syncFcmToken(this);
+        }
     }
 
     public void switchToTab(int menuItemId) {

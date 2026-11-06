@@ -102,7 +102,7 @@ public class LecturerClassInviteFragment extends Fragment {
         String codeToCopy = inviteCode;
         ClipboardManager clipboard = (ClipboardManager) requireContext().getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboard != null) {
-            ClipData clip = ClipData.newPlainText("EduLens Invite Code", codeToCopy);
+            ClipData clip = ClipData.newPlainText("UniClass Invite Code", codeToCopy);
             clipboard.setPrimaryClip(clip);
             Toast.makeText(requireContext(), R.string.copied_invite_code, Toast.LENGTH_SHORT).show();
         }

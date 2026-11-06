@@ -1,7 +1,7 @@
 <resources>
     <!-- App & General -->
     <string name="app_name">UniClassApp</string>
-    <string name="edu_lens_title">EduLens</string>
+    <string name="edu_lens_title">UniClass</string>
     <string name="edu_lens_subtitle">Quản lý lớp học, điểm danh QR, tài liệu và bài tập</string>
     <string name="app_version">Phiên bản 1.0.0</string>
     <string name="action_retry">Thử lại</string>
@@ -12,7 +12,7 @@
 
     <!-- Auth -->
     <string name="login_welcome">Chào mừng trở lại!</string>
-    <string name="login_subtitle">Đăng nhập để tiếp tục học tập cùng EduLens.</string>
+    <string name="login_subtitle">Đăng nhập để tiếp tục học tập cùng UniClass.</string>
     <string name="email_label">Email</string>
     <string name="email_hint">Nhập email của bạn</string>
     <string name="password_label">Password</string>
@@ -75,14 +75,14 @@
     <string name="change_password_button">Đổi mật khẩu</string>
     <string name="desc_shield_icon">Biểu tượng an toàn mật khẩu</string>
     <string name="password_changed_success_title">Đổi mật khẩu thành công!</string>
-    <string name="password_changed_success_desc">Mật khẩu của bạn đã được cập nhật.\nHãy đăng nhập bằng mật khẩu mới để tiếp tục học tập cùng EduLens.</string>
+    <string name="password_changed_success_desc">Mật khẩu của bạn đã được cập nhật.\nHãy đăng nhập bằng mật khẩu mới để tiếp tục học tập cùng UniClass.</string>
     <string name="account_safer_title">Tài khoản của bạn đã an toàn hơn</string>
     <string name="account_safer_subtitle">Bạn có thể sử dụng mật khẩu mới ngay bây giờ.</string>
     <string name="back_to_login_button">Quay lại đăng nhập</string>
     <string name="recovery_complete_note">Bạn đã hoàn tất quá trình khôi phục tài khoản.</string>
     <string name="desc_success_check">Biểu tượng thành công</string>
     <string name="register_success_title">Đăng kí tài khoản thành công!</string>
-    <string name="register_success_desc">Tài khoản của bạn đã được tạo thành công.\nHãy bắt đầu hành trình học tập, luyện tập và phát triển cùng EduLens nhé!</string>
+    <string name="register_success_desc">Tài khoản của bạn đã được tạo thành công.\nHãy bắt đầu hành trình học tập, luyện tập và phát triển cùng UniClass nhé!</string>
     <string name="register_complete_title">Đăng ký hoàn tất</string>
     <string name="register_complete_subtitle">Bạn đã sẵn sàng sử dụng tài khoản.</string>
     <string name="register_complete_note">Bạn đã hoàn tất quá trình đăng ký tài khoản.</string>
@@ -436,7 +436,7 @@
     <string name="copied_invite_code">Đã sao chép mã mời</string>
     <string name="create_class_success_title">Tạo lớp học thành công!</string>
     <string name="share_code_format">Mã tham gia lớp học %1$s: %2$s</string>
-    <string name="share_code_subject">Tham gia lớp học trên EduLens</string>
+    <string name="share_code_subject">Tham gia lớp học trên UniClass</string>
     <string name="class_statistics_title">Thống kê lớp học</string>
     <string name="btn_archive_confirm">Lưu trữ lớp</string>
     <string name="dialog_archive_class_msg">Bạn có chắc chắn muốn lưu trữ lớp học này không?</string>

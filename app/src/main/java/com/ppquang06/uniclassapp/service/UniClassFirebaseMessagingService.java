@@ -155,7 +155,8 @@ public class UniClassFirebaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle(title)
                 .setContentText(body)
                 .setStyle(new NotificationCompat.BigTextStyle().bigText(body))
-                .setPriority(CHANNEL_CLASSES.equals(channelId) ? NotificationCompat.PRIORITY_DEFAULT : NotificationCompat.PRIORITY_HIGH)
+                .setPriority(NotificationCompat.PRIORITY_HIGH)
+                .setDefaults(NotificationCompat.DEFAULT_ALL)
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
@@ -191,10 +192,10 @@ public class UniClassFirebaseMessagingService extends FirebaseMessagingService {
 
             NotificationChannel classesChannel = new NotificationChannel(
                     CHANNEL_CLASSES,
-                    "Lớp học & Bài tập",
-                    NotificationManager.IMPORTANCE_DEFAULT
+                    "Lớp học & Thông báo",
+                    NotificationManager.IMPORTANCE_HIGH
             );
-            classesChannel.setDescription("Thông báo về bài tập mới, tài liệu và cập nhật lớp học");
+            classesChannel.setDescription("Thông báo về bài tập mới, thông báo lớp học và tài liệu");
             manager.createNotificationChannel(classesChannel);
         }
     }

@@ -118,6 +118,7 @@ public class LoginActivity extends AppCompatActivity {
                         && !auth.getToken().trim().isEmpty()
                         && auth.getUser() != null) {
                     SessionManager.getInstance(LoginActivity.this).saveAuth(auth.getToken(), auth.getUser());
+                    com.ppquang06.uniclassapp.utils.FcmTokenHelper.syncFcmToken(LoginActivity.this);
 
                     String welcomeName = auth.getUser() != null ? auth.getUser().getFullName() : "";
                     Toast.makeText(LoginActivity.this, "Đăng nhập thành công! " + welcomeName, Toast.LENGTH_SHORT).show();
