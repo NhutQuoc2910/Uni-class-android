@@ -98,6 +98,10 @@ public class UserRepository {
         return apiService.getHomeSummary();
     }
 
+    public Call<ApiResponse<List<AssignmentItem>>> getGradingAssignments() {
+        return apiService.getGradingAssignments();
+    }
+
     public Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule() {
         return apiService.getTodaySchedule();
     }

@@ -14,6 +14,7 @@ import com.ppquang06.uniclassapp.data.model.request.OpenQrSessionRequest;
 import com.ppquang06.uniclassapp.data.model.request.SubmitAssignmentRequest;
 import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentDetailResponse;
+import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentSubmissionListResponse;
 import com.ppquang06.uniclassapp.data.model.response.AttendanceCheckInResponse;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
@@ -61,6 +62,9 @@ public interface UserClassApiService {
 
     @GET("home/summary")
     Call<ApiResponse<HomeSummaryResponse>> getHomeSummary();
+
+    @GET("home/grading-assignments")
+    Call<ApiResponse<List<AssignmentItem>>> getGradingAssignments();
 
     @GET("home/today-schedule")
     Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule();

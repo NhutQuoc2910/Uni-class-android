@@ -251,6 +251,33 @@ public class ViewModelMigrationTest {
     }
 
     @Test
+    public void homeViewModel_loadGradingAssignments_emitsSuccessState() {
+        com.ppquang06.uniclassapp.data.model.response.AssignmentItem item = new com.ppquang06.uniclassapp.data.model.response.AssignmentItem();
+        item.setId("assign-1");
+        item.setTitle("Báo cáo Giữa kỳ");
+        item.setClassName("NT118.O21");
+        item.setDueDate("2026-11-20T23:59:59");
+
+        UserClassApiService api = createMockUserClassApi((proxy, method, args) -> {
+            if ("getGradingAssignments".equals(method.getName())) {
+                return new FakeCall<>(createSuccess(java.util.Collections.singletonList(item)));
+            }
+            return null;
+        });
+
+        HomeViewModel viewModel = new HomeViewModel(new UserRepository(api));
+        viewModel.loadGradingAssignments();
+
+        UiState<java.util.List<com.ppquang06.uniclassapp.data.model.response.AssignmentItem>> state = viewModel.getGradingAssignmentsState().getValue();
+        assertNotNull(state);
+        assertTrue(state.isSuccess());
+        assertNotNull(state.getData());
+        assertEquals(1, state.getData().size());
+        assertEquals("assign-1", state.getData().get(0).getId());
+        assertEquals("Báo cáo Giữa kỳ", state.getData().get(0).getTitle());
+    }
+
+    @Test
     public void testProfileViewModel_ChangePasswordError() {
         UserClassApiService mockApi = createMockUserClassApi((proxy, method, args) -> {
             if ("changePassword".equals(method.getName())) {

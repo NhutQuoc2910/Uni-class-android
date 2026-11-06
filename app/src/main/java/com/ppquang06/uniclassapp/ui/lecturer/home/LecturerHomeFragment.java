@@ -185,10 +185,18 @@ public class LecturerHomeFragment extends Fragment {
         });
 
         binding.tvSeeAllAssignments.setOnClickListener(v -> {
-            if (getActivity() instanceof LecturerMainActivity) {
-                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_classes);
-            } else {
-                NavHostFragment.findNavController(LecturerHomeFragment.this).navigate(R.id.nav_lecturer_classes);
+            try {
+                NavHostFragment.findNavController(LecturerHomeFragment.this)
+                        .navigate(R.id.nav_lecturer_grading_assignments);
+            } catch (Exception e) {
+                try {
+                    androidx.navigation.Navigation.findNavController(requireActivity(), R.id.nav_host_lecturer)
+                            .navigate(R.id.nav_lecturer_grading_assignments);
+                } catch (Exception ex) {
+                    if (getContext() != null) {
+                        android.widget.Toast.makeText(requireContext(), "Bài tập cần chấm", android.widget.Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 

@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -90,6 +91,12 @@ public class LecturerQrSessionFragment extends Fragment {
 
     private void setupHeader() {
         if (binding == null) return;
+        binding.topAppBar.tvTitle.setText(R.string.qr_session_title);
+        binding.topAppBar.tvRoleBadge.setVisibility(View.GONE);
+        binding.topAppBar.ivAvatar.setVisibility(View.GONE);
+        binding.topAppBar.ivBack.setVisibility(View.VISIBLE);
+        binding.topAppBar.ivBack.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
+
         if (!TextUtils.isEmpty(className)) {
             binding.tvClassName.setText(className);
         }
@@ -131,6 +138,13 @@ public class LecturerQrSessionFragment extends Fragment {
         });
 
         binding.btnCloseSession.setOnClickListener(v -> confirmCloseSession());
+
+        requireActivity().getOnBackPressedDispatcher().addCallback(getViewLifecycleOwner(), new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                NavHostFragment.findNavController(LecturerQrSessionFragment.this).popBackStack();
+            }
+        });
     }
 
     private void observeViewModel() {
@@ -308,8 +322,9 @@ public class LecturerQrSessionFragment extends Fragment {
         binding.tvTokenPreview.setText("Mã QR đã hết hiệu lực");
         binding.ivQrCode.setAlpha(0.35f);
 
-        binding.btnCloseSession.setEnabled(false);
-        binding.btnCloseSession.setText("Phiên đã kết thúc");
+        binding.btnCloseSession.setEnabled(true);
+        binding.btnCloseSession.setText("Quay về");
+        binding.btnCloseSession.setOnClickListener(v -> NavHostFragment.findNavController(this).popBackStack());
     }
 
     @Override

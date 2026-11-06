@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "319133338076",
+    "project_id": "uni-class-94c1f",
+    "storage_bucket": "uni-class-94c1f.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:319133338076:android:4064b6a5778c52aec5a719",
+        "android_client_info": {
+          "package_name": "com.ppquang06.uniclassapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBvf0EiplglKDavkBWi7X3z9BraU5RX-wU"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
