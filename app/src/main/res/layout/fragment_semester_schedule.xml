@@ -41,10 +41,10 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            app:cardBackgroundColor="#0F172A"
+                            app:cardBackgroundColor="@color/color_surface_variant"
                             app:cardCornerRadius="10dp"
                             app:cardElevation="0dp"
-                            app:strokeColor="#334155"
+                            app:strokeColor="@color/outline_border"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -54,31 +54,31 @@
                                 android:padding="3dp">
 
                                 <TextView
+                                    android:id="@+id/btnModeWeekly"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:background="@drawable/bg_badge_pill"
+                                    android:backgroundTint="@color/color_surface"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:paddingHorizontal="14dp"
+                                    android:paddingVertical="7dp"
+                                    android:text="@string/tab_mode_weekly"
+                                    android:textColor="@color/color_primary"
+                                    android:textSize="12sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
                                     android:id="@+id/btnModeList"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:background="@android:color/transparent"
                                     android:clickable="true"
                                     android:focusable="true"
-                                    android:paddingHorizontal="12dp"
+                                    android:paddingHorizontal="14dp"
                                     android:paddingVertical="7dp"
                                     android:text="@string/tab_mode_list"
-                                    android:textColor="#94A3B8"
-                                    android:textSize="12sp"
-                                    android:textStyle="bold" />
-
-                                <TextView
-                                    android:id="@+id/btnModeWeekly"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:background="@drawable/bg_badge_pill"
-                                    android:backgroundTint="#1E293B"
-                                    android:clickable="true"
-                                    android:focusable="true"
-                                    android:paddingHorizontal="12dp"
-                                    android:paddingVertical="7dp"
-                                    android:text="@string/tab_mode_weekly"
-                                    android:textColor="#F8FAFC"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="12sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -91,9 +91,10 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnExportCalendar"
-                            style="@style/Widget.Material3.Button.OutlinedButton"
+                            style="@style/Widget.Material3.Button.TonalButton"
                             android:layout_width="wrap_content"
                             android:layout_height="38dp"
+                            android:backgroundTint="@color/color_primary_container"
                             android:insetTop="0dp"
                             android:insetBottom="0dp"
                             android:paddingHorizontal="12dp"
@@ -102,10 +103,11 @@
                             android:textColor="@color/color_primary"
                             android:textSize="12sp"
                             app:cornerRadius="8dp"
-                            app:icon="@android:drawable/ic_menu_my_calendar"
+                            app:icon="@drawable/ic_calendar_check"
                             app:iconSize="16dp"
                             app:iconTint="@color/color_primary"
-                            app:strokeColor="@color/color_primary" />
+                            app:strokeColor="#BFDBFE"
+                            app:strokeWidth="1dp" />
                     </LinearLayout>
 
                     <!-- ==================== MODE 1: WEEKLY TIMETABLE GRID (LỊCH TUẦN) ==================== -->
@@ -121,10 +123,10 @@
                         <com.google.android.material.card.MaterialCardView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            app:cardBackgroundColor="#0F172A"
-                            app:cardCornerRadius="10dp"
+                            app:cardBackgroundColor="@color/color_surface"
+                            app:cardCornerRadius="12dp"
                             app:cardElevation="0dp"
-                            app:strokeColor="#1E293B"
+                            app:strokeColor="@color/outline_border"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -140,7 +142,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="8dp"
                                     android:text="@string/legend_label"
-                                    android:textColor="#94A3B8"
+                                    android:textColor="@color/text_secondary"
                                     android:textSize="12sp" />
 
                                 <TextView
@@ -148,11 +150,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="6dp"
                                     android:background="@drawable/bg_badge_pill"
-                                    android:backgroundTint="#1E3A8A"
+                                    android:backgroundTint="@color/color_primary_container"
                                     android:paddingHorizontal="8dp"
                                     android:paddingVertical="3dp"
                                     android:text="@string/legend_regular"
-                                    android:textColor="#93C5FD"
+                                    android:textColor="@color/color_primary"
                                     android:textSize="11sp"
                                     android:textStyle="bold" />
 
@@ -161,11 +163,11 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginEnd="6dp"
                                     android:background="@drawable/bg_badge_pill"
-                                    android:backgroundTint="#065F46"
+                                    android:backgroundTint="@color/color_success_container"
                                     android:paddingHorizontal="8dp"
                                     android:paddingVertical="3dp"
                                     android:text="@string/legend_makeup"
-                                    android:textColor="#6EE7B7"
+                                    android:textColor="@color/color_success"
                                     android:textSize="11sp"
                                     android:textStyle="bold" />
 
@@ -173,11 +175,11 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:background="@drawable/bg_badge_pill"
-                                    android:backgroundTint="#7F1D1D"
+                                    android:backgroundTint="@color/color_error_container"
                                     android:paddingHorizontal="8dp"
                                     android:paddingVertical="3dp"
                                     android:text="@string/legend_cancelled"
-                                    android:textColor="#FCA5A5"
+                                    android:textColor="@color/color_error"
                                     android:textSize="11sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -188,10 +190,10 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            app:cardBackgroundColor="#0F172A"
-                            app:cardCornerRadius="12dp"
+                            app:cardBackgroundColor="@color/color_surface"
+                            app:cardCornerRadius="14dp"
                             app:cardElevation="0dp"
-                            app:strokeColor="#1E293B"
+                            app:strokeColor="@color/outline_border"
                             app:strokeWidth="1dp">
 
                             <LinearLayout
@@ -212,12 +214,12 @@
                                         android:id="@+id/btnPrevWeek"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:background="?attr/selectableItemBackground"
+                                        android:background="?attr/selectableItemBackgroundBorderless"
                                         android:clickable="true"
                                         android:focusable="true"
                                         android:padding="6dp"
                                         android:text="@string/btn_prev_week"
-                                        android:textColor="#E2E8F0"
+                                        android:textColor="@color/color_primary"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
 
@@ -232,7 +234,7 @@
                                             android:id="@+id/tvWeekRange"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:textColor="#F8FAFC"
+                                            android:textColor="@color/text_primary"
                                             android:textSize="13sp"
                                             android:textStyle="bold"
                                             tools:text="Tuần 09/11 – 15/11/2026" />
@@ -242,13 +244,13 @@
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
                                             android:layout_marginTop="2dp"
-                                            android:background="?attr/selectableItemBackground"
+                                            android:background="?attr/selectableItemBackgroundBorderless"
                                             android:clickable="true"
                                             android:focusable="true"
                                             android:paddingHorizontal="6dp"
                                             android:paddingVertical="1dp"
                                             android:text="@string/btn_current_week"
-                                            android:textColor="#60A5FA"
+                                            android:textColor="@color/color_primary"
                                             android:textSize="11sp" />
                                     </LinearLayout>
 
@@ -256,12 +258,12 @@
                                         android:id="@+id/btnNextWeek"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:background="?attr/selectableItemBackground"
+                                        android:background="?attr/selectableItemBackgroundBorderless"
                                         android:clickable="true"
                                         android:focusable="true"
                                         android:padding="6dp"
                                         android:text="@string/btn_next_week"
-                                        android:textColor="#E2E8F0"
+                                        android:textColor="@color/color_primary"
                                         android:textSize="12sp"
                                         android:textStyle="bold" />
                                 </LinearLayout>
@@ -269,7 +271,7 @@
                                 <View
                                     android:layout_width="match_parent"
                                     android:layout_height="1dp"
-                                    android:background="#1E293B" />
+                                    android:background="@color/outline_border" />
 
                                 <!-- Grid Area: Left Fixed Period Column + Right Horizontally Scrollable 7 Days -->
                                 <LinearLayout
@@ -282,7 +284,7 @@
                                         android:id="@+id/llPeriodColumn"
                                         android:layout_width="64dp"
                                         android:layout_height="wrap_content"
-                                        android:background="#0B1120"
+                                        android:background="@color/color_surface_variant"
                                         android:orientation="vertical">
 
                                         <!-- Top-left corner header ("Tiết") -->
@@ -291,14 +293,14 @@
                                             android:layout_height="48dp"
                                             android:gravity="center"
                                             android:text="@string/col_period_header"
-                                            android:textColor="#94A3B8"
+                                            android:textColor="@color/text_secondary"
                                             android:textSize="11sp"
                                             android:textStyle="bold" />
 
                                         <View
                                             android:layout_width="match_parent"
                                             android:layout_height="1dp"
-                                            android:background="#1E293B" />
+                                            android:background="@color/outline_border" />
 
                                         <LinearLayout
                                             android:id="@+id/llPeriodLabelsContainer"
@@ -310,7 +312,7 @@
                                     <View
                                         android:layout_width="1dp"
                                         android:layout_height="match_parent"
-                                        android:background="#1E293B" />
+                                        android:background="@color/outline_border" />
 
                                     <!-- Horizontally Scrollable 7 Day Columns (Thứ 2 .. Chủ nhật) -->
                                     <HorizontalScrollView
@@ -331,13 +333,13 @@
                                                 android:id="@+id/llDayHeadersRow"
                                                 android:layout_width="wrap_content"
                                                 android:layout_height="48dp"
-                                                android:background="#0B1120"
+                                                android:background="@color/color_surface_variant"
                                                 android:orientation="horizontal" />
 
                                             <View
                                                 android:layout_width="match_parent"
                                                 android:layout_height="1dp"
-                                                android:background="#1E293B" />
+                                                android:background="@color/outline_border" />
 
                                             <!-- 7 Day Columns Container -->
                                             <LinearLayout
@@ -460,7 +462,7 @@
                             android:gravity="center"
                             android:padding="24dp"
                             android:text="@string/empty_regular_schedules_message"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_muted"
                             android:visibility="gone" />
 
                         <!-- Section: Schedule Exceptions -->
@@ -488,7 +490,7 @@
                             android:gravity="center"
                             android:padding="24dp"
                             android:text="@string/empty_schedule_exceptions_message"
-                            android:textColor="#64748B"
+                            android:textColor="@color/text_muted"
                             android:visibility="gone" />
                     </LinearLayout>
 
