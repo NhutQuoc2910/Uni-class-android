@@ -1,15 +1,13 @@
 package com.ppquang06.uniclassapp;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.text.method.HideReturnsTransformationMethod;
 import android.text.method.PasswordTransformationMethod;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.inputmethod.InputMethod;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -21,6 +19,8 @@ import androidx.lifecycle.ViewModelProvider;
 import com.ppquang06.uniclassapp.data.model.response.AuthResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityLoginBinding;
 import com.ppquang06.uniclassapp.ui.auth.AuthViewModel;
+import com.ppquang06.uniclassapp.utils.AuthUiHelper;
+import com.ppquang06.uniclassapp.utils.Constants;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
@@ -43,14 +43,8 @@ public class LoginActivity extends AppCompatActivity {
         int initialBottom = root.getPaddingBottom();
 
         ViewCompat.setOnApplyWindowInsetsListener(root, (view, insets) -> {
-
-            Insets systemBars = insets.getInsets(
-                    WindowInsetsCompat.Type.systemBars()
-            );
-
-            Insets ime = insets.getInsets(
-                    WindowInsetsCompat.Type.ime()
-            );
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            Insets ime = insets.getInsets(WindowInsetsCompat.Type.ime());
 
             int bottom = Math.max(systemBars.bottom, ime.bottom);
 
@@ -63,28 +57,89 @@ public class LoginActivity extends AppCompatActivity {
 
             return insets;
         });
+
         authViewModel = new ViewModelProvider(this).get(AuthViewModel.class);
 
+        handlePreFilledEmail();
+        setupErrorClearing();
         setupListeners();
         observeViewModel();
     }
-    //@Override
-    /*public boolean dispatchTouchEvent(MotionEvent ev){
-        if(getCurrentFocus() != null){
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            if(imm != null){
-                imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+
+    private void handlePreFilledEmail() {
+        Intent intent = getIntent();
+        if (intent != null) {
+            String prefilledEmail = intent.getStringExtra(Constants.EXTRA_EMAIL);
+            if (prefilledEmail != null && !prefilledEmail.trim().isEmpty()) {
+                binding.edtEmail.setText(prefilledEmail.trim());
+                binding.edtPassword.requestFocus();
             }
         }
-        return super.dispatchTouchEvent(ev);
-    }*/
+    }
+
+    private void setupErrorClearing() {
+        binding.edtEmail.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                clearEmailError();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        binding.edtPassword.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                clearPasswordError();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+    }
+
+    private void clearEmailError() {
+        binding.tvErrorEmail.setVisibility(View.GONE);
+        binding.containerEmail.setBackgroundResource(R.drawable.bg_nordic_input_selector);
+    }
+
+    private void clearPasswordError() {
+        binding.tvErrorPassword.setVisibility(View.GONE);
+        binding.containerPassword.setBackgroundResource(R.drawable.bg_nordic_input_selector);
+    }
+
+    private void showEmailError(String message) {
+        binding.tvErrorEmail.setText(message);
+        binding.tvErrorEmail.setVisibility(View.VISIBLE);
+        binding.containerEmail.setBackgroundResource(R.drawable.bg_nordic_input_error);
+        AuthUiHelper.shakeView(binding.containerEmail);
+        binding.edtEmail.requestFocus();
+    }
+
+    private void showPasswordError(String message) {
+        binding.tvErrorPassword.setText(message);
+        binding.tvErrorPassword.setVisibility(View.VISIBLE);
+        binding.containerPassword.setBackgroundResource(R.drawable.bg_nordic_input_error);
+        AuthUiHelper.shakeView(binding.containerPassword);
+        binding.edtPassword.requestFocus();
+    }
+
     private void setupListeners() {
         binding.ivTogglePassword.setOnClickListener(v -> {
             isPasswordVisible = !isPasswordVisible;
             if (isPasswordVisible) {
                 binding.edtPassword.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                binding.ivTogglePassword.setImageResource(R.drawable.ic_eye_off);
             } else {
                 binding.edtPassword.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                binding.ivTogglePassword.setImageResource(R.drawable.ic_eye);
             }
             binding.edtPassword.setSelection(binding.edtPassword.getText().length());
         });
@@ -121,19 +176,19 @@ public class LoginActivity extends AppCompatActivity {
                     com.ppquang06.uniclassapp.utils.FcmTokenHelper.syncFcmToken(LoginActivity.this);
 
                     String welcomeName = auth.getUser() != null ? auth.getUser().getFullName() : "";
-                    Toast.makeText(LoginActivity.this, "Đăng nhập thành công! " + welcomeName, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(LoginActivity.this, getString(R.string.nordic_login_success) + " " + welcomeName, Toast.LENGTH_SHORT).show();
 
                     RoleRouter.navigateToHomeByRole(LoginActivity.this);
                 } else {
-                    Toast.makeText(LoginActivity.this, "Email/Số điện thoại hoặc mật khẩu không chính xác", Toast.LENGTH_LONG).show();
+                    showPasswordError(getString(R.string.nordic_login_error_credentials));
                 }
             } else if (state.isError()) {
                 setLoading(false);
                 String errorMsg = state.getMessage() != null
                         ? state.getMessage()
-                        : "Email/Số điện thoại hoặc mật khẩu không chính xác";
+                        : getString(R.string.nordic_login_error_credentials);
                 authViewModel.resetLoginState();
-                Toast.makeText(LoginActivity.this, errorMsg, Toast.LENGTH_LONG).show();
+                showPasswordError(errorMsg);
             }
         });
     }
@@ -143,17 +198,17 @@ public class LoginActivity extends AppCompatActivity {
         String password = binding.edtPassword.getText() != null ? binding.edtPassword.getText().toString() : "";
 
         if (TextUtils.isEmpty(emailOrPhone)) {
-            binding.edtEmail.setError("Vui lòng nhập email hoặc số điện thoại");
-            binding.edtEmail.requestFocus();
+            showEmailError("Vui lòng nhập email hoặc số điện thoại");
             return;
         }
 
         if (TextUtils.isEmpty(password)) {
-            binding.edtPassword.setError("Vui lòng nhập mật khẩu");
-            binding.edtPassword.requestFocus();
+            showPasswordError("Vui lòng nhập mật khẩu");
             return;
         }
 
+        clearEmailError();
+        clearPasswordError();
         authViewModel.login(emailOrPhone, password);
     }
 
@@ -161,7 +216,8 @@ public class LoginActivity extends AppCompatActivity {
         binding.btnLogin.setEnabled(!isLoading);
         binding.edtEmail.setEnabled(!isLoading);
         binding.edtPassword.setEnabled(!isLoading);
-        binding.btnLogin.setText(isLoading ? "Đang đăng nhập..." : getString(R.string.login_button));
+        binding.tvBtnLoginLabel.setVisibility(isLoading ? View.GONE : View.VISIBLE);
+        binding.ivBtnArrow.setVisibility(isLoading ? View.GONE : View.VISIBLE);
         binding.progressBar.setVisibility(isLoading ? View.VISIBLE : View.GONE);
     }
 }

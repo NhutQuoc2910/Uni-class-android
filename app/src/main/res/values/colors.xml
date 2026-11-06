@@ -39,4 +39,24 @@
     <color name="border_color">@color/outline_border</color>
     <color name="step_line_color">#CBD5E1</color>
     <color name="step_text_inactive">#64748B</color>
+
+    <!-- Nordic Slate 6-Color Palette Tokens (Nordic Light Mode) -->
+    <color name="nordic_obsidian_navy">#06141B</color>
+    <color name="nordic_midnight_slate">#11212D</color>
+    <color name="nordic_rich_slate_blue">#253745</color>
+    <color name="nordic_muted_steel">#4A5C6A</color>
+    <color name="nordic_pewter_mist">#9BA8AB</color>
+    <color name="nordic_frosted_silver">#CCD0CF</color>
+    <color name="nordic_canvas_light">#F4F6F6</color>
+    <color name="nordic_surface_white">#FFFFFF</color>
+    <color name="nordic_frosted_80">#CCCCD0CF</color>
+    <color name="nordic_frosted_65">#A6CCD0CF</color>
+    <color name="nordic_frosted_55">#8CCCD0CF</color>
+    <color name="nordic_frosted_45">#73CCD0CF</color>
+    <color name="nordic_frosted_35">#59CCD0CF</color>
+    <color name="nordic_error_rose">#F43F5E</color>
+    <color name="nordic_error_rose_light">#33F43F5E</color>
+    <color name="nordic_focus_ring">#1A253745</color>
+    <color name="nordic_otp_ring">#26253745</color>
+    <color name="nordic_brand_uc">#3B82F6</color>
 </resources>
