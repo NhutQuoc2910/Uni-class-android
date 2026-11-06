@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -27,12 +28,13 @@ import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
 import com.ppquang06.uniclassapp.ui.common.adapter.TodayScheduleAdapter;
 import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.utils.SessionManager;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Locale;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 
 public class StudentHomeFragment extends Fragment {
 
@@ -41,7 +43,7 @@ public class StudentHomeFragment extends Fragment {
     private CourseClassAdapter courseAdapter;
     private AssignmentAdapter assignmentAdapter;
     private TodayScheduleAdapter todayScheduleAdapter;
-    private boolean hasTodayScheduleHero = false;
+    private List<TodayScheduleItem> cachedSchedules = null;
 
     @Nullable
     @Override
@@ -88,6 +90,10 @@ public class StudentHomeFragment extends Fragment {
 
         if (binding != null) {
             updateTodayDate();
+            if (cachedSchedules != null) {
+                bindTodaySchedule(cachedSchedules);
+            }
+            loadHomeSummary();
         }
     }
     private void setupMetricLabels() {
@@ -186,6 +192,22 @@ public class StudentHomeFragment extends Fragment {
                         .navigate(R.id.nav_student_scan_qr);
             }
         });
+
+        binding.tvViewSemesterSchedule.setOnClickListener(v -> {
+            try {
+                Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                        .navigate(R.id.nav_student_semester_schedule);
+            } catch (Exception e) {
+                try {
+                    NavHostFragment.findNavController(StudentHomeFragment.this)
+                            .navigate(R.id.nav_student_semester_schedule);
+                } catch (Exception ex) {
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Mở Thời khóa biểu học kỳ", Toast.LENGTH_SHORT).show();
+                    }
+                }
+            }
+        });
     }
 
     private void bindUserData() {
@@ -256,27 +278,87 @@ public class StudentHomeFragment extends Fragment {
     }
 
     private void bindTodaySchedule(@Nullable List<TodayScheduleItem> schedules) {
+        cachedSchedules = schedules;
         if (schedules != null && !schedules.isEmpty()) {
-            hasTodayScheduleHero = true;
             todayScheduleAdapter.submitList(schedules);
             binding.rvTodaySchedule.setVisibility(View.VISIBLE);
             binding.tvEmptyTodaySchedule.setVisibility(View.GONE);
-
-            TodayScheduleItem first = schedules.get(0);
-            binding.heroCard.setVisibility(View.VISIBLE);
-            binding.tvHeroTag.setText(first.getScheduleTypeLabel().toUpperCase(new Locale("vi", "VN")));
-            String heroTitle = !TextUtils.isEmpty(first.getClassCode())
-                    ? (first.getClassCode() + " - " + (first.getClassName() != null ? first.getClassName() : ""))
-                    : (first.getClassName() != null ? first.getClassName() : "");
-            binding.tvHeroCourseName.setText(heroTitle);
-            String roomPart = !TextUtils.isEmpty(first.getRoom()) ? ("Phòng " + first.getRoom()) : "Chưa xếp phòng";
-            String timePart = first.getFormattedTimeRange();
-            binding.tvHeroRoomSchedule.setText(!TextUtils.isEmpty(timePart) ? (roomPart + " · " + timePart) : roomPart);
         } else {
-            hasTodayScheduleHero = false;
             todayScheduleAdapter.submitList(Collections.emptyList());
             binding.rvTodaySchedule.setVisibility(View.GONE);
             binding.tvEmptyTodaySchedule.setVisibility(View.VISIBLE);
+        }
+
+        Calendar cal = Calendar.getInstance();
+        int nowMinutes = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+        List<TodayScheduleItem> activeSchedules = new ArrayList<>();
+        if (schedules != null) {
+            for (TodayScheduleItem item : schedules) {
+                if (item != null && !item.isCancelled()) {
+                    activeSchedules.add(item);
+                }
+            }
+        }
+
+        TodayScheduleItem heroItem = null;
+        if (!activeSchedules.isEmpty()) {
+            for (TodayScheduleItem item : activeSchedules) {
+                if (item.isOngoing(nowMinutes)) {
+                    heroItem = item;
+                    break;
+                }
+            }
+            if (heroItem == null) {
+                for (TodayScheduleItem item : activeSchedules) {
+                    if (item.isUpcoming(nowMinutes)) {
+                        heroItem = item;
+                        break;
+                    }
+                }
+            }
+        }
+
+        if (heroItem != null) {
+            binding.heroCard.setVisibility(View.VISIBLE);
+            String tagPrefix = heroItem.isOngoing(nowMinutes) ? "ĐANG DIỄN RA · " : "SẮP DIỄN RA · ";
+            binding.tvHeroTag.setText((tagPrefix + heroItem.getScheduleTypeLabel()).toUpperCase(new Locale("vi", "VN")));
+            String courseName = !TextUtils.isEmpty(heroItem.getClassCode())
+                    ? (heroItem.getClassCode() + " - " + (heroItem.getClassName() != null ? heroItem.getClassName() : ""))
+                    : (heroItem.getClassName() != null ? heroItem.getClassName() : "");
+            binding.tvHeroCourseName.setText(courseName);
+            String roomPart = !TextUtils.isEmpty(heroItem.getRoom()) ? ("Phòng " + heroItem.getRoom()) : "Chưa xếp phòng";
+            binding.tvHeroRoomSchedule.setText(roomPart + " · " + heroItem.getFormattedTimeRange());
+            binding.btnScanHero.setVisibility(heroItem.canOpenOrScanQr(nowMinutes) ? View.VISIBLE : View.GONE);
+
+            TodayScheduleItem finalHeroItem = heroItem;
+            binding.heroCard.setOnClickListener(v -> {
+                Bundle bundle = new Bundle();
+                bundle.putString("classId", finalHeroItem.getClassId());
+                bundle.putString("classCode", finalHeroItem.getClassCode());
+                bundle.putString("className", finalHeroItem.getClassName());
+                try {
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_student).navigate(R.id.nav_student_class_detail, bundle);
+                } catch (Exception e) {
+                    try {
+                        NavHostFragment.findNavController(StudentHomeFragment.this).navigate(R.id.nav_student_class_detail, bundle);
+                    } catch (Exception ignored) {}
+                }
+            });
+        } else if (!activeSchedules.isEmpty()) {
+            binding.heroCard.setVisibility(View.VISIBLE);
+            binding.tvHeroTag.setText(R.string.hero_today_class_tag);
+            binding.tvHeroCourseName.setText(R.string.hero_completed_today_title);
+            binding.tvHeroRoomSchedule.setText(R.string.hero_completed_today_sub);
+            binding.btnScanHero.setVisibility(View.GONE);
+            binding.heroCard.setOnClickListener(null);
+        } else {
+            binding.heroCard.setVisibility(View.VISIBLE);
+            binding.tvHeroTag.setText(R.string.hero_today_class_tag);
+            binding.tvHeroCourseName.setText(R.string.hero_empty_today_title);
+            binding.tvHeroRoomSchedule.setText(R.string.hero_empty_today_sub);
+            binding.btnScanHero.setVisibility(View.GONE);
+            binding.heroCard.setOnClickListener(null);
         }
     }
 
@@ -287,24 +369,10 @@ public class StudentHomeFragment extends Fragment {
 
         List<CourseClassItem> courses = data.getCourses();
         if (courses != null && !courses.isEmpty()) {
-            if (!hasTodayScheduleHero) {
-                CourseClassItem first = courses.get(0);
-                binding.heroCard.setVisibility(View.VISIBLE);
-                binding.tvHeroTag.setText(R.string.hero_today_class_tag);
-                binding.tvHeroCourseName.setText(first.getName());
-                String roomText = !TextUtils.isEmpty(first.getRoom())
-                        ? ("Phòng " + first.getRoom() + " · " + (first.getSemester() != null ? first.getSemester() : ""))
-                        : (first.getSemester() != null ? first.getSemester() : "");
-                binding.tvHeroRoomSchedule.setText(roomText);
-            }
-
             courseAdapter.submitList(courses);
             binding.rvMyCourses.setVisibility(View.VISIBLE);
             binding.tvEmptyCourses.setVisibility(View.GONE);
         } else {
-            if (!hasTodayScheduleHero) {
-                binding.heroCard.setVisibility(View.GONE);
-            }
             courseAdapter.submitList(Collections.emptyList());
             binding.rvMyCourses.setVisibility(View.GONE);
             binding.tvEmptyCourses.setVisibility(View.VISIBLE);

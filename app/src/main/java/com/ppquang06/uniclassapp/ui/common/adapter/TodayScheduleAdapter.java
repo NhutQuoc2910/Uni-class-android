@@ -1,16 +1,20 @@
 package com.ppquang06.uniclassapp.ui.common.adapter;
 
+import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.TodayScheduleItem;
 import com.ppquang06.uniclassapp.databinding.ItemTodayScheduleBinding;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdapter.ViewHolder> {
@@ -73,10 +77,24 @@ public class TodayScheduleAdapter extends RecyclerView.Adapter<TodayScheduleAdap
                     : (item.getClassName() != null ? item.getClassName() : "");
             binding.tvScheduleClassName.setText(title);
 
-            String roomText = !TextUtils.isEmpty(item.getRoom())
-                    ? ("Phòng " + item.getRoom())
-                    : "Chưa xếp phòng";
-            binding.tvScheduleRoom.setText(roomText);
+            Calendar cal = Calendar.getInstance();
+            int nowMinutes = cal.get(Calendar.HOUR_OF_DAY) * 60 + cal.get(Calendar.MINUTE);
+
+            String statusLabel = item.getRealTimeStatusLabel(nowMinutes);
+            String roomPart = !TextUtils.isEmpty(item.getRoom()) ? ("Phòng " + item.getRoom()) : "Chưa xếp phòng";
+            binding.tvScheduleRoom.setText(!TextUtils.isEmpty(statusLabel) ? (roomPart + " · " + statusLabel) : roomPart);
+
+            int primaryColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.color_primary);
+            if (item.isCancelled()) {
+                binding.tvScheduleTypeBadge.setTextColor(Color.parseColor("#DC2626"));
+                binding.tvScheduleTime.setTextColor(Color.parseColor("#DC2626"));
+            } else if (item.isOngoing(nowMinutes)) {
+                binding.tvScheduleTypeBadge.setTextColor(Color.parseColor("#16A34A"));
+                binding.tvScheduleTime.setTextColor(primaryColor);
+            } else {
+                binding.tvScheduleTypeBadge.setTextColor(Color.parseColor("#64748B"));
+                binding.tvScheduleTime.setTextColor(primaryColor);
+            }
 
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {

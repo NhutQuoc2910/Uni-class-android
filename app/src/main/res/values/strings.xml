@@ -472,5 +472,18 @@
     <!-- Today Schedule -->
     <string name="today_schedule_title">Lịch học hôm nay</string>
     <string name="empty_today_schedule_message">Hôm nay bạn không có lịch học nào</string>
+    <string name="semester_schedule_link">Thời khóa biểu →</string>
+    <string name="hero_completed_today_title">Đã hoàn thành các ca học hôm nay</string>
+    <string name="hero_completed_today_sub">Hẹn gặp lại bạn vào buổi học tiếp theo!</string>
+    <string name="hero_completed_today_title_lecturer">Đã hoàn thành các ca dạy hôm nay</string>
+    <string name="hero_completed_today_sub_lecturer">Hẹn gặp lại quý thầy/cô vào buổi dạy tiếp theo!</string>
+    <string name="hero_empty_today_title">Hôm nay bạn không có ca học nào</string>
+    <string name="hero_empty_today_sub">Hãy dành thời gian ôn tập và hoàn thành bài tập nhé!</string>
+    <string name="hero_empty_today_title_lecturer">Hôm nay không có ca dạy nào</string>
+    <string name="hero_empty_today_sub_lecturer">Chúc quý thầy/cô một ngày làm việc hiệu quả!</string>
+    <string name="lecturer_grading_assignments_title">Bài tập cần chấm</string>
+    <string name="empty_grading_assignments_message">Không có bài tập nào cần chấm</string>
+    <string name="lecturer_today_schedule_title">Lịch dạy hôm nay</string>
+    <string name="empty_lecturer_today_schedule_message">Hôm nay không có ca dạy nào</string>
 
 </resources>

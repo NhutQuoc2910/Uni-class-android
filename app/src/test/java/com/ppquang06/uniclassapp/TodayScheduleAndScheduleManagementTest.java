@@ -405,4 +405,102 @@ public class TodayScheduleAndScheduleManagementTest {
         viewModel.resetExceptionActionState();
         assertTrue(viewModel.getExceptionActionState().getValue().isIdle());
     }
+
+    @Test
+    public void testHeroScheduleSelectionLogic() {
+        int nowMinutes = 8 * 60 + 0; // 08:00 (480 mins)
+
+        TodayScheduleItem finishedItem = new TodayScheduleItem();
+        finishedItem.setClassId("c1");
+        finishedItem.setStartTime("06:00");
+        finishedItem.setEndTime("07:30");
+        finishedItem.setScheduleType("REGULAR");
+
+        TodayScheduleItem ongoingItem = new TodayScheduleItem();
+        ongoingItem.setClassId("c2");
+        ongoingItem.setStartTime("07:30");
+        ongoingItem.setEndTime("09:30");
+        ongoingItem.setScheduleType("REGULAR");
+
+        TodayScheduleItem upcomingItem = new TodayScheduleItem();
+        upcomingItem.setClassId("c3");
+        upcomingItem.setStartTime("13:00");
+        upcomingItem.setEndTime("17:00");
+        upcomingItem.setScheduleType("REGULAR");
+
+        TodayScheduleItem cancelledItem = new TodayScheduleItem();
+        cancelledItem.setClassId("c4");
+        cancelledItem.setStartTime("07:00");
+        cancelledItem.setEndTime("11:00");
+        cancelledItem.setScheduleType("CANCELLED");
+
+        List<TodayScheduleItem> list = new ArrayList<>();
+        list.add(finishedItem);
+        list.add(ongoingItem);
+        list.add(upcomingItem);
+        list.add(cancelledItem);
+
+        // Filter active
+        List<TodayScheduleItem> active = new ArrayList<>();
+        for (TodayScheduleItem item : list) {
+            if (!item.isCancelled()) active.add(item);
+        }
+        assertEquals(3, active.size());
+
+        // Hero selection: 1st priority = ongoing
+        TodayScheduleItem hero = null;
+        for (TodayScheduleItem item : active) {
+            if (item.isOngoing(nowMinutes)) {
+                hero = item;
+                break;
+            }
+        }
+        assertNotNull(hero);
+        assertEquals("c2", hero.getClassId());
+        assertTrue(hero.canOpenOrScanQr(nowMinutes));
+
+        // When ongoing is finished (e.g. 10:00 -> 600 mins)
+        int laterMinutes = 10 * 60;
+        hero = null;
+        for (TodayScheduleItem item : active) {
+            if (item.isOngoing(laterMinutes)) {
+                hero = item;
+                break;
+            }
+        }
+        if (hero == null) {
+            for (TodayScheduleItem item : active) {
+                if (item.isUpcoming(laterMinutes)) {
+                    hero = item;
+                    break;
+                }
+            }
+        }
+        assertNotNull(hero);
+        assertEquals("c3", hero.getClassId());
+        assertFalse(hero.canOpenOrScanQr(laterMinutes)); // 10:00 is not within 15 mins of 13:00
+
+        // At 12:50 (within 15 mins of 13:00)
+        int preClassMinutes = 12 * 60 + 50;
+        assertTrue(hero.canOpenOrScanQr(preClassMinutes));
+
+        // When all are finished (e.g. 18:00)
+        int eveningMinutes = 18 * 60;
+        hero = null;
+        for (TodayScheduleItem item : active) {
+            if (item.isOngoing(eveningMinutes)) {
+                hero = item;
+                break;
+            }
+        }
+        if (hero == null) {
+            for (TodayScheduleItem item : active) {
+                if (item.isUpcoming(eveningMinutes)) {
+                    hero = item;
+                    break;
+                }
+            }
+        }
+        assertEquals(null, hero);
+    }
 }

@@ -157,6 +157,108 @@
                         android:layout_weight="1" />
                 </LinearLayout>
 
+                <!-- Today Schedule Section -->
+                <LinearLayout
+                    android:id="@+id/sectionTodaySchedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/lecturer_today_schedule_title" />
+
+                        <TextView
+                            android:id="@+id/tvViewSemesterSchedule"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/semester_schedule_link"
+                            android:textColor="@color/color_primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvTodaySchedule"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyTodaySchedule"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/space_12"
+                        android:text="@string/empty_lecturer_today_schedule_message"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
+                </LinearLayout>
+
+                <!-- Grading Assignments Section -->
+                <LinearLayout
+                    android:id="@+id/sectionAssignments"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_20"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextAppearance.EduLens.Subtitle"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:text="@string/lecturer_grading_assignments_title" />
+
+                        <TextView
+                            android:id="@+id/tvSeeAllAssignments"
+                            style="@style/TextAppearance.EduLens.Caption"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/see_all"
+                            android:textColor="@color/color_primary"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvGradingAssignments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:nestedScrollingEnabled="false" />
+
+                    <TextView
+                        android:id="@+id/tvEmptyAssignments"
+                        style="@style/TextAppearance.EduLens.Body"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:gravity="center"
+                        android:paddingVertical="@dimen/space_12"
+                        android:text="@string/empty_grading_assignments_message"
+                        android:textColor="@color/text_muted"
+                        android:visibility="gone" />
+                </LinearLayout>
+
                 <!-- Classes Section -->
                 <LinearLayout
                     android:id="@+id/sectionCourses"
