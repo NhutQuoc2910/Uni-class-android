@@ -84,7 +84,7 @@
                         android:layout_marginTop="@dimen/space_8"
                         android:ellipsize="end"
                         android:maxLines="2"
-                        android:text="@string/course_name_1" />
+                        tools:text="Đánh giá hiệu năng hệ thống mạng máy tính" />
 
                     <TextView
                         android:id="@+id/tvHeroRoomSchedule"
@@ -92,7 +92,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_4"
-                        android:text="@string/course_type_1" />
+                        tools:text="Học phần chuyên ngành" />
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/btnScanHero"

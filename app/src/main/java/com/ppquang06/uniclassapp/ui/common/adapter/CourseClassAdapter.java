@@ -103,13 +103,13 @@ public class CourseClassAdapter extends RecyclerView.Adapter<CourseClassAdapter.
             }
 
             if (!lecturerName.isEmpty()) {
-                if (!lecturerName.startsWith("GV:")) {
-                    binding.tvLecturerName.setText("GV: " + lecturerName);
+                if (!lecturerName.startsWith("GV:") && !lecturerName.startsWith("Giảng viên:")) {
+                    binding.tvLecturerName.setText("Giảng viên: " + lecturerName);
                 } else {
-                    binding.tvLecturerName.setText(lecturerName);
+                    binding.tvLecturerName.setText(lecturerName.replace("GV:", "Giảng viên:"));
                 }
             } else {
-                binding.tvLecturerName.setText("GV: Chưa cập nhật");
+                binding.tvLecturerName.setText("Giảng viên: Chưa cập nhật");
             }
 
             // Show unread red dot if progress < 50

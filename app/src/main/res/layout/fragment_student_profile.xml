@@ -32,26 +32,55 @@
                 android:orientation="vertical">
 
                 <FrameLayout
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
-                    android:background="@drawable/bg_circle_aura">
+                    android:id="@+id/layoutAvatarContainer"
+                    android:layout_width="88dp"
+                    android:layout_height="88dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:foreground="?attr/selectableItemBackgroundBorderless">
+
+                    <FrameLayout
+                        android:layout_width="80dp"
+                        android:layout_height="80dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_aura">
+
+                        <ImageView
+                            android:id="@+id/ivAvatarProfile"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:contentDescription="@string/desc_avatar"
+                            android:scaleType="centerCrop"
+                            android:visibility="gone" />
+
+                        <TextView
+                            android:id="@+id/tvAvatarInitial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:text="S"
+                            android:textColor="@color/color_primary"
+                            android:textSize="32sp"
+                            android:textStyle="bold" />
+                    </FrameLayout>
 
                     <ImageView
-                        android:id="@+id/ivAvatarProfile"
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:contentDescription="@string/desc_avatar"
-                        android:visibility="gone" />
+                        android:layout_width="26dp"
+                        android:layout_height="26dp"
+                        android:layout_gravity="bottom|end"
+                        android:background="@drawable/bg_circle_blue"
+                        android:contentDescription="Thay đổi ảnh đại diện"
+                        android:padding="5dp"
+                        android:src="@drawable/ic_edit"
+                        app:tint="@color/white" />
 
-                    <TextView
-                        android:id="@+id/tvAvatarInitial"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                    <ProgressBar
+                        android:id="@+id/pbAvatarLoading"
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
                         android:layout_gravity="center"
-                        android:text="S"
-                        android:textColor="@color/color_primary"
-                        android:textSize="32sp"
-                        android:textStyle="bold" />
+                        android:indeterminateTint="@color/color_primary"
+                        android:visibility="gone" />
                 </FrameLayout>
 
                 <TextView

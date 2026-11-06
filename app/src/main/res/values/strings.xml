@@ -123,8 +123,8 @@
     <string name="qr_session_title">Tạo phiên điểm danh QR</string>
 
     <!-- Roles & Headers -->
-    <string name="role_badge_student">SV</string>
-    <string name="role_badge_lecturer">GV</string>
+    <string name="role_badge_student">Sinh viên</string>
+    <string name="role_badge_lecturer">Giảng viên</string>
     <string name="classes_semester_header">Học kỳ 1 · 2026–2027</string>
     <string name="empty_courses_message">Chưa có lớp học nào</string>
     <string name="join_class_desc">Nhập mã lớp học để tham gia lớp của bạn</string>

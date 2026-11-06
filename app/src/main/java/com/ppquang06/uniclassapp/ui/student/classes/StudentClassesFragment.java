@@ -119,7 +119,7 @@ public class StudentClassesFragment extends Fragment {
                     if (state.getData() != null && !state.getData().isEmpty()) {
                         handleClassesResult(state.getData());
                     } else {
-                        handleClassesResult(getSampleClasses());
+                        showErrorState(state.getMessage());
                     }
                     break;
                 case IDLE:
@@ -146,24 +146,10 @@ public class StudentClassesFragment extends Fragment {
             adapter.submitList(items);
             showContentState();
         } else {
-            List<CourseClassItem> sampleItems = getSampleClasses();
-            binding.tvClassCount.setText(String.format(getString(R.string.classes_count_format), sampleItems.size()));
-            adapter.submitList(sampleItems);
-            showContentState();
+            binding.tvClassCount.setText(String.format(getString(R.string.classes_count_format), 0));
+            adapter.submitList(java.util.Collections.emptyList());
+            showEmptyState();
         }
-    }
-
-    private List<CourseClassItem> getSampleClasses() {
-        List<CourseClassItem> list = new ArrayList<>();
-        CourseClassItem item1 = new CourseClassItem("c1", "SE104.021", "Nhập môn Công nghệ phần mềm", "Học kỳ 1 · 2026–2027", "Thứ 3, tiết 1-3", "TS. Lê Hoàng Nam", 30, 45);
-        CourseClassItem item2 = new CourseClassItem("c2", "IT003.022", "Cấu trúc dữ liệu và giải thuật", "Học kỳ 1 · 2026–2027", "Thứ 5, tiết 4-6", "ThS. Trần Thu Hà", 40, 50);
-        CourseClassItem item3 = new CourseClassItem("c3", "IT004.023", "Cơ sở dữ liệu", "Học kỳ 1 · 2026–2027", "Thứ 2, tiết 7-9", "PGS.TS. Phạm Quốc Việt", 60, 42);
-        CourseClassItem item4 = new CourseClassItem("c4", "NT106.021", "Mạng máy tính", "Học kỳ 1 · 2026–2027", "Thứ 6, tiết 1-3", "ThS. Võ Minh Tuấn", 75, 48);
-        list.add(item1);
-        list.add(item2);
-        list.add(item3);
-        list.add(item4);
-        return list;
     }
 
     private void showLoadingState() {

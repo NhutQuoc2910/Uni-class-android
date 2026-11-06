@@ -33,7 +33,7 @@
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
-            <!-- Left: Avatar Badge ("SV") + Title ("Lớp học của tôi") -->
+            <!-- Left: Avatar Badge ("Sinh viên") + Title ("Lớp học của tôi") -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -43,21 +43,16 @@
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
-                <FrameLayout
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:background="@drawable/bg_circle_blue">
-
-                    <TextView
-                        android:id="@+id/tvRoleAvatar"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:text="@string/role_badge_student"
-                        android:textColor="@color/white"
-                        android:textSize="12sp"
-                        android:textStyle="bold" />
-                </FrameLayout>
+                <TextView
+                    android:id="@+id/tvRoleAvatar"
+                    style="@style/TextAppearance.EduLens.Badge"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_badge_pill"
+                    android:paddingHorizontal="@dimen/space_12"
+                    android:paddingVertical="@dimen/space_4"
+                    android:text="@string/role_badge_student"
+                    android:textColor="@color/color_primary" />
 
                 <TextView
                     android:id="@+id/tvHeaderTitle"

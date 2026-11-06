@@ -183,24 +183,6 @@ public class VerifyOtpActivity extends AppCompatActivity {
         binding.btnConfirmRegisterOtp.setOnClickListener(v -> verifyOtp());
 
         binding.tvResendTimer.setOnClickListener(v -> resendOtp());
-
-        binding.tvBackToRegister.setOnClickListener(v -> finish());
-
-        binding.tvBackToLogin.setOnClickListener(v -> {
-
-            Intent intent = new Intent(
-                    VerifyOtpActivity.this,
-                    LoginActivity.class
-            );
-
-            intent.setFlags(
-                    Intent.FLAG_ACTIVITY_CLEAR_TOP
-                            | Intent.FLAG_ACTIVITY_SINGLE_TOP
-            );
-
-            startActivity(intent);
-            finish();
-        });
     }
 
     private void observeViewModel() {

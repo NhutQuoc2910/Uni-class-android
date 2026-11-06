@@ -207,7 +207,7 @@ public class LecturerClassStatisticsFragment extends Fragment {
         binding.tvOverallAttendanceRate.setText(attendanceRate + "%");
 
         int warningCount = data.getWarningAbsentCount();
-        binding.tvWarningAbsentCount.setText(warningCount + " SV");
+        binding.tvWarningAbsentCount.setText(warningCount + " sinh viên");
 
         double avgScore = data.getAverageScore();
         binding.tvAverageScore.setText(String.format(Locale.US, "%.1f", avgScore));

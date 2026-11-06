@@ -222,23 +222,32 @@ public class LecturerHomeFragment extends Fragment {
 
         UserResponse user = SessionManager.getInstance(requireContext()).getUser();
 
-        if (user != null && !TextUtils.isEmpty(user.getFullName())) {
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+        if (user != null) {
+            if (!TextUtils.isEmpty(user.getFullName())) {
+                Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
-            String greeting;
+                String greeting;
 
-            if (hour >= 5 && hour < 12) {
-                greeting = "Chào buổi sáng";
-            } else if (hour >= 12 && hour < 18) {
-                greeting = "Chào buổi chiều";
-            } else {
-                greeting = "Chào buổi tối";
+                if (hour >= 5 && hour < 12) {
+                    greeting = "Chào buổi sáng";
+                } else if (hour >= 12 && hour < 18) {
+                    greeting = "Chào buổi chiều";
+                } else {
+                    greeting = "Chào buổi tối";
+                }
+
+                binding.tvGreetingUser.setText(
+                        greeting + ", " + user.getFullName() + "!"
+                );
             }
 
-            binding.tvGreetingUser.setText(
-                    greeting + ", " + user.getFullName() + "!"
-            );
+            if (!TextUtils.isEmpty(user.getAvatarUrl())) {
+                com.bumptech.glide.Glide.with(this)
+                        .load(user.getAvatarUrl())
+                        .circleCrop()
+                        .into(binding.topAppBar.ivAvatar);
+            }
         }
     }
 

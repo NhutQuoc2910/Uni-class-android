@@ -8,10 +8,15 @@ import androidx.lifecycle.MutableLiveData;
 
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
 import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
+import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.data.repository.UserRepository;
 import com.ppquang06.uniclassapp.ui.common.BaseViewModel;
 import com.ppquang06.uniclassapp.ui.common.UiState;
+
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 /**
  * ViewModel managing user profile retrieval, profile update, and password change.
@@ -23,6 +28,7 @@ public class ProfileViewModel extends BaseViewModel {
     private final MutableLiveData<UiState<UserResponse>> profileState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<UserResponse>> updateProfileState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<Void>> changePasswordState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<FileUploadResponse>> uploadAvatarState = new MutableLiveData<>(UiState.idle());
 
     public ProfileViewModel(@NonNull Application application) {
         this(application, new UserRepository(application));
@@ -47,6 +53,10 @@ public class ProfileViewModel extends BaseViewModel {
 
     public LiveData<UiState<Void>> getChangePasswordState() {
         return changePasswordState;
+    }
+
+    public LiveData<UiState<FileUploadResponse>> getUploadAvatarState() {
+        return uploadAvatarState;
     }
 
     public void loadProfile() {
@@ -81,11 +91,24 @@ public class ProfileViewModel extends BaseViewModel {
         );
     }
 
+    public void uploadAvatar(@NonNull MultipartBody.Part file) {
+        RequestBody folder = RequestBody.create(MediaType.parse("text/plain"), "avatars");
+        executeCall(
+                userRepository.uploadFile(file, folder),
+                uploadAvatarState,
+                "Tải lên ảnh đại diện thất bại"
+        );
+    }
+
     public void resetUpdateProfileState() {
         dispatchState(updateProfileState, UiState.idle());
     }
 
     public void resetChangePasswordState() {
         dispatchState(changePasswordState, UiState.idle());
+    }
+
+    public void resetUploadAvatarState() {
+        dispatchState(uploadAvatarState, UiState.idle());
     }
 }

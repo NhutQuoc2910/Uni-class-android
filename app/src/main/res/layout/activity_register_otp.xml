@@ -47,19 +47,6 @@
                     android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- "Bước 2/2" Badge -->
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:background="@drawable/bg_step_badge"
-                android:paddingHorizontal="14dp"
-                android:paddingVertical="6dp"
-                android:text="@string/step_2_2"
-                android:textColor="#2563EB"
-                android:textSize="13sp"
-                android:textStyle="bold" />
-
         </LinearLayout>
 
         <!-- Title & Subtitle Section -->
@@ -317,6 +304,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp"
             android:background="@drawable/bg_button_primary"
             android:text="@string/confirm_register_button"
             android:textAllCaps="false"
@@ -324,45 +312,6 @@
             android:textSize="16sp"
             android:textStyle="bold"
             app:backgroundTint="@null" />
-
-        <!-- Back to Previous Step Link -->
-        <TextView
-            android:id="@+id/tv_back_to_register"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="12dp"
-            android:text="@string/back_to_register_step"
-            android:textColor="#64748B"
-            android:textSize="13sp" />
-
-        <!-- Footer Link -->
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="20dp"
-            android:layout_marginBottom="24dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/already_have_account_question"
-                android:textColor="#64748B"
-                android:textSize="14sp" />
-
-            <TextView
-                android:id="@+id/tv_back_to_login"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="4dp"
-                android:text="@string/back_to_login"
-                android:textColor="#2563EB"
-                android:textSize="14sp"
-                android:textStyle="bold" />
-
-        </LinearLayout>
 
     </LinearLayout>
 </ScrollView>

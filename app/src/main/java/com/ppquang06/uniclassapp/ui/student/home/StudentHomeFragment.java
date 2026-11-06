@@ -71,6 +71,10 @@ public class StudentHomeFragment extends Fragment {
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.edu_lens_title);
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
+        binding.tvHeroTag.setText(R.string.hero_today_class_tag);
+        binding.tvHeroCourseName.setText(R.string.hero_empty_today_title);
+        binding.tvHeroRoomSchedule.setText(R.string.hero_empty_today_sub);
+        binding.btnScanHero.setVisibility(View.GONE);
     }
 
     private void updateTodayDate(){
@@ -215,24 +219,32 @@ public class StudentHomeFragment extends Fragment {
 
         UserResponse user = SessionManager.getInstance(requireContext()).getUser();
 
-        if (user != null && !TextUtils.isEmpty(user.getFullName())) {
+        if (user != null) {
+            if (!TextUtils.isEmpty(user.getFullName())) {
+                Calendar calendar = Calendar.getInstance();
+                int hour = calendar.get(Calendar.HOUR_OF_DAY);
 
-            Calendar calendar = Calendar.getInstance();
-            int hour = calendar.get(Calendar.HOUR_OF_DAY);
+                String greeting;
 
-            String greeting;
+                if (hour >= 5 && hour < 12) {
+                    greeting = "Chào buổi sáng";
+                } else if (hour >= 12 && hour < 18) {
+                    greeting = "Chào buổi chiều";
+                } else {
+                    greeting = "Chào buổi tối";
+                }
 
-            if (hour >= 5 && hour < 12) {
-                greeting = "Chào buổi sáng";
-            } else if (hour >= 12 && hour < 18) {
-                greeting = "Chào buổi chiều";
-            } else {
-                greeting = "Chào buổi tối";
+                binding.tvGreetingUser.setText(
+                        greeting + ", " + user.getFullName() + "!"
+                );
             }
 
-            binding.tvGreetingUser.setText(
-                    greeting + ", " + user.getFullName() + "!"
-            );
+            if (!TextUtils.isEmpty(user.getAvatarUrl())) {
+                com.bumptech.glide.Glide.with(this)
+                        .load(user.getAvatarUrl())
+                        .circleCrop()
+                        .into(binding.topAppBar.ivAvatar);
+            }
         }
     }
 
