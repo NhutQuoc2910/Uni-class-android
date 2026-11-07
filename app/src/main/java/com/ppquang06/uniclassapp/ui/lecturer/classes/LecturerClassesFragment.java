@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.google.android.material.tabs.TabLayout;
 import com.ppquang06.uniclassapp.R;
+import com.ppquang06.uniclassapp.ui.lecturer.LecturerMainActivity;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerClassesBinding;
 import com.ppquang06.uniclassapp.ui.common.UiState;
@@ -56,6 +57,11 @@ public class LecturerClassesFragment extends Fragment {
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.nav_classes);
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_lecturer);
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_profile);
+            }
+        });
     }
 
     private void setupTabs() {
@@ -114,14 +120,22 @@ public class LecturerClassesFragment extends Fragment {
         binding.swipeRefresh.setOnRefreshListener(this::loadClasses);
 
         binding.fabCreateClass.setOnClickListener(v -> {
-            try {
-                NavHostFragment.findNavController(this)
-                        .navigate(R.id.nav_lecturer_create_class);
-            } catch (Exception e) {
-                if (getContext() != null) {
-                    Toast.makeText(requireContext(), "Mở tạo lớp", Toast.LENGTH_SHORT).show();
+            CreateClassBottomSheetDialogFragment sheet = CreateClassBottomSheetDialogFragment.newInstance();
+            sheet.setOnClassCreatedListener(newClass -> {
+                loadClasses();
+                if (newClass != null && getContext() != null) {
+                    Bundle bundle = new Bundle();
+                    bundle.putString("classId", newClass.getId());
+                    bundle.putString("classCode", newClass.getCode());
+                    bundle.putString("className", newClass.getName());
+                    bundle.putString("inviteCode", newClass.getInviteCode());
+                    try {
+                        NavHostFragment.findNavController(LecturerClassesFragment.this)
+                                .navigate(R.id.nav_lecturer_class_invite, bundle);
+                    } catch (Exception ignored) {}
                 }
-            }
+            });
+            sheet.show(getChildFragmentManager(), "CreateClassBottomSheet");
         });
     }
 

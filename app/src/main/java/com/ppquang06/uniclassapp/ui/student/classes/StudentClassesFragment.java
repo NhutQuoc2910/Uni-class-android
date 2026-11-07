@@ -14,6 +14,7 @@ import androidx.navigation.fragment.NavHostFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
+import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentClassesBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.CourseClassAdapter;
@@ -49,10 +50,12 @@ public class StudentClassesFragment extends Fragment {
     }
 
     private void setupTopBar() {
-        binding.tvHeaderTitle.setText(R.string.my_classes_title);
-        binding.tvRoleAvatar.setText(R.string.role_badge_student);
-        binding.btnSearchHeader.setOnClickListener(v -> {
-            // Action when Search is clicked
+        binding.topAppBar.tvTitle.setText(R.string.my_classes_title);
+        binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_profile);
+            }
         });
     }
 

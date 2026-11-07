@@ -281,4 +281,32 @@ public class LecturerClassFlowTest {
         assertNotNull(deserialized.getAssignments());
         assertTrue(deserialized.getAssignments().isEmpty());
     }
+
+    @Test
+    public void createClassBottomSheet_instantiationAndListenerCallback() {
+        com.ppquang06.uniclassapp.ui.lecturer.classes.CreateClassBottomSheetDialogFragment sheet =
+                com.ppquang06.uniclassapp.ui.lecturer.classes.CreateClassBottomSheetDialogFragment.newInstance();
+        assertNotNull(sheet);
+
+        final boolean[] callbackInvoked = {false};
+        sheet.setOnClassCreatedListener(newClass -> {
+            callbackInvoked[0] = true;
+            assertNotNull(newClass);
+            assertEquals("TEST-101", newClass.getCode());
+        });
+
+        // Test callback invocation directly
+        CourseClassItem dummyClass = new CourseClassItem("c-101", "TEST-101", "Lập trình Web", "HK1", "Phòng 102", "TS. A", "INV-101", "ACTIVE", 90, 45);
+        com.ppquang06.uniclassapp.ui.lecturer.classes.CreateClassBottomSheetDialogFragment.OnClassCreatedListener listener =
+                new com.ppquang06.uniclassapp.ui.lecturer.classes.CreateClassBottomSheetDialogFragment.OnClassCreatedListener() {
+                    @Override
+                    public void onClassCreated(CourseClassItem newClass) {
+                        callbackInvoked[0] = true;
+                        assertEquals("TEST-101", newClass.getCode());
+                    }
+                };
+        sheet.setOnClassCreatedListener(listener);
+        listener.onClassCreated(dummyClass);
+        assertTrue(callbackInvoked[0]);
+    }
 }

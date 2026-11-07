@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
+import com.ppquang06.uniclassapp.ui.lecturer.LecturerMainActivity;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerNotificationsBinding;
@@ -53,6 +54,11 @@ public class LecturerNotificationsFragment extends Fragment {
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.nav_notifications);
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_lecturer);
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_profile);
+            }
+        });
     }
 
     private void setupRecyclerView() {

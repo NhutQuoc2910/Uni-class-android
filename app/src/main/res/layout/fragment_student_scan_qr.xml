@@ -7,43 +7,10 @@
     android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
-    <!-- Top Bar with Flash Toggle -->
-    <LinearLayout
-        android:id="@+id/layoutTopBar"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@color/uc_bg_top_bar"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="16dp">
-
-        <TextView
-            android:id="@+id/tvTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/scan_qr_screen_title"
-            android:textColor="@color/uc_text_primary"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-
-        <!-- Flash Toggle Button -->
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/btnFlash"
-            style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:contentDescription="Bật/Tắt Flash"
-            android:insetLeft="0dp"
-            android:insetTop="0dp"
-            android:insetRight="0dp"
-            android:insetBottom="0dp"
-            app:backgroundTint="@color/uc_surface_elevated"
-            app:icon="@drawable/ic_flash"
-            app:iconGravity="textStart"
-            app:iconPadding="0dp"
-            app:iconTint="@color/uc_text_primary" />
-    </LinearLayout>
+    <!-- Unified Top App Bar -->
+    <include
+        android:id="@+id/topAppBar"
+        layout="@layout/view_top_app_bar" />
 
     <ScrollView
         android:layout_width="match_parent"
@@ -91,6 +58,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:background="@drawable/bg_qr_scanner_line" />
+
+                <!-- Flash Toggle Button (Floating on Viewfinder) -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnFlash"
+                    style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="10dp"
+                    android:contentDescription="Bật/Tắt Flash"
+                    android:insetLeft="0dp"
+                    android:insetTop="0dp"
+                    android:insetRight="0dp"
+                    android:insetBottom="0dp"
+                    app:backgroundTint="@color/uc_surface_card"
+                    app:icon="@drawable/ic_flash"
+                    app:iconGravity="textStart"
+                    app:iconPadding="0dp"
+                    app:iconTint="@color/uc_text_primary" />
             </FrameLayout>
 
             <!-- Instructions -->

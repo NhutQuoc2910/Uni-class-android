@@ -186,10 +186,10 @@ public class StudentHomeFragment extends Fragment {
 
         binding.tvSeeAllAssignments.setOnClickListener(v -> {
             if (getActivity() instanceof StudentMainActivity) {
-                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_notifications);
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_classes);
             } else {
                 NavHostFragment.findNavController(StudentHomeFragment.this)
-                        .navigate(R.id.nav_student_notifications);
+                        .navigate(R.id.nav_student_classes);
             }
         });
 

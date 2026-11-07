@@ -100,6 +100,7 @@ public class StudentScanQrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        setupTopBar();
         setupFlashToggle();
         setupScanLineAnimation();
         setupQuickScan();
@@ -311,6 +312,17 @@ public class StudentScanQrFragment extends Fragment {
                 Toast.makeText(requireContext(), "Lỗi chuyển màn hình xác thực", Toast.LENGTH_SHORT).show();
             }
         }
+    }
+
+    private void setupTopBar() {
+        if (binding == null || binding.topAppBar == null) return;
+        binding.topAppBar.tvTitle.setText(R.string.scan_qr_screen_title);
+        binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof com.ppquang06.uniclassapp.ui.student.StudentMainActivity) {
+                ((com.ppquang06.uniclassapp.ui.student.StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_profile);
+            }
+        });
     }
 
     private void setupFlashToggle() {

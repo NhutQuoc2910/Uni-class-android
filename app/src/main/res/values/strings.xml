@@ -229,11 +229,11 @@
     <string name="lecturer_action_qr">Mã QR</string>
     <string name="lecturer_action_stats">Thống kê</string>
     <string name="section_announcements">Thông báo</string>
-    <string name="btn_create_announcement">Tạo thông báo</string>
+    <string name="btn_create_announcement">+ Tạo thông báo</string>
     <string name="section_materials">Tài liệu</string>
-    <string name="btn_upload_material">Tải tài liệu</string>
+    <string name="btn_upload_material">+ Tải tài liệu</string>
     <string name="section_assignments">Bài tập</string>
-    <string name="btn_create_assignment">Tạo bài tập</string>
+    <string name="btn_create_assignment">+ Tạo bài tập</string>
     <string name="create_class_success_subtitle">Lớp học của bạn đã sẵn sàng</string>
     <string name="btn_copy_code">Sao chép mã</string>
     <string name="btn_share_code">Chia sẻ mã</string>
