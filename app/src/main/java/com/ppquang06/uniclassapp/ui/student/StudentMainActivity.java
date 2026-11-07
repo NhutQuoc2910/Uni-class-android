@@ -11,6 +11,9 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 import androidx.navigation.NavController;
 import androidx.navigation.fragment.NavHostFragment;
 import androidx.navigation.ui.NavigationUI;
@@ -54,6 +57,14 @@ public class StudentMainActivity extends AppCompatActivity {
 
         binding = ActivityStudentMainBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.bottomNavStudent, (v, insets) -> {
+            if (v != null && insets != null) {
+                Insets navBarInsets = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+                v.setPadding(0, 0, 0, navBarInsets.bottom);
+            }
+            return insets;
+        });
 
         setupNavigation();
         requestNotificationPermissionAndSyncToken();

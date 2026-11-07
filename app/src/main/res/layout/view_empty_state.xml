@@ -25,6 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_12"
         android:gravity="center"
+        android:textColor="@color/uc_text_primary"
         android:text="@string/my_classes_title" />
 
     <TextView
@@ -34,6 +35,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_4"
         android:gravity="center"
+        android:textColor="@color/uc_text_secondary"
         android:text="@string/edu_lens_subtitle" />
 
     <com.google.android.material.button.MaterialButton

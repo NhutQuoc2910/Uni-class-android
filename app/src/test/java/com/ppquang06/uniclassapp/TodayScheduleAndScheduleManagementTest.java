@@ -630,6 +630,26 @@ public class TodayScheduleAndScheduleManagementTest {
     }
 
     @Test
+    public void testTodayScheduleAdapterSubmitListAndItemCount() {
+        final TodayScheduleItem[] clickedItem = {null};
+        com.ppquang06.uniclassapp.ui.common.adapter.TodayScheduleAdapter adapter =
+                new com.ppquang06.uniclassapp.ui.common.adapter.TodayScheduleAdapter(item -> clickedItem[0] = item);
+
+        assertEquals(0, adapter.getItemCount());
+
+        List<TodayScheduleItem> list = new ArrayList<>();
+        TodayScheduleItem item1 = new TodayScheduleItem();
+        item1.setClassId("c1");
+        list.add(item1);
+
+        adapter.submitList(list);
+        assertEquals(1, adapter.getItemCount());
+
+        adapter.submitList(null);
+        assertEquals(0, adapter.getItemCount());
+    }
+
+    @Test
     public void testScheduleExceptionAdapterDateFormatting() {
         assertEquals("20/10/2026", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate("2026-10-20"));
         assertEquals("20/10/2026", com.ppquang06.uniclassapp.ui.common.adapter.ScheduleExceptionAdapter.formatDate("20/10/2026"));

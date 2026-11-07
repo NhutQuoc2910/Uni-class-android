@@ -1,13 +1,15 @@
 package com.ppquang06.uniclassapp.ui.common.adapter;
 
-import android.graphics.Color;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.ppquang06.uniclassapp.R;
 
 import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
 import com.ppquang06.uniclassapp.databinding.ItemScheduleExceptionBinding;
@@ -142,11 +144,11 @@ public class ScheduleExceptionAdapter extends RecyclerView.Adapter<ScheduleExcep
             String type = item.getExceptionType() != null ? item.getExceptionType().trim().toUpperCase() : "";
             int badgeColor;
             if ("CANCELLED".equals(type)) {
-                badgeColor = Color.parseColor("#DC2626"); // Red
+                badgeColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.color_error);
             } else if ("MAKEUP".equals(type)) {
-                badgeColor = Color.parseColor("#16A34A"); // Green
+                badgeColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.color_success);
             } else {
-                badgeColor = Color.parseColor("#D97706"); // Orange
+                badgeColor = ContextCompat.getColor(binding.getRoot().getContext(), R.color.color_warning);
             }
             binding.tvExceptionTypeBadge.setTextColor(badgeColor);
 

@@ -4,7 +4,7 @@
     android:id="@+id/cardBanner"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:gravity="center_vertical"
     android:minHeight="70dp"
     android:orientation="horizontal"
@@ -30,6 +30,7 @@
             style="@style/TextAppearance.EduLens.Subtitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:textColor="@color/uc_text_primary"
             android:text="@string/edu_lens_title" />
 
         <TextView
@@ -38,6 +39,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
+            android:textColor="@color/uc_text_secondary"
             android:text="@string/edu_lens_subtitle" />
     </LinearLayout>
 

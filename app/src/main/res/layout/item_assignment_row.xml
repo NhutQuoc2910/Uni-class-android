@@ -54,11 +54,11 @@
         style="@style/TextAppearance.EduLens.Badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/bg_unified_lavender_pill"
+        android:background="@drawable/bg_badge_pill"
         android:paddingHorizontal="@dimen/space_12"
         android:paddingVertical="4dp"
         android:text="@string/status_due_soon"
-        android:textColor="#191D23" />
+        android:textColor="@color/uc_text_primary" />
 
     <ImageButton
         android:id="@+id/btnDeleteAssignment"

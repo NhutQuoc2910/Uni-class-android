@@ -22,7 +22,7 @@
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_unified_lavender_pill"
+            android:background="@drawable/bg_feedback_box"
             android:gravity="center"
             android:minWidth="84dp"
             android:orientation="vertical"
@@ -34,7 +34,7 @@
                 style="@style/TextAppearance.EduLens.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:textColor="#191D23"
+                android:textColor="@color/uc_text_primary"
                 android:textStyle="bold"
                 tools:text="07:30 - 11:30" />
 
@@ -43,7 +43,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="#4A5C6A"
+                android:textColor="@color/uc_text_secondary"
                 android:textSize="11sp"
                 tools:text="Lịch định kỳ" />
         </LinearLayout>
