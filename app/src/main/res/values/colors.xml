@@ -7,6 +7,7 @@
     <!-- 12-Color Unified Theme Tokens (Palette 1 + Palette 2) -->
     <!-- Palette 1: Nordic Slate -->
     <color name="p1_obsidian">#06141B</color>
+    <color name="p1_dark_navy">#06141B</color>
     <color name="p1_midnight">#11212D</color>
     <color name="p1_slate">#253745</color>
     <color name="p1_steel">#4A5C6A</color>
