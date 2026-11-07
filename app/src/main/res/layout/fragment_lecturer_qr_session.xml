@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -23,75 +23,67 @@
             android:orientation="vertical"
             android:padding="@dimen/space_16">
 
-            <!-- Class & Session Status Card -->
-            <com.google.android.material.card.MaterialCardView
+            <!-- Class & Session Status Bento Hero Card -->
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_16"
-                app:cardBackgroundColor="@color/color_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="1dp"
-                app:strokeColor="@color/outline_border"
-                app:strokeWidth="1dp">
+                android:background="@drawable/bg_unified_bento_hero"
+                android:orientation="vertical"
+                android:padding="@dimen/space_16">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:padding="@dimen/space_16">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:gravity="center_vertical"
-                        android:orientation="horizontal">
-
-                        <TextView
-                            android:id="@+id/tvClassName"
-                            style="@style/TextAppearance.EduLens.Title"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_weight="1"
-                            android:ellipsize="end"
-                            android:maxLines="2"
-                            android:textColor="@color/text_primary"
-                            android:textStyle="bold"
-                            tools:text="Thiết kế mạng máy tính nâng cao" />
-
-                        <TextView
-                            android:id="@+id/tvSessionStatus"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_8"
-                            android:background="@drawable/bg_pill_green"
-                            android:paddingHorizontal="@dimen/space_12"
-                            android:paddingVertical="@dimen/space_4"
-                            android:text="@string/session_status_open"
-                            android:textColor="@color/color_success"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-                    </LinearLayout>
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
                     <TextView
-                        android:id="@+id/tvClassCodeRoom"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvClassName"
+                        style="@style/TextAppearance.EduLens.Title"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_6"
-                        android:textColor="@color/text_secondary"
-                        android:textSize="14sp"
-                        tools:text="NT118.Q11 · Phòng B2.10" />
+                        android:layout_weight="1"
+                        android:ellipsize="end"
+                        android:maxLines="2"
+                        android:textColor="@color/white"
+                        android:textSize="17sp"
+                        android:textStyle="bold"
+                        tools:text="Thiết kế mạng máy tính nâng cao" />
+
+                    <TextView
+                        android:id="@+id/tvSessionStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/space_8"
+                        android:background="@drawable/bg_pill_green"
+                        android:paddingHorizontal="@dimen/space_12"
+                        android:paddingVertical="@dimen/space_4"
+                        android:text="@string/session_status_open"
+                        android:textColor="@color/color_success"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
-            </com.google.android.material.card.MaterialCardView>
+
+                <TextView
+                    android:id="@+id/tvClassCodeRoom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/space_6"
+                    android:textColor="@color/p1_pewter"
+                    android:textSize="13sp"
+                    tools:text="NT118.Q11 · Phòng B2.10" />
+            </LinearLayout>
 
             <!-- Dynamic QR Code Card -->
             <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_16"
-                app:cardBackgroundColor="@color/color_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp"
-                app:strokeColor="@color/outline_border"
+                app:cardBackgroundColor="@color/uc_surface_card"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/uc_stroke_grid"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -137,7 +129,7 @@
                             style="@style/TextAppearance.EduLens.Body"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
+                            android:textColor="@color/uc_text_primary"
                             android:textSize="14sp"
                             android:textStyle="bold"
                             tools:text="Mã phiên tự động làm mới sau: 30s" />
@@ -150,7 +142,7 @@
                             android:max="30"
                             android:progress="30"
                             app:indicatorColor="@color/color_primary"
-                            app:trackColor="@color/color_surface_variant"
+                            app:trackColor="@color/uc_surface_elevated"
                             app:trackCornerRadius="3dp" />
 
                         <TextView
@@ -158,7 +150,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_8"
-                            android:textColor="@color/text_muted"
+                            android:textColor="@color/uc_text_secondary"
                             android:textSize="12sp"
                             tools:text="Mã phiên: SEC-0982 · Token tự xoay vòng" />
                     </LinearLayout>
@@ -170,10 +162,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="@dimen/space_16"
-                app:cardBackgroundColor="@color/color_surface"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="1dp"
-                app:strokeColor="@color/outline_border"
+                app:cardBackgroundColor="@color/uc_surface_card"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/uc_stroke_grid"
                 app:strokeWidth="1dp">
 
                 <LinearLayout
@@ -187,7 +179,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/security_layer_title"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/uc_text_primary"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
@@ -196,14 +188,14 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
                         android:text="Tự động kiểm tra đa yếu tố khi sinh viên quét mã"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:textSize="12sp" />
 
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="@dimen/space_12"
-                        android:background="@color/outline_border" />
+                        android:background="@color/uc_border_card" />
 
                     <!-- Layer 1: WiFi -->
                     <LinearLayout
@@ -232,7 +224,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/security_layer_wifi"
-                                android:textColor="@color/text_primary"
+                                android:textColor="@color/uc_text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -241,7 +233,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/text_secondary"
+                                android:textColor="@color/uc_text_secondary"
                                 android:textSize="12sp"
                                 tools:text="BSSID: 00:11:22:33:44:55 · Mạng trường" />
                         </LinearLayout>
@@ -258,7 +250,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="@dimen/space_12"
-                        android:background="@color/color_surface_variant" />
+                        android:background="@color/uc_border_card" />
 
                     <!-- Layer 2: GPS -->
                     <LinearLayout
@@ -287,7 +279,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/security_layer_gps"
-                                android:textColor="@color/text_primary"
+                                android:textColor="@color/uc_text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -296,7 +288,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:textColor="@color/text_secondary"
+                                android:textColor="@color/uc_text_secondary"
                                 android:textSize="12sp"
                                 tools:text="Tọa độ: 10.8700, 106.8031 · Bán kính 50m" />
                         </LinearLayout>
@@ -313,7 +305,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="1dp"
                         android:layout_marginVertical="@dimen/space_12"
-                        android:background="@color/color_surface_variant" />
+                        android:background="@color/uc_border_card" />
 
                     <!-- Layer 3: Device Limit -->
                     <LinearLayout
@@ -342,7 +334,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/security_layer_device"
-                                android:textColor="@color/text_primary"
+                                android:textColor="@color/uc_text_primary"
                                 android:textSize="14sp"
                                 android:textStyle="bold" />
 
@@ -352,7 +344,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="@string/security_layer_device_desc"
-                                android:textColor="@color/text_secondary"
+                                android:textColor="@color/uc_text_secondary"
                                 android:textSize="12sp" />
                         </LinearLayout>
 
@@ -369,20 +361,18 @@
             <!-- Action Buttons -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnTrackLive"
+                style="@style/Widget.EduLens.Button.Filled"
                 android:layout_width="match_parent"
                 android:layout_height="52dp"
                 android:layout_marginBottom="@dimen/space_12"
-                android:backgroundTint="@color/color_primary"
                 android:text="@string/btn_track_live"
-                android:textAllCaps="false"
-                android:textColor="@color/white"
                 android:textSize="15sp"
-                android:textStyle="bold"
-                app:cornerRadius="12dp"
+                app:backgroundTint="@color/uc_btn_primary_bg"
+                android:textColor="@color/uc_btn_primary_text"
                 app:icon="@drawable/ic_group"
                 app:iconGravity="textStart"
                 app:iconPadding="8dp"
-                app:iconTint="@color/white" />
+                app:iconTint="@color/uc_btn_primary_text" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnCloseSession"
@@ -395,7 +385,7 @@
                 android:textColor="@color/color_error"
                 android:textSize="14sp"
                 android:textStyle="bold"
-                app:cornerRadius="12dp"
+                app:cornerRadius="14dp"
                 app:strokeColor="@color/color_error"
                 app:strokeWidth="1.5dp" />
 

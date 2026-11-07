@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_8"
-    app:cardBackgroundColor="@color/color_surface"
-    app:cardCornerRadius="12dp"
-    app:cardElevation="0.5dp"
-    app:strokeColor="@color/outline_border"
+    app:cardBackgroundColor="@color/uc_surface_card"
+    app:cardCornerRadius="16dp"
+    app:cardElevation="0dp"
+    app:strokeColor="@color/uc_stroke_grid"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/text_primary"
+                android:textColor="@color/uc_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="Nguyễn Văn An" />
@@ -67,7 +67,7 @@
                     android:id="@+id/tvStudentCode"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/uc_text_secondary"
                     android:textSize="12sp"
                     tools:text="21520001" />
 
@@ -76,13 +76,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="@dimen/space_4"
                     android:text="·"
-                    android:textColor="@color/text_muted" />
+                    android:textColor="@color/uc_text_secondary" />
 
                 <TextView
                     android:id="@+id/tvScannedAt"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/text_muted"
+                    android:textColor="@color/uc_text_secondary"
                     android:textSize="12sp"
                     tools:text="08:15:22" />
             </LinearLayout>

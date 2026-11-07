@@ -76,7 +76,7 @@ public final class QrCodeGenerator {
             int height = bitMatrix.getHeight();
 
             int[] pixels = new int[width * height];
-            int darkColor = 0xFF0F172A; // Dark Slate #0F172A matching EduLens text_primary
+            int darkColor = 0xFF06141B; // Midnight Dark #06141B for maximum optical contrast
             int lightColor = Color.WHITE;
 
             for (int y = 0; y < height; y++) {

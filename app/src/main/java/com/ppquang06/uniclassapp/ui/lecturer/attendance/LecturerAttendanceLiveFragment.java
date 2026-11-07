@@ -287,7 +287,9 @@ public class LecturerAttendanceLiveFragment extends Fragment {
         binding.btnCloseSessionLive.setEnabled(true);
         binding.btnCloseSessionLive.setText("Quay về chi tiết lớp");
         binding.btnCloseSessionLive.setOnClickListener(v -> navigateBackToClassDetail());
-        binding.btnCloseSessionLive.setBackgroundTintList(ColorStateList.valueOf(requireContext().getColor(R.color.color_primary)));
+        binding.btnCloseSessionLive.setBackgroundTintList(ColorStateList.valueOf(requireContext().getColor(R.color.uc_btn_primary_bg)));
+        binding.btnCloseSessionLive.setTextColor(requireContext().getColor(R.color.uc_btn_primary_text));
+        binding.btnCloseSessionLive.setIconTint(ColorStateList.valueOf(requireContext().getColor(R.color.uc_btn_primary_text)));
     }
 
     private void connectWebSocket() {

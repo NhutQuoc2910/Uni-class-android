@@ -4,33 +4,29 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
         android:id="@+id/topAppBar"
         layout="@layout/view_top_app_bar" />
 
-    <!-- Class Header & Status Bar -->
-    <com.google.android.material.card.MaterialCardView
+    <!-- Bento Hero Container (Live Session Header + 3 Metrics) -->
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
         android:layout_marginTop="@dimen/space_12"
         android:layout_marginBottom="@dimen/space_8"
-        app:cardBackgroundColor="@color/color_surface"
-        app:cardCornerRadius="14dp"
-        app:cardElevation="1dp"
-        app:strokeColor="@color/outline_border"
-        app:strokeWidth="1dp">
+        android:background="@drawable/bg_unified_bento_hero"
+        android:orientation="vertical"
+        android:padding="20dp">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:orientation="horizontal"
-            android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_12">
+            android:orientation="horizontal">
 
             <LinearLayout
                 android:layout_width="0dp"
@@ -45,8 +41,8 @@
                     android:layout_height="wrap_content"
                     android:ellipsize="end"
                     android:maxLines="1"
-                    android:textColor="@color/text_primary"
-                    android:textSize="15sp"
+                    android:textColor="@color/white"
+                    android:textSize="17sp"
                     android:textStyle="bold"
                     tools:text="Thiết kế mạng máy tính" />
 
@@ -55,8 +51,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
-                    android:textColor="@color/text_secondary"
-                    android:textSize="12sp"
+                    android:textColor="@color/p1_pewter"
+                    android:textSize="13sp"
                     tools:text="NT118.Q11 · Phòng B2.10" />
             </LinearLayout>
 
@@ -64,6 +60,7 @@
                 android:id="@+id/tvLiveSessionStatus"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_8"
                 android:background="@drawable/bg_pill_green"
                 android:paddingHorizontal="@dimen/space_10"
                 android:paddingVertical="@dimen/space_4"
@@ -72,40 +69,31 @@
                 android:textSize="12sp"
                 android:textStyle="bold" />
         </LinearLayout>
-    </com.google.android.material.card.MaterialCardView>
 
-    <!-- 3 Live Metric Counter Cards -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="@dimen/space_16"
-        android:layout_marginBottom="@dimen/space_8"
-        android:orientation="horizontal">
-
-        <!-- Card 1: Có mặt -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
+        <!-- 3 Live Metric Counter Boxes Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="@dimen/space_4"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/color_surface"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="1dp"
-            app:strokeColor="@color/outline_border"
-            app:strokeWidth="1dp">
+            android:layout_marginTop="16dp"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
 
+            <!-- Sub-cell 1: Có mặt -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/space_4"
+                android:layout_weight="1"
+                android:background="@drawable/bg_unified_bento_stat"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingVertical="@dimen/space_12">
+                android:paddingVertical="12dp">
 
                 <TextView
                     android:id="@+id/tvPresentCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_success"
+                    android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="38" />
@@ -115,35 +103,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="@string/metric_present"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/p1_pewter"
                     android:textSize="12sp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card 2: Vắng -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/space_4"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/color_surface"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="1dp"
-            app:strokeColor="@color/outline_border"
-            app:strokeWidth="1dp">
-
+            <!-- Sub-cell 2: Vắng -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="@dimen/space_4"
+                android:layout_weight="1"
+                android:background="@drawable/bg_unified_bento_stat"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingVertical="@dimen/space_12">
+                android:paddingVertical="12dp">
 
                 <TextView
                     android:id="@+id/tvAbsentCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_absence"
+                    android:textColor="@color/p2_lavender"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="4" />
@@ -153,35 +132,26 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="@string/metric_absent"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/p1_pewter"
                     android:textSize="12sp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
 
-        <!-- Card 3: Tổng số -->
-        <com.google.android.material.card.MaterialCardView
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/space_4"
-            android:layout_weight="1"
-            app:cardBackgroundColor="@color/color_surface"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="1dp"
-            app:strokeColor="@color/outline_border"
-            app:strokeWidth="1dp">
-
+            <!-- Sub-cell 3: Tổng số -->
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/space_4"
+                android:layout_weight="1"
+                android:background="@drawable/bg_unified_bento_stat"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:paddingVertical="@dimen/space_12">
+                android:paddingVertical="12dp">
 
                 <TextView
                     android:id="@+id/tvTotalCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/color_primary"
+                    android:textColor="@color/white"
                     android:textSize="22sp"
                     android:textStyle="bold"
                     tools:text="42" />
@@ -191,10 +161,10 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="2dp"
                     android:text="@string/metric_total"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/p1_pewter"
                     android:textSize="12sp" />
             </LinearLayout>
-        </com.google.android.material.card.MaterialCardView>
+        </LinearLayout>
     </LinearLayout>
 
     <!-- Attendance Progress Bar Card -->
@@ -203,10 +173,10 @@
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="@dimen/space_16"
         android:layout_marginBottom="@dimen/space_8"
-        app:cardBackgroundColor="@color/color_surface"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="1dp"
-        app:strokeColor="@color/outline_border"
+        app:cardBackgroundColor="@color/uc_surface_card"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
+        app:strokeColor="@color/uc_stroke_grid"
         app:strokeWidth="1dp">
 
         <LinearLayout
@@ -214,7 +184,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/space_16"
-            android:paddingVertical="@dimen/space_10">
+            android:paddingVertical="@dimen/space_12">
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -227,7 +197,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/uc_text_primary"
                     android:textSize="13sp"
                     android:textStyle="bold"
                     tools:text="Đã điểm danh: 38/42 (90%)" />
@@ -250,7 +220,7 @@
                 android:max="100"
                 android:progress="90"
                 app:indicatorColor="@color/color_success"
-                app:trackColor="@color/color_surface_variant"
+                app:trackColor="@color/uc_surface_elevated"
                 app:trackCornerRadius="4dp" />
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
@@ -271,7 +241,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Danh sách vừa quét mã"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/uc_text_primary"
             android:textSize="14sp"
             android:textStyle="bold" />
 
@@ -279,7 +249,7 @@
             android:id="@+id/tvLiveAttendeesCountLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/text_muted"
+            android:textColor="@color/uc_text_secondary"
             android:textSize="12sp"
             tools:text="38 sinh viên" />
     </LinearLayout>
@@ -321,14 +291,14 @@
                 android:layout_height="56dp"
                 android:contentDescription="Chưa có dữ liệu"
                 android:src="@drawable/ic_group"
-                app:tint="@color/text_muted" />
+                app:tint="@color/uc_text_secondary" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_12"
                 android:text="Chưa có sinh viên nào quét mã"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/uc_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold" />
 
@@ -338,7 +308,7 @@
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:text="Sinh viên quét mã trên màn hình phiên QR sẽ xuất hiện trực tiếp tại đây"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/uc_text_secondary"
                 android:textSize="12sp" />
         </LinearLayout>
 
@@ -356,8 +326,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_surface"
-        android:elevation="4dp"
+        android:background="@color/uc_surface_card"
+        android:elevation="0dp"
         android:orientation="vertical"
         android:paddingHorizontal="@dimen/space_16"
         android:paddingVertical="@dimen/space_12">
@@ -372,7 +342,7 @@
             android:textColor="@color/white"
             android:textSize="15sp"
             android:textStyle="bold"
-            app:cornerRadius="12dp"
+            app:cornerRadius="14dp"
             app:icon="@drawable/ic_check_circle"
             app:iconGravity="textStart"
             app:iconPadding="8dp"
