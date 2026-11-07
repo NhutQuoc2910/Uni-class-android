@@ -346,8 +346,11 @@
             <!-- Compatibility alias view for btnSubmitAssignment -->
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSubmitAssignment"
+                style="@style/Widget.EduLens.Button.Filled"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                app:backgroundTint="@color/uc_btn_primary_bg"
+                android:textColor="@color/uc_btn_primary_text"
                 android:visibility="gone" />
 
         </LinearLayout>

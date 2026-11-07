@@ -465,8 +465,11 @@
                 <!-- Semantic alias view for btnSaveGrade -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveGrade"
+                    style="@style/Widget.EduLens.Button.Filled"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/uc_btn_primary_bg"
+                    android:textColor="@color/uc_btn_primary_text"
                     android:visibility="gone" />
 
                 <!-- Công bố điểm (btnPublishGrade / btnPublishGrades) -->
@@ -488,8 +491,13 @@
                 <!-- Semantic alias view for btnPublishGrades -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPublishGrades"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    app:backgroundTint="@color/uc_surface_elevated"
+                    app:strokeColor="@color/uc_border_card"
+                    android:textColor="@color/uc_text_primary"
+                    app:iconTint="@color/uc_text_primary"
                     android:visibility="gone" />
             </LinearLayout>
 
