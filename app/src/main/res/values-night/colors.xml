@@ -12,4 +12,32 @@
     <color name="uc_text_muted">#7B919C</color>
     <color name="uc_nav_item_active">#C5BAC4</color>
     <color name="uc_nav_item_inactive">#7B919C</color>
+    <color name="uc_btn_primary_bg">#C5BAC4</color>
+    <color name="uc_btn_primary_text">#06141B</color>
+
+    <!-- Unified App Semantic Tokens (Mapped to 12-Color Theme for Dark Mode) -->
+    <color name="color_primary">#C5BAC4</color>
+    <color name="color_primary_dark">#9BA8AB</color>
+    <color name="color_primary_container">#33C5BAC4</color>
+    <color name="color_secondary">#9BA8AB</color>
+    <color name="color_secondary_container">#253745</color>
+    <color name="color_surface">@color/uc_surface_card</color>
+    <color name="color_surface_variant">@color/uc_surface_elevated</color>
+    <color name="color_background">@color/uc_bg_canvas</color>
+
+    <!-- Status Semantic Colors (Dark Mode Soft Translucent Containers) -->
+    <color name="color_error">#F87171</color>
+    <color name="color_error_container">#26EF4444</color>
+    <color name="color_success">#34D399</color>
+    <color name="color_success_container">#2610B981</color>
+    <color name="color_warning">#FBBF24</color>
+    <color name="color_warning_container">#26F59E0B</color>
+    <color name="color_absence">#FB923C</color>
+    <color name="color_absence_container">#26F97316</color>
+
+    <!-- Typography & Border Tokens -->
+    <color name="text_primary">@color/uc_text_primary</color>
+    <color name="text_secondary">@color/uc_text_secondary</color>
+    <color name="text_muted">@color/uc_text_muted</color>
+    <color name="outline_border">@color/uc_border_card</color>
 </resources>

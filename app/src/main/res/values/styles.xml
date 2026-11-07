@@ -36,14 +36,15 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <!-- Button Variants (Figma 0:1) -->
+    <!-- Button Variants (12-Color Unified Design System) -->
     <style name="Widget.EduLens.Button.Filled" parent="Widget.Material3.Button">
         <item name="android:minHeight">@dimen/button_height_md</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="backgroundTint">@color/color_primary</item>
-        <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">@dimen/radius_sm</item>
+        <item name="backgroundTint">@color/uc_btn_primary_bg</item>
+        <item name="android:textColor">@color/uc_btn_primary_text</item>
+        <item name="iconTint">@color/uc_btn_primary_text</item>
+        <item name="cornerRadius">14dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -52,10 +53,11 @@
         <item name="android:minHeight">@dimen/button_height_md</item>
         <item name="android:insetTop">0dp</item>
         <item name="android:insetBottom">0dp</item>
-        <item name="strokeColor">@color/outline_border</item>
+        <item name="strokeColor">@color/uc_border_card</item>
         <item name="strokeWidth">1dp</item>
-        <item name="android:textColor">@color/text_primary</item>
-        <item name="cornerRadius">@dimen/radius_sm</item>
+        <item name="android:textColor">@color/uc_text_primary</item>
+        <item name="iconTint">@color/uc_text_primary</item>
+        <item name="cornerRadius">14dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
     </style>
@@ -75,7 +77,7 @@
         <item name="android:insetBottom">0dp</item>
         <item name="backgroundTint">@color/color_error</item>
         <item name="android:textColor">@color/white</item>
-        <item name="cornerRadius">@dimen/radius_sm</item>
+        <item name="cornerRadius">14dp</item>
         <item name="android:textAllCaps">false</item>
         <item name="android:textStyle">bold</item>
     </style>
