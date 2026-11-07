@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -32,24 +32,20 @@
                     android:orientation="vertical"
                     android:padding="@dimen/space_16">
 
-                    <!-- Class Header & Status Card -->
-                    <com.google.android.material.card.MaterialCardView
+                    <!-- Bento Hero Container (Class Header + 3 Summary Metrics) -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_16"
-                        app:cardBackgroundColor="@color/color_surface"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="1dp"
-                        app:strokeColor="@color/outline_border"
-                        app:strokeWidth="1dp">
+                        android:background="@drawable/bg_unified_bento_hero"
+                        android:orientation="vertical"
+                        android:padding="20dp">
 
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:gravity="center_vertical"
-                            android:orientation="horizontal"
-                            android:paddingHorizontal="@dimen/space_16"
-                            android:paddingVertical="@dimen/space_12">
+                            android:orientation="horizontal">
 
                             <LinearLayout
                                 android:layout_width="0dp"
@@ -64,8 +60,8 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="end"
                                     android:maxLines="2"
-                                    android:textColor="@color/text_primary"
-                                    android:textSize="16sp"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="17sp"
                                     android:textStyle="bold"
                                     tools:text="Thiết kế mạng máy tính" />
 
@@ -74,7 +70,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
-                                    android:textColor="@color/text_secondary"
+                                    android:textColor="#9BA8AB"
                                     android:textSize="13sp"
                                     tools:text="NT118.Q11 · HK1 (2026-2027)" />
                             </LinearLayout>
@@ -83,6 +79,7 @@
                                 android:id="@+id/tvStatClassStatus"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_8"
                                 android:background="@drawable/bg_pill_green"
                                 android:paddingHorizontal="@dimen/space_12"
                                 android:paddingVertical="@dimen/space_4"
@@ -91,39 +88,31 @@
                                 android:textSize="12sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
-                    </com.google.android.material.card.MaterialCardView>
 
-                    <!-- 3 Summary Metric Cards -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/space_16"
-                        android:orientation="horizontal">
-
-                        <!-- Metric 1: Chuyên cần -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="0dp"
+                        <!-- 3 Summary Metric Boxes Row -->
+                        <LinearLayout
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/space_4"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/color_surface"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:strokeColor="@color/outline_border"
-                            app:strokeWidth="1dp">
+                            android:layout_marginTop="16dp"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
 
+                            <!-- Metric 1: Chuyên cần -->
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginEnd="@dimen/space_4"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_unified_bento_stat"
                                 android:gravity="center"
                                 android:orientation="vertical"
-                                android:paddingVertical="@dimen/space_12">
+                                android:paddingVertical="12dp">
 
                                 <TextView
                                     android:id="@+id/tvOverallAttendanceRate"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/color_success"
+                                    android:textColor="#FFFFFF"
                                     android:textSize="22sp"
                                     android:textStyle="bold"
                                     tools:text="88%" />
@@ -133,35 +122,26 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:text="@string/stat_attendance_rate"
-                                    android:textColor="@color/text_secondary"
+                                    android:textColor="#9BA8AB"
                                     android:textSize="12sp" />
                             </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
 
-                        <!-- Metric 2: Vắng > 20% -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/space_4"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/color_surface"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:strokeColor="@color/outline_border"
-                            app:strokeWidth="1dp">
-
+                            <!-- Metric 2: Vắng > 20% -->
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginHorizontal="@dimen/space_4"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_unified_bento_stat"
                                 android:gravity="center"
                                 android:orientation="vertical"
-                                android:paddingVertical="@dimen/space_12">
+                                android:paddingVertical="12dp">
 
                                 <TextView
                                     android:id="@+id/tvWarningAbsentCount"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/color_absence"
+                                    android:textColor="#C5BAC4"
                                     android:textSize="22sp"
                                     android:textStyle="bold"
                                     tools:text="3 SV" />
@@ -171,35 +151,26 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:text="@string/stat_warning_absent"
-                                    android:textColor="@color/text_secondary"
+                                    android:textColor="#9BA8AB"
                                     android:textSize="12sp" />
                             </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
 
-                        <!-- Metric 3: Điểm TB -->
-                        <com.google.android.material.card.MaterialCardView
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_4"
-                            android:layout_weight="1"
-                            app:cardBackgroundColor="@color/color_surface"
-                            app:cardCornerRadius="12dp"
-                            app:cardElevation="1dp"
-                            app:strokeColor="@color/outline_border"
-                            app:strokeWidth="1dp">
-
+                            <!-- Metric 3: Điểm TB -->
                             <LinearLayout
-                                android:layout_width="match_parent"
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
+                                android:layout_marginStart="@dimen/space_4"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_unified_bento_stat"
                                 android:gravity="center"
                                 android:orientation="vertical"
-                                android:paddingVertical="@dimen/space_12">
+                                android:paddingVertical="12dp">
 
                                 <TextView
                                     android:id="@+id/tvAverageScore"
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
-                                    android:textColor="@color/color_primary"
+                                    android:textColor="#FFFFFF"
                                     android:textSize="22sp"
                                     android:textStyle="bold"
                                     tools:text="7.8" />
@@ -209,10 +180,10 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:text="@string/stat_average_score"
-                                    android:textColor="@color/text_secondary"
+                                    android:textColor="#9BA8AB"
                                     android:textSize="12sp" />
                             </LinearLayout>
-                        </com.google.android.material.card.MaterialCardView>
+                        </LinearLayout>
                     </LinearLayout>
 
                     <!-- Attendance Progress Overview Card -->
@@ -220,10 +191,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_16"
-                        app:cardBackgroundColor="@color/color_surface"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="1dp"
-                        app:strokeColor="@color/outline_border"
+                        app:cardBackgroundColor="@color/uc_surface_card"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/uc_stroke_grid"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -244,7 +215,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_weight="1"
                                     android:text="Tiến độ chuyên cần toàn khóa"
-                                    android:textColor="@color/text_primary"
+                                    android:textColor="@color/uc_text_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
 
@@ -266,7 +237,7 @@
                                 android:max="100"
                                 android:progress="88"
                                 app:indicatorColor="@color/color_primary"
-                                app:trackColor="@color/color_surface_variant"
+                                app:trackColor="@color/uc_surface_elevated"
                                 app:trackCornerRadius="4dp" />
 
                             <TextView
@@ -274,7 +245,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/space_8"
-                                android:textColor="@color/text_muted"
+                                android:textColor="@color/uc_text_muted"
                                 android:textSize="12sp"
                                 tools:text="Sĩ số lớp: 42 sinh viên đăng ký" />
                         </LinearLayout>
@@ -285,10 +256,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_16"
-                        app:cardBackgroundColor="@color/color_surface"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="1dp"
-                        app:strokeColor="@color/color_warning"
+                        app:cardBackgroundColor="@color/uc_surface_card"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/uc_stroke_grid"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -317,7 +288,7 @@
                                     android:layout_marginStart="@dimen/space_8"
                                     android:layout_weight="1"
                                     android:text="@string/warning_students_title"
-                                    android:textColor="@color/text_primary"
+                                    android:textColor="@color/uc_text_primary"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
                             </LinearLayout>
@@ -327,14 +298,14 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="4dp"
                                 android:text="Quy chế đào tạo: Sinh viên vắng quá 20% tổng số buổi sẽ không đủ điều kiện dự thi cuối kỳ."
-                                android:textColor="@color/text_secondary"
+                                android:textColor="@color/uc_text_secondary"
                                 android:textSize="12sp" />
 
                             <View
                                 android:layout_width="match_parent"
                                 android:layout_height="1dp"
                                 android:layout_marginVertical="@dimen/space_10"
-                                android:background="@color/outline_border" />
+                                android:background="@color/uc_border_card" />
 
                             <!-- List of Warning Students -->
                             <LinearLayout
@@ -361,10 +332,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_20"
-                        app:cardBackgroundColor="@color/color_surface"
-                        app:cardCornerRadius="14dp"
-                        app:cardElevation="1dp"
-                        app:strokeColor="@color/outline_border"
+                        app:cardBackgroundColor="@color/uc_surface_card"
+                        app:cardCornerRadius="20dp"
+                        app:cardElevation="0dp"
+                        app:strokeColor="@color/uc_stroke_grid"
                         app:strokeWidth="1dp">
 
                         <LinearLayout
@@ -378,7 +349,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:text="@string/score_distribution_title"
-                                android:textColor="@color/text_primary"
+                                android:textColor="@color/uc_text_primary"
                                 android:textSize="15sp"
                                 android:textStyle="bold" />
 
@@ -387,7 +358,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Phân bố điểm tổng kết theo 6 khoảng điểm"
-                                android:textColor="@color/text_muted"
+                                android:textColor="@color/uc_text_muted"
                                 android:textSize="12sp" />
 
                             <!-- 6-Column Bar Chart -->
@@ -410,7 +381,7 @@
                                         android:id="@+id/tvScoreBar02Count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold"
                                         tools:text="1" />
@@ -420,14 +391,14 @@
                                         android:layout_width="24dp"
                                         android:layout_height="15dp"
                                         android:layout_marginTop="4dp"
-                                        android:background="@drawable/bg_pill_gray" />
+                                        android:background="@drawable/bg_score_bar_low" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="0–2"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold" />
 
@@ -435,7 +406,7 @@
                                         android:id="@+id/tvScoreBar02Percent"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_muted"
+                                        android:textColor="@color/uc_text_muted"
                                         android:textSize="10sp"
                                         tools:text="2%" />
                                 </LinearLayout>
@@ -452,7 +423,7 @@
                                         android:id="@+id/tvScoreBar24Count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold"
                                         tools:text="2" />
@@ -462,14 +433,14 @@
                                         android:layout_width="24dp"
                                         android:layout_height="25dp"
                                         android:layout_marginTop="4dp"
-                                        android:background="@drawable/bg_pill_warning" />
+                                        android:background="@drawable/bg_score_bar_mid" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="2–4"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold" />
 
@@ -477,7 +448,7 @@
                                         android:id="@+id/tvScoreBar24Percent"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_muted"
+                                        android:textColor="@color/uc_text_muted"
                                         android:textSize="10sp"
                                         tools:text="5%" />
                                 </LinearLayout>
@@ -494,7 +465,7 @@
                                         android:id="@+id/tvScoreBar46Count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold"
                                         tools:text="7" />
@@ -504,14 +475,14 @@
                                         android:layout_width="24dp"
                                         android:layout_height="50dp"
                                         android:layout_marginTop="4dp"
-                                        android:background="@drawable/bg_pill_warning" />
+                                        android:background="@drawable/bg_score_bar_mid" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="4–6"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold" />
 
@@ -519,7 +490,7 @@
                                         android:id="@+id/tvScoreBar46Percent"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_muted"
+                                        android:textColor="@color/uc_text_muted"
                                         android:textSize="10sp"
                                         tools:text="17%" />
                                 </LinearLayout>
@@ -536,7 +507,7 @@
                                         android:id="@+id/tvScoreBar68Count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold"
                                         tools:text="18" />
@@ -546,14 +517,14 @@
                                         android:layout_width="24dp"
                                         android:layout_height="100dp"
                                         android:layout_marginTop="4dp"
-                                        android:background="@drawable/bg_pill_green" />
+                                        android:background="@drawable/bg_score_bar_high" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="6–8"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold" />
 
@@ -561,7 +532,7 @@
                                         android:id="@+id/tvScoreBar68Percent"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_muted"
+                                        android:textColor="@color/uc_text_muted"
                                         android:textSize="10sp"
                                         tools:text="43%" />
                                 </LinearLayout>
@@ -578,7 +549,7 @@
                                         android:id="@+id/tvScoreBar89Count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold"
                                         tools:text="10" />
@@ -588,14 +559,14 @@
                                         android:layout_width="24dp"
                                         android:layout_height="65dp"
                                         android:layout_marginTop="4dp"
-                                        android:background="@drawable/bg_pill_green" />
+                                        android:background="@drawable/bg_score_bar_high" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="8–9"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold" />
 
@@ -603,7 +574,7 @@
                                         android:id="@+id/tvScoreBar89Percent"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_muted"
+                                        android:textColor="@color/uc_text_muted"
                                         android:textSize="10sp"
                                         tools:text="24%" />
                                 </LinearLayout>
@@ -620,7 +591,7 @@
                                         android:id="@+id/tvScoreBar910Count"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold"
                                         tools:text="4" />
@@ -630,14 +601,14 @@
                                         android:layout_width="24dp"
                                         android:layout_height="35dp"
                                         android:layout_marginTop="4dp"
-                                        android:background="@drawable/bg_pill_green" />
+                                        android:background="@drawable/bg_score_bar_high" />
 
                                     <TextView
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="4dp"
                                         android:text="9–10"
-                                        android:textColor="@color/text_secondary"
+                                        android:textColor="@color/uc_text_secondary"
                                         android:textSize="11sp"
                                         android:textStyle="bold" />
 
@@ -645,7 +616,7 @@
                                         android:id="@+id/tvScoreBar910Percent"
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
-                                        android:textColor="@color/text_muted"
+                                        android:textColor="@color/uc_text_muted"
                                         android:textSize="10sp"
                                         tools:text="9%" />
                                 </LinearLayout>
@@ -663,16 +634,17 @@
                         android:layout_marginBottom="@dimen/space_16"
                         android:text="@string/btn_archive_class"
                         android:textAllCaps="false"
-                        android:textColor="@color/color_primary"
+                        android:textColor="@color/uc_text_primary"
                         android:textSize="14sp"
                         android:textStyle="bold"
-                        app:cornerRadius="12dp"
+                        app:backgroundTint="@color/uc_surface_elevated"
+                        app:cornerRadius="16dp"
                         app:icon="@drawable/ic_check_circle"
                         app:iconGravity="textStart"
                         app:iconPadding="8dp"
-                        app:iconTint="@color/color_primary"
-                        app:strokeColor="@color/color_primary"
-                        app:strokeWidth="1.5dp" />
+                        app:iconTint="@color/uc_text_primary"
+                        app:strokeColor="@color/uc_border_card"
+                        app:strokeWidth="1dp" />
 
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

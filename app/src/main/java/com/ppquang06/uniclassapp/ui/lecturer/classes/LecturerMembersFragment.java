@@ -54,6 +54,7 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
 
         readArguments();
         setupTopAppBar();
+        setupHeader();
         setupRecyclerView();
         setupSearch();
         setupSwipeRefresh();
@@ -67,6 +68,22 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
             classCode = getArguments().getString("classCode", "");
             className = getArguments().getString("className", "");
             enrolledCount = getArguments().getInt("enrolledCount", 0);
+        }
+    }
+
+    private void setupHeader() {
+        if (!className.isEmpty()) {
+            binding.tvMembersClassName.setText(className);
+        }
+        if (!classCode.isEmpty()) {
+            binding.tvMembersClassCode.setText(classCode);
+        }
+        updateEnrolledBadge(enrolledCount > 0 ? enrolledCount : allMembers.size());
+    }
+
+    private void updateEnrolledBadge(int count) {
+        if (binding != null && binding.tvEnrolledCountBadge != null) {
+            binding.tvEnrolledCountBadge.setText(count + " SV");
         }
     }
 
@@ -168,6 +185,7 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
         if (list != null) {
             allMembers.addAll(list);
         }
+        updateEnrolledBadge(enrolledCount > 0 ? enrolledCount : allMembers.size());
         filterMembers(binding != null && binding.etSearchMember != null ? binding.etSearchMember.getText().toString().trim() : "");
     }
 
@@ -239,6 +257,8 @@ public class LecturerMembersFragment extends Fragment implements ClassMemberAdap
 
     private void handleRemoveSuccess(ClassMemberItemResponse member) {
         allMembers.remove(member);
+        if (enrolledCount > 0) enrolledCount--;
+        updateEnrolledBadge(enrolledCount > 0 ? enrolledCount : allMembers.size());
         filterMembers(binding != null && binding.etSearchMember != null ? binding.etSearchMember.getText().toString().trim() : "");
         if (getContext() != null) {
             Toast.makeText(requireContext(), "Đã xóa " + member.getFullName() + " khỏi lớp học", Toast.LENGTH_SHORT).show();

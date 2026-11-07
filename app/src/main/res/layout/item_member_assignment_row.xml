@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_8"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:padding="@dimen/space_12">
@@ -34,7 +34,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/uc_text_primary"
+            android:textStyle="bold"
             tools:text="Bài tập 1: Layouts &amp; ViewBinding" />
 
         <TextView
@@ -43,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/uc_text_secondary"
             tools:text="Hạn: 15/10/2026 · Nộp lúc: 14/10 20:30" />
     </LinearLayout>
 
@@ -71,8 +72,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_4"
-            android:textStyle="bold"
             android:textColor="@color/color_primary"
+            android:textStyle="bold"
             tools:text="9.0 / 10" />
     </LinearLayout>
 </LinearLayout>

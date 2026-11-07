@@ -250,11 +250,11 @@ public class LecturerClassStatisticsFragment extends Fragment {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         cardParams.bottomMargin = dpToPx(8);
         card.setLayoutParams(cardParams);
-        card.setCardBackgroundColor(requireContext().getColor(R.color.color_surface));
-        card.setRadius(dpToPx(10));
-        card.setStrokeColor(requireContext().getColor(R.color.outline_border));
+        card.setCardBackgroundColor(requireContext().getColor(R.color.uc_surface_elevated));
+        card.setRadius(dpToPx(14));
+        card.setStrokeColor(requireContext().getColor(R.color.uc_border_card));
         card.setStrokeWidth(dpToPx(1));
-        card.setCardElevation(dpToPx(0.5f));
+        card.setCardElevation(0f);
 
         LinearLayout root = new LinearLayout(requireContext());
         root.setOrientation(LinearLayout.HORIZONTAL);
@@ -284,14 +284,14 @@ public class LecturerClassStatisticsFragment extends Fragment {
 
         TextView tvName = new TextView(requireContext());
         tvName.setText(student.getFullName() != null ? student.getFullName() : "Sinh viên");
-        tvName.setTextColor(requireContext().getColor(R.color.text_primary));
+        tvName.setTextColor(requireContext().getColor(R.color.uc_text_primary));
         tvName.setTextSize(TypedValue.COMPLEX_UNIT_SP, 13);
         tvName.setTypeface(null, android.graphics.Typeface.BOLD);
         infoLayout.addView(tvName);
 
         TextView tvCode = new TextView(requireContext());
         tvCode.setText("MSSV: " + (student.getStudentCode() != null ? student.getStudentCode() : ""));
-        tvCode.setTextColor(requireContext().getColor(R.color.text_secondary));
+        tvCode.setTextColor(requireContext().getColor(R.color.uc_text_secondary));
         tvCode.setTextSize(TypedValue.COMPLEX_UNIT_SP, 11);
         infoLayout.addView(tvCode);
 
@@ -383,13 +383,13 @@ public class LecturerClassStatisticsFragment extends Fragment {
         isArchived = true;
         binding.tvStatClassStatus.setText(R.string.status_archived_pill);
         binding.tvStatClassStatus.setBackgroundResource(R.drawable.bg_pill_gray);
-        binding.tvStatClassStatus.setTextColor(requireContext().getColor(R.color.text_secondary));
+        binding.tvStatClassStatus.setTextColor(requireContext().getColor(R.color.uc_text_secondary));
 
         binding.btnArchiveClass.setEnabled(false);
         binding.btnArchiveClass.setText(R.string.btn_class_archived);
-        binding.btnArchiveClass.setStrokeColorResource(R.color.outline_border);
-        binding.btnArchiveClass.setTextColor(requireContext().getColor(R.color.text_muted));
-        binding.btnArchiveClass.setIconTintResource(R.color.text_muted);
+        binding.btnArchiveClass.setStrokeColorResource(R.color.uc_border_card);
+        binding.btnArchiveClass.setTextColor(requireContext().getColor(R.color.uc_text_muted));
+        binding.btnArchiveClass.setIconTintResource(R.color.uc_text_muted);
     }
 
     private int dpToPx(float dp) {

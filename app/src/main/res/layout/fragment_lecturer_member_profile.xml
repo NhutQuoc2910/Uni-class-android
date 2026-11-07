@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -22,149 +22,164 @@
             android:orientation="vertical"
             android:padding="@dimen/space_16">
 
-            <!-- Student Profile Header Card -->
+            <!-- Unified Bento Hero Container (Student Profile & 3 Metric Stats) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_card"
-                android:gravity="center"
+                android:layout_marginBottom="@dimen/space_16"
+                android:background="@drawable/bg_unified_bento_hero"
                 android:orientation="vertical"
-                android:padding="@dimen/space_16">
+                android:padding="20dp">
 
-                <FrameLayout
-                    android:layout_width="64dp"
-                    android:layout_height="64dp"
-                    android:background="@drawable/bg_circle_aura">
+                <!-- Student Info Header -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical">
+
+                    <FrameLayout
+                        android:layout_width="64dp"
+                        android:layout_height="64dp"
+                        android:background="@drawable/bg_circle_aura">
+
+                        <TextView
+                            android:id="@+id/tvProfileAvatarInitial"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:textColor="@color/color_primary"
+                            android:textSize="22sp"
+                            android:textStyle="bold"
+                            tools:text="NA" />
+                    </FrameLayout>
 
                     <TextView
-                        android:id="@+id/tvProfileAvatarInitial"
+                        android:id="@+id/tvProfileStudentName"
+                        style="@style/TextAppearance.EduLens.Title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_gravity="center"
-                        android:textColor="@color/color_primary"
-                        android:textSize="22sp"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        tools:text="NA" />
-                </FrameLayout>
-
-                <TextView
-                    android:id="@+id/tvProfileStudentName"
-                    style="@style/TextAppearance.EduLens.Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_8"
-                    android:textColor="@color/text_primary"
-                    tools:text="Nguyễn Văn An" />
-
-                <TextView
-                    android:id="@+id/tvProfileStudentCode"
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/text_secondary"
-                    tools:text="MSSV: 21520001" />
-
-                <TextView
-                    android:id="@+id/tvProfileStudentEmail"
-                    style="@style/TextAppearance.EduLens.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:textColor="@color/text_muted"
-                    tools:text="an.nv@uniclass.app" />
-            </LinearLayout>
-
-            <!-- 3 Metric Cards Row -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_12"
-                android:baselineAligned="false"
-                android:orientation="horizontal">
-
-                <!-- Metric 1: Attendance % -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/space_8"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_surface_card"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/space_12">
+                        tools:text="Nguyễn Văn An" />
 
                     <TextView
-                        android:id="@+id/tvProfileAttendanceRate"
-                        style="@style/TextAppearance.EduLens.Title"
+                        android:id="@+id/tvProfileStudentCode"
+                        style="@style/TextAppearance.EduLens.Body"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/color_primary"
-                        tools:text="95%" />
+                        android:layout_marginTop="2dp"
+                        android:textColor="#9BA8AB"
+                        android:textSize="13sp"
+                        tools:text="MSSV: 21520001" />
 
                     <TextView
+                        android:id="@+id/tvProfileStudentEmail"
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
-                        android:text="@string/metric_attendance"
-                        android:textColor="@color/text_secondary" />
+                        android:layout_marginTop="2dp"
+                        android:textColor="#CCD0CF"
+                        android:textSize="12sp"
+                        tools:text="an.nv@uniclass.app" />
                 </LinearLayout>
 
-                <!-- Metric 2: Submitted -->
+                <!-- 3 Metric Cells Row -->
                 <LinearLayout
-                    android:layout_width="0dp"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginHorizontal="@dimen/space_4"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_surface_card"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/space_12">
+                    android:layout_marginTop="16dp"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tvProfileSubmittedAssignments"
-                        style="@style/TextAppearance.EduLens.Title"
-                        android:layout_width="wrap_content"
+                    <!-- Metric 1: Chuyên cần -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/color_primary"
-                        tools:text="4/4" />
+                        android:layout_marginEnd="@dimen/space_4"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_unified_bento_stat"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
 
-                    <TextView
-                        style="@style/TextAppearance.EduLens.Caption"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:id="@+id/tvProfileAttendanceRate"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:text="95%" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/metric_attendance"
+                            android:textColor="#9BA8AB"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <!-- Metric 2: Bài nộp -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
-                        android:text="@string/metric_submitted"
-                        android:textColor="@color/text_secondary" />
-                </LinearLayout>
+                        android:layout_marginHorizontal="@dimen/space_4"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_unified_bento_stat"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
 
-                <!-- Metric 3: GPA -->
-                <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/space_8"
-                    android:layout_weight="1"
-                    android:background="@drawable/bg_surface_card"
-                    android:gravity="center"
-                    android:orientation="vertical"
-                    android:paddingVertical="@dimen/space_12">
+                        <TextView
+                            android:id="@+id/tvProfileSubmittedAssignments"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#C5BAC4"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:text="4/4" />
 
-                    <TextView
-                        android:id="@+id/tvProfileAverageScore"
-                        style="@style/TextAppearance.EduLens.Title"
-                        android:layout_width="wrap_content"
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/metric_submitted"
+                            android:textColor="#9BA8AB"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <!-- Metric 3: Điểm TB -->
+                    <LinearLayout
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/color_primary"
-                        tools:text="8.8" />
+                        android:layout_marginStart="@dimen/space_4"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_unified_bento_stat"
+                        android:gravity="center"
+                        android:orientation="vertical"
+                        android:paddingVertical="12dp">
 
-                    <TextView
-                        style="@style/TextAppearance.EduLens.Caption"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
-                        android:text="@string/metric_gpa"
-                        android:textColor="@color/text_secondary" />
+                        <TextView
+                            android:id="@+id/tvProfileAverageScore"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold"
+                            tools:text="8.8" />
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:text="@string/metric_gpa"
+                            android:textColor="#9BA8AB"
+                            android:textSize="11sp" />
+                    </LinearLayout>
                 </LinearLayout>
             </LinearLayout>
 
@@ -172,8 +187,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_12"
-                android:background="@drawable/bg_surface_card"
+                android:layout_marginBottom="@dimen/space_16"
+                android:background="@drawable/bg_unified_surface_card"
                 android:orientation="vertical"
                 android:padding="@dimen/space_16">
 
@@ -182,7 +197,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="Chuyên cần &amp; Vắng học"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/uc_text_primary" />
 
                 <TextView
                     android:id="@+id/tvAbsentSessionsText"
@@ -190,7 +205,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_4"
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/uc_text_secondary"
                     tools:text="Số buổi vắng: 1/15 buổi" />
 
                 <com.google.android.material.progressindicator.LinearProgressIndicator
@@ -199,7 +214,7 @@
                     android:layout_height="8dp"
                     android:layout_marginTop="@dimen/space_12"
                     app:indicatorColor="@color/color_success"
-                    app:trackColor="@color/outline_border"
+                    app:trackColor="@color/uc_surface_elevated"
                     app:trackCornerRadius="4dp"
                     app:trackThickness="8dp"
                     tools:max="15"
@@ -228,10 +243,9 @@
                 style="@style/TextAppearance.EduLens.Subtitle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_16"
                 android:layout_marginBottom="@dimen/space_8"
                 android:text="@string/recent_assignments_title"
-                android:textColor="@color/text_primary" />
+                android:textColor="@color/uc_text_primary" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvMemberAssignments"
@@ -249,7 +263,7 @@
                 android:layout_marginTop="@dimen/space_8"
                 android:gravity="center"
                 android:text="Chưa có dữ liệu bài tập"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/uc_text_muted"
                 android:visibility="gone" />
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
