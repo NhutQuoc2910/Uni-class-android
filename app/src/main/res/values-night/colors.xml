@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Semantic Theme Tokens (Dark Mode: Midnight Dark #06141B) -->
+    <color name="uc_bg_canvas">#06141B</color>
+    <color name="uc_bg_top_bar">@color/uc_bg_canvas</color>
+    <color name="uc_bg_bottom_nav">@color/uc_bg_canvas</color>
+    <color name="uc_surface_card">#CC11212D</color>
+    <color name="uc_surface_elevated">#253745</color>
+    <color name="uc_border_card">#BF253745</color>
+    <color name="uc_text_primary">#FFFFFF</color>
+    <color name="uc_text_secondary">#9BA8AB</color>
+    <color name="uc_text_muted">#7B919C</color>
+    <color name="uc_nav_item_active">#C5BAC4</color>
+    <color name="uc_nav_item_inactive">#7B919C</color>
+</resources>

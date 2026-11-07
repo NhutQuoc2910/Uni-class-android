@@ -1,5 +1,6 @@
 package com.ppquang06.uniclassapp.ui.student.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -104,6 +105,10 @@ public class StudentHomeFragment extends Fragment {
         binding.metricCourses.tvMetricLabel.setText(R.string.label_courses);
         binding.metricAttendance.tvMetricLabel.setText(R.string.label_attendance);
         binding.metricAssignments.tvMetricLabel.setText(R.string.label_assignments);
+
+        binding.metricAttendance.cardMetric.setBackgroundResource(R.drawable.bg_unified_bento_stat_highlight);
+        binding.metricAttendance.tvMetricValue.setTextColor(Color.parseColor("#C5BAC4"));
+        binding.metricAttendance.tvMetricLabel.setTextColor(Color.parseColor("#C5BAC4"));
     }
 
     private void setupRecyclerViews() {
@@ -186,6 +191,31 @@ public class StudentHomeFragment extends Fragment {
                 NavHostFragment.findNavController(StudentHomeFragment.this)
                         .navigate(R.id.nav_student_notifications);
             }
+        });
+
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_profile);
+            }
+        });
+
+        binding.metricCourses.cardMetric.setOnClickListener(v -> {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_classes);
+            }
+        });
+
+        binding.metricAttendance.cardMetric.setOnClickListener(v -> {
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_scan_qr);
+            }
+        });
+
+        binding.btnEmptyJoinClass.setOnClickListener(v -> {
+            com.ppquang06.uniclassapp.ui.student.classes.JoinClassBottomSheetDialogFragment sheet =
+                    com.ppquang06.uniclassapp.ui.student.classes.JoinClassBottomSheetDialogFragment.newInstance();
+            sheet.setOnClassJoinedListener(course -> loadHomeSummary());
+            sheet.show(getChildFragmentManager(), "JoinClassBottomSheet");
         });
 
         binding.btnScanHero.setOnClickListener(v -> {
@@ -384,10 +414,12 @@ public class StudentHomeFragment extends Fragment {
             courseAdapter.submitList(courses);
             binding.rvMyCourses.setVisibility(View.VISIBLE);
             binding.tvEmptyCourses.setVisibility(View.GONE);
+            binding.cardEmptyOnboarding.setVisibility(View.GONE);
         } else {
             courseAdapter.submitList(Collections.emptyList());
             binding.rvMyCourses.setVisibility(View.GONE);
             binding.tvEmptyCourses.setVisibility(View.VISIBLE);
+            binding.cardEmptyOnboarding.setVisibility(View.VISIBLE);
         }
 
         List<AssignmentItem> assignments = data.getDueSoonAssignments();

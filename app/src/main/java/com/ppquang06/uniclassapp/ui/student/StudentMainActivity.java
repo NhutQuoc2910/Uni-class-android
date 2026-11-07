@@ -22,6 +22,7 @@ import com.ppquang06.uniclassapp.databinding.ActivityStudentMainBinding;
 import com.ppquang06.uniclassapp.utils.FcmTokenHelper;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
+import com.ppquang06.uniclassapp.utils.ThemeHelper;
 
 public class StudentMainActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class StudentMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeHelper.applySavedTheme(this);
         super.onCreate(savedInstanceState);
 
         if (!SessionManager.getInstance(this).isLoggedIn()) {
@@ -87,15 +89,12 @@ public class StudentMainActivity extends AppCompatActivity {
             });
             navController.addOnDestinationChangedListener((controller, destination, arguments) -> {
                 int id = destination.getId();
-                if (id == R.id.nav_student_home
+                boolean showBottomBar = (id == R.id.nav_student_home
                         || id == R.id.nav_student_classes
                         || id == R.id.nav_student_scan_qr
                         || id == R.id.nav_student_notifications
-                        || id == R.id.nav_student_profile) {
-                    binding.bottomNavStudent.setVisibility(View.VISIBLE);
-                } else {
-                    binding.bottomNavStudent.setVisibility(View.GONE);
-                }
+                        || id == R.id.nav_student_profile);
+                binding.bottomNavStudent.setVisibility(showBottomBar ? View.VISIBLE : View.GONE);
             });
         }
     }

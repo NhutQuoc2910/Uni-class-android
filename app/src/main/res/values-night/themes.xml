@@ -1,7 +1,12 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- Base application theme. -->
-    <style name="Base.Theme.UniClassApp" parent="Theme.Material3.Light.NoActionBar">
-        <!-- Customize your dark theme here. -->
-        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+    <style name="Base.Theme.UniClassApp" parent="Theme.Material3.DayNight.NoActionBar">
+        <item name="colorPrimary">@color/p2_lavender</item>
+        <item name="colorSecondary">@color/p2_teal</item>
+        <item name="colorSurface">@color/uc_bg_canvas</item>
+        <item name="android:colorBackground">@color/uc_bg_canvas</item>
+        <item name="colorError">@color/color_error</item>
+        <item name="android:statusBarColor">@color/uc_bg_canvas</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
     </style>
 </resources>

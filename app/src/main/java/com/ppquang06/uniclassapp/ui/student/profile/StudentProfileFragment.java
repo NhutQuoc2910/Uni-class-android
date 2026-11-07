@@ -28,6 +28,7 @@ import com.ppquang06.uniclassapp.ui.common.profile.ChangePasswordBottomSheetDial
 import com.ppquang06.uniclassapp.ui.common.profile.EditProfileBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.ui.common.profile.ProfileViewModel;
 import com.ppquang06.uniclassapp.utils.SessionManager;
+import com.ppquang06.uniclassapp.utils.ThemeHelper;
 import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 import okhttp3.MultipartBody;
@@ -66,7 +67,10 @@ public class StudentProfileFragment extends Fragment {
 
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.nav_profile);
-        binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
+        binding.topAppBar.tvRoleBadge.setVisibility(View.GONE);
+        binding.topAppBar.ivAvatar.setVisibility(View.GONE);
+        binding.topAppBar.btnTopBarAction.setVisibility(View.VISIBLE);
+        binding.topAppBar.btnTopBarAction.setOnClickListener(v -> openEditProfile());
     }
 
     private void observeViewModel() {
@@ -168,10 +172,9 @@ public class StudentProfileFragment extends Fragment {
             }
 
             String roleName = getString(R.string.role_badge_student);
-            String emailOrId = !TextUtils.isEmpty(user.getEmail()) ? user.getEmail()
-                    : (!TextUtils.isEmpty(user.getStudentId()) ? user.getStudentId() : "");
-            String subtitle = emailOrId.isEmpty() ? roleName : roleName + " · " + emailOrId;
-            binding.tvUserSubtitle.setText(subtitle);
+            String idStr = !TextUtils.isEmpty(user.getStudentId()) ? ("MSSV: " + user.getStudentId())
+                    : (!TextUtils.isEmpty(user.getEmail()) ? user.getEmail() : roleName);
+            binding.tvUserSubtitle.setText(idStr);
 
             binding.tvRoleBadge.setText(R.string.role_badge_student);
 
@@ -179,8 +182,15 @@ public class StudentProfileFragment extends Fragment {
                     ? user.getFullName() : getString(R.string.profile_not_set));
             binding.tvContactEmail.setText(!TextUtils.isEmpty(user.getEmail())
                     ? user.getEmail() : getString(R.string.profile_not_set));
-            binding.tvContactPhone.setText(!TextUtils.isEmpty(user.getPhone())
-                    ? user.getPhone() : getString(R.string.profile_not_set));
+
+            if (!TextUtils.isEmpty(user.getPhone())) {
+                binding.tvContactPhone.setText(user.getPhone());
+                binding.tvPromptUpdatePhone.setVisibility(View.GONE);
+            } else {
+                binding.tvContactPhone.setText(R.string.profile_not_set);
+                binding.tvPromptUpdatePhone.setVisibility(View.VISIBLE);
+                binding.tvPromptUpdatePhone.setOnClickListener(v -> openEditProfile());
+            }
         }
     }
 
@@ -195,6 +205,24 @@ public class StudentProfileFragment extends Fragment {
         binding.rowEditProfile.setOnClickListener(v -> openEditProfile());
         binding.rowChangePassword.setOnClickListener(v -> openChangePassword());
         binding.rowLogout.setOnClickListener(v -> showLogoutDialog());
+
+        // Setup Dark Mode Switch
+        boolean isDark = ThemeHelper.isDarkMode(requireContext());
+        binding.switchDarkMode.setChecked(isDark);
+        updateDarkModeLabel(isDark);
+
+        binding.rowDarkMode.setOnClickListener(v -> binding.switchDarkMode.toggle());
+        binding.switchDarkMode.setOnCheckedChangeListener((btn, isChecked) -> {
+            updateDarkModeLabel(isChecked);
+            ThemeHelper.setDarkMode(requireContext(), isChecked);
+        });
+    }
+
+    private void updateDarkModeLabel(boolean isDark) {
+        if (binding == null) return;
+        binding.tvDarkModeSubtitle.setText(isDark
+                ? "Đang dùng: Chế độ Tối"
+                : "Đang dùng: Chế độ Sáng");
     }
 
     private void uploadAvatarUri(Uri uri) {

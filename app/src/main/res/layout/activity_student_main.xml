@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/color_background">
+    android:background="@color/uc_bg_canvas">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nav_host_student"
@@ -24,10 +24,12 @@
         android:id="@+id/bottom_nav_student"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/color_surface"
-        app:elevation="8dp"
-        app:itemIconTint="@color/selector_bottom_nav"
-        app:itemTextColor="@color/selector_bottom_nav"
+        android:background="@color/uc_bg_bottom_nav"
+        app:elevation="0dp"
+        app:itemIconTint="@color/selector_bottom_nav_unified"
+        app:itemTextColor="@color/selector_bottom_nav_unified"
+        app:itemTextAppearanceActive="@style/TextAppearance.UniClass.BottomNav.Active"
+        app:itemTextAppearanceInactive="@style/TextAppearance.UniClass.BottomNav.Inactive"
         app:labelVisibilityMode="labeled"
         app:menu="@menu/menu_bottom_nav_student"
         app:layout_constraintBottom_toBottomOf="parent"

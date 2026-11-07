@@ -2,28 +2,32 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/cardMetric"
     android:layout_width="match_parent"
-    android:layout_height="80dp"
-    android:background="@drawable/bg_surface_card"
+    android:layout_height="78dp"
+    android:background="@drawable/bg_unified_bento_stat"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/selectableItemBackground"
     android:gravity="center"
     android:orientation="vertical"
-    android:padding="@dimen/space_8">
+    android:padding="8dp">
 
     <TextView
         android:id="@+id/tvMetricValue"
-        style="@style/TextAppearance.EduLens.Title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="0"
-        android:textColor="@color/color_primary"
-        android:textSize="20sp" />
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvMetricLabel"
-        style="@style/TextAppearance.EduLens.Caption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_4"
+        android:layout_marginTop="4dp"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/label_courses" />
+        android:text="@string/label_courses"
+        android:textColor="#CCD0CF"
+        android:textSize="11sp" />
 </LinearLayout>

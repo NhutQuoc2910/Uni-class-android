@@ -3,43 +3,62 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/topAppBarRoot"
     android:layout_width="match_parent"
-    android:layout_height="@dimen/top_app_bar_height"
-    android:background="@color/color_surface"
+    android:layout_height="60dp"
+    android:background="@color/uc_bg_top_bar"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingHorizontal="@dimen/space_16">
+    android:paddingHorizontal="16dp">
 
     <ImageButton
         android:id="@+id/ivBack"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginEnd="@dimen/space_8"
+        android:layout_marginEnd="8dp"
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/desc_back_button"
         android:src="@drawable/ic_arrow_back"
-        android:visibility="gone" />
+        android:visibility="gone"
+        app:tint="@color/uc_text_primary" />
+
+    <FrameLayout
+        android:id="@+id/flBrandLogo"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_unified_top_logo">
+
+        <ImageView
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_graduation_cap"
+            app:tint="@color/p2_lavender" />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/TextAppearance.EduLens.Title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
         android:ellipsize="end"
         android:maxLines="1"
-        android:text="@string/edu_lens_title" />
+        android:text="@string/edu_lens_title"
+        android:textColor="@color/uc_text_primary"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvRoleBadge"
-        style="@style/TextAppearance.EduLens.Badge"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/space_8"
-        android:background="@drawable/bg_badge_pill"
-        android:paddingHorizontal="@dimen/space_12"
-        android:paddingVertical="@dimen/space_4"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/bg_unified_lavender_pill"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="5dp"
         android:text="@string/role_badge_student"
-        android:textColor="@color/color_primary" />
+        android:textColor="#191D23"
+        android:textSize="11sp"
+        android:textStyle="bold" />
 
     <ImageView
         android:id="@+id/ivAvatar"
@@ -49,5 +68,18 @@
         android:contentDescription="@string/desc_avatar"
         android:padding="6dp"
         android:src="@drawable/ic_person_outline"
-        app:tint="@color/color_primary" />
+        app:tint="@color/p2_lavender" />
+
+    <TextView
+        android:id="@+id/btnTopBarAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_unified_top_action_btn"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="Chỉnh sửa"
+        android:textColor="@color/uc_text_primary"
+        android:textSize="12sp"
+        android:textStyle="bold"
+        android:visibility="gone" />
 </LinearLayout>

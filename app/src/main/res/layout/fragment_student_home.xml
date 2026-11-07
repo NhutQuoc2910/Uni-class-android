@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -27,117 +27,207 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingHorizontal="@dimen/space_16"
-                android:paddingVertical="@dimen/space_16">
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp">
 
-                <TextView
-                    android:id="@+id/tvTodayDate"
-                    style="@style/TextAppearance.EduLens.Caption"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/today_date"
-                    android:textColor="@color/text_muted"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/tvGreetingUser"
-                    style="@style/TextAppearance.EduLens.Headline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:text="@string/greeting_user" />
-
-                <TextView
-                    android:id="@+id/tvGreetingSub"
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_2"
-                    android:text="@string/greeting_sub" />
-
-                <!-- Hero Card (Figma 268:1331 - Today Class & Quick Scan) -->
+                <!-- Unified Bento Hero Card -->
                 <LinearLayout
-                    android:id="@+id/heroCard"
+                    android:id="@+id/bentoHeroCard"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_16"
-                    android:background="@drawable/bg_surface_card"
+                    android:background="@drawable/bg_unified_bento_hero"
                     android:orientation="vertical"
-                    android:padding="@dimen/space_16">
+                    android:padding="20dp">
 
+                    <!-- Header Row: Date & Greeting -->
                     <TextView
-                        android:id="@+id/tvHeroTag"
-                        style="@style/TextAppearance.EduLens.Badge"
+                        android:id="@+id/tvTodayDate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_badge_pill"
-                        android:paddingHorizontal="@dimen/space_8"
-                        android:paddingVertical="2dp"
-                        android:text="@string/hero_today_class_tag"
-                        android:textColor="@color/color_primary" />
+                        android:letterSpacing="0.05"
+                        android:text="@string/today_date"
+                        android:textColor="#C5BAC4"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvHeroCourseName"
-                        style="@style/TextAppearance.EduLens.Title"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvGreetingUser"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
-                        android:ellipsize="end"
-                        android:maxLines="2"
-                        tools:text="Đánh giá hiệu năng hệ thống mạng máy tính" />
+                        android:layout_marginTop="4dp"
+                        android:text="@string/greeting_user"
+                        android:textColor="#FFFFFF"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
 
                     <TextView
-                        android:id="@+id/tvHeroRoomSchedule"
-                        style="@style/TextAppearance.EduLens.Body"
-                        android:layout_width="match_parent"
+                        android:id="@+id/tvGreetingSub"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
-                        tools:text="Học phần chuyên ngành" />
+                        android:layout_marginTop="2dp"
+                        android:text="@string/greeting_sub"
+                        android:textColor="#9BA8AB"
+                        android:textSize="12sp" />
 
-                    <com.google.android.material.button.MaterialButton
-                        android:id="@+id/btnScanHero"
-                        style="@style/Widget.EduLens.Button.Filled"
+                    <!-- 3-Column Bento Metrics Row -->
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_12"
-                        android:minHeight="44dp"
-                        android:text="@string/btn_scan_now"
-                        app:icon="@drawable/ic_qr_code"
-                        app:iconGravity="textStart"
-                        app:iconPadding="@dimen/space_8"
-                        app:iconTint="@color/white" />
+                        android:layout_marginTop="16dp"
+                        android:orientation="horizontal"
+                        android:weightSum="3">
+
+                        <include
+                            android:id="@+id/metricCourses"
+                            layout="@layout/view_attendance_metric"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1" />
+
+                        <include
+                            android:id="@+id/metricAttendance"
+                            layout="@layout/view_attendance_metric"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="8dp"
+                            android:layout_weight="1" />
+
+                        <include
+                            android:id="@+id/metricAssignments"
+                            layout="@layout/view_attendance_metric"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1" />
+                    </LinearLayout>
+
+                    <!-- Today Session Strip -->
+                    <LinearLayout
+                        android:id="@+id/heroCard"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/bg_unified_bento_session_strip"
+                        android:orientation="vertical"
+                        android:padding="14dp">
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <View
+                                android:layout_width="8dp"
+                                android:layout_height="8dp"
+                                android:background="@drawable/bg_circle_green" />
+
+                            <TextView
+                                android:id="@+id/tvHeroTag"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="6dp"
+                                android:letterSpacing="0.04"
+                                android:text="@string/hero_today_class_tag"
+                                android:textColor="#C5BAC4"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvHeroCourseName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:ellipsize="end"
+                            android:maxLines="2"
+                            android:textColor="#FFFFFF"
+                            android:textSize="14sp"
+                            android:textStyle="bold"
+                            tools:text="Đánh giá hiệu năng hệ thống mạng máy tính" />
+
+                        <TextView
+                            android:id="@+id/tvHeroRoomSchedule"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="#9BA8AB"
+                            android:textSize="11sp"
+                            tools:text="Học phần chuyên ngành" />
+
+                        <com.google.android.material.button.MaterialButton
+                            android:id="@+id/btnScanHero"
+                            android:layout_width="match_parent"
+                            android:layout_height="44dp"
+                            android:layout_marginTop="12dp"
+                            android:backgroundTint="#C5BAC4"
+                            android:text="@string/btn_scan_now"
+                            android:textColor="#191D23"
+                            android:textSize="13sp"
+                            android:textStyle="bold"
+                            app:cornerRadius="12dp"
+                            app:icon="@drawable/ic_qr_code"
+                            app:iconGravity="textStart"
+                            app:iconPadding="8dp"
+                            app:iconTint="#191D23" />
+                    </LinearLayout>
                 </LinearLayout>
 
-                <!-- Metrics Row (3 cards) -->
+                <!-- Empty Onboarding Card (shown when courses.isEmpty()) -->
                 <LinearLayout
+                    android:id="@+id/cardEmptyOnboarding"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_16"
-                    android:orientation="horizontal"
-                    android:weightSum="3">
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/bg_unified_empty_onboarding"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="20dp"
+                    android:visibility="gone">
 
-                    <include
-                        android:id="@+id/metricCourses"
-                        layout="@layout/view_attendance_metric"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/space_8"
-                        android:layout_weight="1" />
+                    <FrameLayout
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/bg_unified_top_logo">
 
-                    <include
-                        android:id="@+id/metricAttendance"
-                        layout="@layout/view_attendance_metric"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="@dimen/space_8"
-                        android:layout_weight="1" />
+                        <ImageView
+                            android:layout_width="26dp"
+                            android:layout_height="26dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_graduation_cap"
+                            app:tint="@color/p2_lavender" />
+                    </FrameLayout>
 
-                    <include
-                        android:id="@+id/metricAssignments"
-                        layout="@layout/view_attendance_metric"
-                        android:layout_width="0dp"
+                    <TextView
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1" />
+                        android:layout_marginTop="10dp"
+                        android:text="Bắt đầu học kỳ mới trên UniClass"
+                        android:textColor="@color/uc_text_primary"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="Bạn chưa tham gia lớp học nào. Nhập mã lớp từ giảng viên để bắt đầu điểm danh và nhận tài liệu."
+                        android:textColor="@color/uc_text_secondary"
+                        android:textSize="12sp" />
+
+                    <com.google.android.material.button.MaterialButton
+                        android:id="@+id/btnEmptyJoinClass"
+                        android:layout_width="wrap_content"
+                        android:layout_height="42dp"
+                        android:layout_marginTop="12dp"
+                        android:backgroundTint="@color/p2_teal"
+                        android:paddingHorizontal="16dp"
+                        android:text="+ Tham gia lớp bằng mã"
+                        android:textColor="#FFFFFF"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        app:cornerRadius="12dp" />
                 </LinearLayout>
 
                 <!-- Today Schedule Section -->
@@ -145,7 +235,7 @@
                     android:id="@+id/sectionTodaySchedule"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_20"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -159,7 +249,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/today_schedule_title" />
+                            android:text="@string/today_schedule_title"
+                            android:textColor="@color/uc_text_primary" />
 
                         <TextView
                             android:id="@+id/tvViewSemesterSchedule"
@@ -167,7 +258,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/semester_schedule_link"
-                            android:textColor="@color/color_primary"
+                            android:textColor="@color/p2_teal"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -175,7 +266,7 @@
                         android:id="@+id/rvTodaySchedule"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginTop="8dp"
                         android:nestedScrollingEnabled="false" />
 
                     <TextView
@@ -183,11 +274,11 @@
                         style="@style/TextAppearance.EduLens.Body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:paddingVertical="@dimen/space_12"
+                        android:paddingVertical="12dp"
                         android:text="@string/empty_today_schedule_message"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -196,7 +287,7 @@
                     android:id="@+id/sectionAssignments"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_20"
+                    android:layout_marginTop="20dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -210,7 +301,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/due_soon_title" />
+                            android:text="@string/due_soon_title"
+                            android:textColor="@color/uc_text_primary" />
 
                         <TextView
                             android:id="@+id/tvSeeAllAssignments"
@@ -218,7 +310,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/see_all"
-                            android:textColor="@color/color_primary"
+                            android:textColor="@color/p2_teal"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -226,7 +318,7 @@
                         android:id="@+id/rvDueSoonAssignments"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginTop="8dp"
                         android:nestedScrollingEnabled="false" />
 
                     <TextView
@@ -234,11 +326,11 @@
                         style="@style/TextAppearance.EduLens.Body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:paddingVertical="@dimen/space_12"
+                        android:paddingVertical="12dp"
                         android:text="@string/empty_assignments_message"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
                 </LinearLayout>
 
@@ -247,7 +339,7 @@
                     android:id="@+id/sectionCourses"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_16"
+                    android:layout_marginTop="16dp"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -261,7 +353,8 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:text="@string/my_classes_title" />
+                            android:text="@string/my_classes_title"
+                            android:textColor="@color/uc_text_primary" />
 
                         <TextView
                             android:id="@+id/tvSeeAllCourses"
@@ -269,7 +362,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="@string/see_all"
-                            android:textColor="@color/color_primary"
+                            android:textColor="@color/p2_teal"
                             android:textStyle="bold" />
                     </LinearLayout>
 
@@ -277,7 +370,7 @@
                         android:id="@+id/rvMyCourses"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginTop="8dp"
                         android:nestedScrollingEnabled="false" />
 
                     <TextView
@@ -285,11 +378,11 @@
                         style="@style/TextAppearance.EduLens.Body"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_8"
+                        android:layout_marginTop="8dp"
                         android:gravity="center"
-                        android:paddingVertical="@dimen/space_12"
+                        android:paddingVertical="12dp"
                         android:text="@string/empty_courses_message"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
                 </LinearLayout>
 

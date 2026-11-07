@@ -1,5 +1,6 @@
 package com.ppquang06.uniclassapp.ui.lecturer.home;
 
+import android.graphics.Color;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -102,6 +103,10 @@ public class LecturerHomeFragment extends Fragment {
         binding.metricCourses.tvMetricLabel.setText(R.string.label_courses);
         binding.metricAttendance.tvMetricLabel.setText(R.string.label_attendance);
         binding.metricPending.tvMetricLabel.setText(R.string.label_pending);
+
+        binding.metricAttendance.cardMetric.setBackgroundResource(R.drawable.bg_unified_bento_stat_highlight);
+        binding.metricAttendance.tvMetricValue.setTextColor(Color.parseColor("#C5BAC4"));
+        binding.metricAttendance.tvMetricLabel.setTextColor(Color.parseColor("#C5BAC4"));
     }
 
     private void setupRecyclerViews() {
@@ -348,7 +353,30 @@ public class LecturerHomeFragment extends Fragment {
             binding.btnHeroEnterClass.setVisibility(View.VISIBLE);
 
             TodayScheduleItem finalHeroItem = heroItem;
-            binding.btnHeroOpenQr.setOnClickListener(v -> {
+            binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_profile);
+            }
+        });
+
+        binding.metricCourses.cardMetric.setOnClickListener(v -> {
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_classes);
+            }
+        });
+
+        binding.metricPending.cardMetric.setOnClickListener(v -> {
+            if (binding.tvSeeAllAssignments != null) binding.tvSeeAllAssignments.performClick();
+        });
+
+        binding.btnEmptyCreateCourse.setOnClickListener(v -> {
+            try {
+                NavHostFragment.findNavController(LecturerHomeFragment.this)
+                        .navigate(R.id.nav_lecturer_create_class);
+            } catch (Exception ignored) {}
+        });
+
+        binding.btnHeroOpenQr.setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putString("classId", finalHeroItem.getClassId() != null ? finalHeroItem.getClassId() : "");
                 args.putString("classCode", finalHeroItem.getClassCode() != null ? finalHeroItem.getClassCode() : "");
@@ -396,10 +424,12 @@ public class LecturerHomeFragment extends Fragment {
             courseAdapter.submitList(courses);
             binding.rvLecturerCourses.setVisibility(View.VISIBLE);
             binding.tvEmptyCourses.setVisibility(View.GONE);
+            binding.cardEmptyOnboarding.setVisibility(View.GONE);
         } else {
             courseAdapter.submitList(Collections.emptyList());
             binding.rvLecturerCourses.setVisibility(View.GONE);
             binding.tvEmptyCourses.setVisibility(View.VISIBLE);
+            binding.cardEmptyOnboarding.setVisibility(View.VISIBLE);
         }
 
         List<AssignmentItem> assignments = data.getDueSoonAssignments();

@@ -23,6 +23,7 @@ import com.ppquang06.uniclassapp.utils.AuthUiHelper;
 import com.ppquang06.uniclassapp.utils.Constants;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
+import com.ppquang06.uniclassapp.utils.ThemeHelper;
 
 public class LoginActivity extends AppCompatActivity {
     private ActivityLoginBinding binding;
@@ -31,6 +32,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeHelper.applySavedTheme(this);
         super.onCreate(savedInstanceState);
         binding = ActivityLoginBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());

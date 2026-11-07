@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -21,316 +22,558 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_20"
-            android:paddingVertical="@dimen/space_16">
+            android:paddingHorizontal="20dp"
+            android:paddingVertical="16dp">
 
-            <!-- Header Section (Figma 198:180) -->
+            <!-- Digital Student ID Card -->
             <LinearLayout
+                android:id="@+id/cardDigitalStudentId"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center_horizontal"
-                android:orientation="vertical">
+                android:background="@drawable/bg_unified_digital_id_card"
+                android:orientation="vertical"
+                android:padding="22dp">
 
-                <FrameLayout
-                    android:id="@+id/layoutAvatarContainer"
-                    android:layout_width="88dp"
-                    android:layout_height="88dp"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:foreground="?attr/selectableItemBackgroundBorderless">
+                <!-- Upper Section: Avatar + Name + Single Role Badge + MSSV -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
 
+                    <!-- Avatar with Camera Badge -->
                     <FrameLayout
-                        android:layout_width="80dp"
-                        android:layout_height="80dp"
-                        android:layout_gravity="center"
-                        android:background="@drawable/bg_circle_aura">
+                        android:id="@+id/layoutAvatarContainer"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:foreground="?attr/selectableItemBackgroundBorderless">
+
+                        <com.google.android.material.card.MaterialCardView
+                            android:layout_width="66dp"
+                            android:layout_height="66dp"
+                            android:layout_gravity="center"
+                            app:cardCornerRadius="16dp"
+                            app:cardElevation="0dp"
+                            app:strokeColor="#C5BAC4"
+                            app:strokeWidth="2dp">
+
+                            <FrameLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:background="#253745">
+
+                                <ImageView
+                                    android:id="@+id/ivAvatarProfile"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="match_parent"
+                                    android:contentDescription="@string/desc_avatar"
+                                    android:scaleType="centerCrop"
+                                    android:visibility="gone" />
+
+                                <TextView
+                                    android:id="@+id/tvAvatarInitial"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_gravity="center"
+                                    android:text="S"
+                                    android:textColor="#C5BAC4"
+                                    android:textSize="26sp"
+                                    android:textStyle="bold" />
+                            </FrameLayout>
+                        </com.google.android.material.card.MaterialCardView>
 
                         <ImageView
-                            android:id="@+id/ivAvatarProfile"
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:contentDescription="@string/desc_avatar"
-                            android:scaleType="centerCrop"
-                            android:visibility="gone" />
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="bottom|end"
+                            android:background="@drawable/bg_unified_lavender_pill"
+                            android:contentDescription="Thay đổi ảnh đại diện"
+                            android:padding="5dp"
+                            android:src="@drawable/ic_edit"
+                            app:tint="#191D23" />
 
-                        <TextView
-                            android:id="@+id/tvAvatarInitial"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
+                        <ProgressBar
+                            android:id="@+id/pbAvatarLoading"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
                             android:layout_gravity="center"
-                            android:text="S"
-                            android:textColor="@color/color_primary"
-                            android:textSize="32sp"
-                            android:textStyle="bold" />
+                            android:indeterminateTint="#C5BAC4"
+                            android:visibility="gone" />
                     </FrameLayout>
 
-                    <ImageView
-                        android:layout_width="26dp"
-                        android:layout_height="26dp"
-                        android:layout_gravity="bottom|end"
-                        android:background="@drawable/bg_circle_blue"
-                        android:contentDescription="Thay đổi ảnh đại diện"
-                        android:padding="5dp"
-                        android:src="@drawable/ic_edit"
-                        app:tint="@color/white" />
+                    <!-- Student Name & Info -->
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="16dp"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                    <ProgressBar
-                        android:id="@+id/pbAvatarLoading"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="center"
-                        android:indeterminateTint="@color/color_primary"
+                        <TextView
+                            android:id="@+id/tvFullName"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:ellipsize="end"
+                            android:maxLines="1"
+                            android:text="@string/fullname_label"
+                            android:textColor="#FFFFFF"
+                            android:textSize="20sp"
+                            android:textStyle="bold" />
+
+                        <!-- Single Role Badge -->
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="6dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <TextView
+                                android:id="@+id/tvRoleBadge"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:background="@drawable/bg_unified_lavender_pill"
+                                android:paddingHorizontal="10dp"
+                                android:paddingVertical="3dp"
+                                android:text="@string/role_badge_student"
+                                android:textColor="#191D23"
+                                android:textSize="11sp"
+                                android:textStyle="bold" />
+
+                            <View
+                                android:layout_width="6dp"
+                                android:layout_height="6dp"
+                                android:layout_marginStart="8dp"
+                                android:background="@drawable/bg_circle_green" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="Đang hoạt động"
+                                android:textColor="#9BA8AB"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvUserSubtitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:ellipsize="end"
+                            android:fontFamily="monospace"
+                            android:maxLines="1"
+                            android:text="MSSV: 22521190"
+                            android:textColor="#CCD0CF"
+                            android:textSize="12sp" />
+                    </LinearLayout>
+                </LinearLayout>
+
+                <!-- ID Card Card-Perforation Divider -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:layout_marginVertical="16dp"
+                    android:background="#3357707A" />
+
+                <!-- Lower Section: Integrated Contact Box inside Digital ID -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_unified_id_contact_box"
+                    android:orientation="vertical"
+                    android:padding="14dp">
+
+                    <!-- Full Name Hidden Holder for backward compat -->
+                    <TextView
+                        android:id="@+id/tvContactFullName"
+                        android:layout_width="0dp"
+                        android:layout_height="0dp"
                         android:visibility="gone" />
-                </FrameLayout>
 
-                <TextView
-                    android:id="@+id/tvFullName"
-                    style="@style/TextAppearance.EduLens.Headline"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_12"
-                    android:gravity="center"
-                    android:text="@string/fullname_label" />
+                    <!-- Email Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
 
-                <TextView
-                    android:id="@+id/tvUserSubtitle"
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:gravity="center"
-                    android:text="Sinh viên · student@uniclass.app"
-                    android:textColor="@color/text_secondary" />
+                        <FrameLayout
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_unified_top_logo">
 
-                <TextView
-                    android:id="@+id/tvRoleBadge"
-                    style="@style/TextAppearance.EduLens.Badge"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_8"
-                    android:background="@drawable/bg_badge_pill"
-                    android:paddingHorizontal="@dimen/space_16"
-                    android:paddingVertical="@dimen/space_4"
-                    android:text="@string/role_badge_student"
-                    android:textColor="@color/color_primary" />
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_email"
+                                app:tint="@color/p2_lavender" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:letterSpacing="0.04"
+                                android:text="EMAIL ĐĂNG KÝ"
+                                android:textColor="#9BA8AB"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvContactEmail"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:ellipsize="end"
+                                android:maxLines="1"
+                                android:text="@string/email_label"
+                                android:textColor="#DEDCDC"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_circle_green"
+                            android:paddingHorizontal="8dp"
+                            android:paddingVertical="3dp"
+                            android:text="✓ Xác thực"
+                            android:textColor="#FFFFFF"
+                            android:textSize="10sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <!-- Divider -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginVertical="10dp"
+                        android:background="#2657707A" />
+
+                    <!-- Phone Row -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal">
+
+                        <FrameLayout
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/bg_unified_top_logo">
+
+                            <ImageView
+                                android:layout_width="16dp"
+                                android:layout_height="16dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_smartphone"
+                                app:tint="@color/p2_lavender" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:letterSpacing="0.04"
+                                android:text="SỐ ĐIỆN THOẠI"
+                                android:textColor="#9BA8AB"
+                                android:textSize="10sp"
+                                android:textStyle="bold" />
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:gravity="center_vertical"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    android:id="@+id/tvContactPhone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:text="@string/profile_not_set"
+                                    android:textColor="#DEDCDC"
+                                    android:textSize="13sp"
+                                    android:textStyle="bold" />
+
+                                <TextView
+                                    android:id="@+id/tvPromptUpdatePhone"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginStart="6dp"
+                                    android:clickable="true"
+                                    android:focusable="true"
+                                    android:text="+ Cập nhật SĐT ngay"
+                                    android:textColor="@color/p2_lavender"
+                                    android:textSize="11sp"
+                                    android:textStyle="bold"
+                                    android:visibility="gone" />
+                            </LinearLayout>
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Contact Info Card -->
+            <!-- Settings Group Card -->
             <TextView
-                style="@style/TextAppearance.EduLens.Subtitle"
+                style="@style/TextAppearance.EduLens.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_20"
-                android:text="@string/profile_contact_info"
-                android:textColor="@color/text_primary" />
+                android:layout_marginTop="24dp"
+                android:letterSpacing="0.05"
+                android:text="TÀI KHOẢN &amp; CÀI ĐẶT"
+                android:textColor="@color/uc_text_secondary"
+                android:textSize="11sp"
+                android:textStyle="bold" />
 
+            <com.google.android.material.card.MaterialCardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                app:cardBackgroundColor="@color/uc_surface_card"
+                app:cardCornerRadius="24dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/uc_border_card"
+                app:strokeWidth="1dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="6dp">
+
+                    <!-- Row 1: Edit Profile -->
+                    <LinearLayout
+                        android:id="@+id/rowEditProfile"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
+
+                        <FrameLayout
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:background="@drawable/bg_unified_top_logo">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_edit"
+                                app:tint="@color/p2_lavender" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/action_edit_profile"
+                                android:textColor="@color/uc_text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="Họ tên, số điện thoại liên hệ"
+                                android:textColor="@color/uc_text_secondary"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/uc_text_secondary" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/uc_border_card" />
+
+                    <!-- Row 2: Change Password -->
+                    <LinearLayout
+                        android:id="@+id/rowChangePassword"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
+
+                        <FrameLayout
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:background="@drawable/bg_unified_top_logo">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_lock"
+                                app:tint="@color/p2_lavender" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="@string/action_change_password"
+                                android:textColor="@color/uc_text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="Cập nhật mật khẩu bảo mật định kỳ"
+                                android:textColor="@color/uc_text_secondary"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:contentDescription="@null"
+                            android:src="@drawable/ic_chevron_right"
+                            app:tint="@color/uc_text_secondary" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="1dp"
+                        android:layout_marginHorizontal="14dp"
+                        android:background="@color/uc_border_card" />
+
+                    <!-- Row 3: Midnight Dark Mode Switch -->
+                    <LinearLayout
+                        android:id="@+id/rowDarkMode"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="?attr/selectableItemBackground"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center_vertical"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="12dp">
+
+                        <FrameLayout
+                            android:layout_width="38dp"
+                            android:layout_height="38dp"
+                            android:background="@drawable/bg_unified_top_logo">
+
+                            <ImageView
+                                android:layout_width="18dp"
+                                android:layout_height="18dp"
+                                android:layout_gravity="center"
+                                android:src="@drawable/ic_eye"
+                                app:tint="@color/p2_lavender" />
+                        </FrameLayout>
+
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="14dp"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Giao diện Midnight Dark"
+                                android:textColor="@color/uc_text_primary"
+                                android:textSize="14sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvDarkModeSubtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="1dp"
+                                android:text="Đang dùng: Chế độ Sáng"
+                                android:textColor="@color/uc_text_secondary"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switchDarkMode"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content" />
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <!-- Row 4: Logout Button (Independent at Bottom) -->
             <LinearLayout
+                android:id="@+id/rowLogout"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:background="@drawable/bg_surface_card"
-                android:orientation="vertical"
-                android:padding="@dimen/space_16">
+                android:layout_height="52dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/bg_unified_logout_btn"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center"
+                android:orientation="horizontal">
 
-                <!-- Full Name -->
-                <TextView
-                    style="@style/TextAppearance.EduLens.Caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/profile_fullname_caption"
-                    android:textColor="@color/text_muted" />
+                <ImageView
+                    android:layout_width="20dp"
+                    android:layout_height="20dp"
+                    android:contentDescription="@null"
+                    android:src="@drawable/ic_logout"
+                    app:tint="@color/color_error" />
 
                 <TextView
-                    android:id="@+id/tvContactFullName"
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:text="@string/fullname_label"
-                    android:textColor="@color/text_primary"
+                    android:layout_marginStart="10dp"
+                    android:text="Đăng xuất khỏi thiết bị"
+                    android:textColor="@color/color_error"
+                    android:textSize="14sp"
                     android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="@dimen/space_12"
-                    android:background="@color/outline_border" />
-
-                <!-- Email -->
-                <TextView
-                    style="@style/TextAppearance.EduLens.Caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/profile_email_caption"
-                    android:textColor="@color/text_muted" />
-
-                <TextView
-                    android:id="@+id/tvContactEmail"
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:text="@string/email_label"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginVertical="@dimen/space_12"
-                    android:background="@color/outline_border" />
-
-                <!-- Phone -->
-                <TextView
-                    style="@style/TextAppearance.EduLens.Caption"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/profile_phone_caption"
-                    android:textColor="@color/text_muted" />
-
-                <TextView
-                    android:id="@+id/tvContactPhone"
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_4"
-                    android:text="@string/profile_not_set"
-                    android:textColor="@color/text_primary"
-                    android:textStyle="bold" />
-            </LinearLayout>
-
-            <!-- Account Actions Card -->
-            <TextView
-                style="@style/TextAppearance.EduLens.Subtitle"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_20"
-                android:text="@string/profile_account_actions"
-                android:textColor="@color/text_primary" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_8"
-                android:background="@drawable/bg_surface_card"
-                android:orientation="vertical"
-                android:padding="@dimen/space_8">
-
-                <!-- Row 1: Edit Profile -->
-                <LinearLayout
-                    android:id="@+id/rowEditProfile"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/space_12">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_edit"
-                        app:tint="@color/color_primary" />
-
-                    <TextView
-                        style="@style/TextAppearance.EduLens.Body"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/space_12"
-                        android:layout_weight="1"
-                        android:text="@string/action_edit_profile"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_muted" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="@dimen/space_8"
-                    android:background="@color/outline_border" />
-
-                <!-- Row 2: Change Password -->
-                <LinearLayout
-                    android:id="@+id/rowChangePassword"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/space_12">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_lock"
-                        app:tint="@color/color_primary" />
-
-                    <TextView
-                        style="@style/TextAppearance.EduLens.Body"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/space_12"
-                        android:layout_weight="1"
-                        android:text="@string/action_change_password"
-                        android:textColor="@color/text_primary"
-                        android:textStyle="bold" />
-
-                    <ImageView
-                        android:layout_width="20dp"
-                        android:layout_height="20dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_chevron_right"
-                        app:tint="@color/text_muted" />
-                </LinearLayout>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:layout_marginHorizontal="@dimen/space_8"
-                    android:background="@color/outline_border" />
-
-                <!-- Row 3: Logout -->
-                <LinearLayout
-                    android:id="@+id/rowLogout"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:background="?attr/selectableItemBackground"
-                    android:clickable="true"
-                    android:focusable="true"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal"
-                    android:padding="@dimen/space_12">
-
-                    <ImageView
-                        android:layout_width="24dp"
-                        android:layout_height="24dp"
-                        android:contentDescription="@null"
-                        android:src="@drawable/ic_logout"
-                        app:tint="@color/color_error" />
-
-                    <TextView
-                        style="@style/TextAppearance.EduLens.Body"
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/space_12"
-                        android:layout_weight="1"
-                        android:text="@string/action_logout"
-                        android:textColor="@color/color_error"
-                        android:textStyle="bold" />
-                </LinearLayout>
             </LinearLayout>
 
         </LinearLayout>

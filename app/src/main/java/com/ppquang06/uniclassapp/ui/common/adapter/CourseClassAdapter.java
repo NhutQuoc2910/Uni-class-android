@@ -119,6 +119,32 @@ public class CourseClassAdapter extends RecyclerView.Adapter<CourseClassAdapter.
                 binding.viewUnreadDot.setVisibility(View.GONE);
             }
 
+            boolean hasStatus = false;
+            String status = item.getStatus();
+            if (status != null && !status.trim().isEmpty() && !"ACTIVE".equalsIgnoreCase(status.trim())) {
+                binding.tvStatusBadge.setText(status);
+                binding.tvStatusBadge.setVisibility(View.VISIBLE);
+                hasStatus = true;
+            } else {
+                binding.tvStatusBadge.setVisibility(View.GONE);
+            }
+
+            boolean hasSemester = false;
+            String semester = item.getSemester();
+            if (semester != null && !semester.trim().isEmpty()) {
+                binding.tvSemesterBadge.setText(semester.trim());
+                binding.tvSemesterBadge.setVisibility(View.VISIBLE);
+                hasSemester = true;
+            } else {
+                binding.tvSemesterBadge.setVisibility(View.GONE);
+            }
+
+            if (hasStatus || hasSemester) {
+                binding.layoutBadgesRow.setVisibility(View.VISIBLE);
+            } else {
+                binding.layoutBadgesRow.setVisibility(View.GONE);
+            }
+
             binding.getRoot().setOnClickListener(v -> {
                 if (listener != null) {
                     listener.onCourseClick(item);

@@ -22,6 +22,7 @@ import com.ppquang06.uniclassapp.databinding.ActivityLecturerMainBinding;
 import com.ppquang06.uniclassapp.utils.FcmTokenHelper;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
+import com.ppquang06.uniclassapp.utils.ThemeHelper;
 
 public class LecturerMainActivity extends AppCompatActivity {
 
@@ -34,6 +35,7 @@ public class LecturerMainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        ThemeHelper.applySavedTheme(this);
         super.onCreate(savedInstanceState);
 
         if (!SessionManager.getInstance(this).isLoggedIn()) {

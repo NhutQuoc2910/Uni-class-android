@@ -4,26 +4,28 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <!-- Top Bar with Flash Toggle -->
     <LinearLayout
         android:id="@+id/layoutTopBar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/top_app_bar_height"
-        android:background="@color/color_surface"
+        android:layout_height="60dp"
+        android:background="@color/uc_bg_top_bar"
         android:gravity="center_vertical"
         android:orientation="horizontal"
-        android:paddingHorizontal="@dimen/space_16">
+        android:paddingHorizontal="16dp">
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/TextAppearance.EduLens.Title"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/scan_qr_screen_title" />
+            android:text="@string/scan_qr_screen_title"
+            android:textColor="@color/uc_text_primary"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <!-- Flash Toggle Button -->
         <com.google.android.material.button.MaterialButton
@@ -36,11 +38,11 @@
             android:insetTop="0dp"
             android:insetRight="0dp"
             android:insetBottom="0dp"
-            app:backgroundTint="@color/color_surface_variant"
+            app:backgroundTint="@color/uc_surface_elevated"
             app:icon="@drawable/ic_flash"
             app:iconGravity="textStart"
             app:iconPadding="0dp"
-            app:iconTint="@color/text_primary" />
+            app:iconTint="@color/uc_text_primary" />
     </LinearLayout>
 
     <ScrollView
@@ -54,16 +56,16 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingHorizontal="@dimen/space_20"
-            android:paddingTop="@dimen/space_16"
-            android:paddingBottom="@dimen/space_24">
+            android:paddingHorizontal="20dp"
+            android:paddingTop="16dp"
+            android:paddingBottom="24dp">
 
             <!-- Viewfinder Area (240x240dp) -->
             <FrameLayout
                 android:id="@+id/frameViewfinder"
                 android:layout_width="240dp"
                 android:layout_height="240dp"
-                android:layout_marginTop="@dimen/space_8"
+                android:layout_marginTop="8dp"
                 android:background="@drawable/bg_qr_frame">
 
                 <!-- Real CameraX Live Preview -->
@@ -78,10 +80,10 @@
                     android:layout_width="80dp"
                     android:layout_height="80dp"
                     android:layout_gravity="center"
-                    android:alpha="0.25"
+                    android:alpha="0.3"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_qr_code"
-                    app:tint="@color/color_primary" />
+                    app:tint="@color/p2_lavender" />
 
                 <!-- Scanning Line -->
                 <View
@@ -94,51 +96,53 @@
             <!-- Instructions -->
             <TextView
                 android:id="@+id/tvInstructionTitle"
-                style="@style/TextAppearance.EduLens.Subtitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_16"
+                android:layout_marginTop="16dp"
                 android:gravity="center"
                 android:text="@string/scan_qr_viewfinder_instruction"
-                android:textColor="@color/text_primary" />
+                android:textColor="@color/uc_text_primary"
+                android:textSize="15sp"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/tvInstructionSub"
                 style="@style/TextAppearance.EduLens.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_4"
+                android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:text="@string/scan_qr_viewfinder_subinstruction"
-                android:textColor="@color/text_muted" />
+                android:textColor="@color/uc_text_secondary" />
 
             <!-- Before Scanning Section -->
             <TextView
                 style="@style/TextAppearance.EduLens.Badge"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/space_24"
-                android:layout_marginBottom="@dimen/space_8"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="8dp"
+                android:letterSpacing="0.04"
                 android:text="@string/scan_qr_before_title"
-                android:textColor="@color/text_muted" />
+                android:textColor="@color/uc_text_secondary" />
 
             <!-- Requirement 1: WiFi -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_8"
-                android:background="@drawable/bg_surface_card"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_unified_surface_card"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/space_12">
+                android:padding="12dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/space_12"
+                    android:layout_marginEnd="12dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_wifi"
-                    app:tint="@color/color_primary" />
+                    app:tint="@color/p2_teal" />
 
                 <TextView
                     style="@style/TextAppearance.EduLens.Body"
@@ -146,33 +150,34 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/scan_qr_req_wifi"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/uc_text_primary"
                     android:textSize="13sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_check_circle" />
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="@color/color_success" />
             </LinearLayout>
 
             <!-- Requirement 2: GPS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_8"
-                android:background="@drawable/bg_surface_card"
+                android:layout_marginBottom="8dp"
+                android:background="@drawable/bg_unified_surface_card"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/space_12">
+                android:padding="12dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/space_12"
+                    android:layout_marginEnd="12dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_gps"
-                    app:tint="@color/color_primary" />
+                    app:tint="@color/p2_teal" />
 
                 <TextView
                     style="@style/TextAppearance.EduLens.Body"
@@ -180,33 +185,34 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/scan_qr_req_gps"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/uc_text_primary"
                     android:textSize="13sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_check_circle" />
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="@color/color_success" />
             </LinearLayout>
 
             <!-- Requirement 3: Device -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/space_16"
-                android:background="@drawable/bg_surface_card"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/bg_unified_surface_card"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:padding="@dimen/space_12">
+                android:padding="12dp">
 
                 <ImageView
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:layout_marginEnd="@dimen/space_12"
+                    android:layout_marginEnd="12dp"
                     android:contentDescription="@null"
                     android:src="@drawable/ic_smartphone"
-                    app:tint="@color/color_primary" />
+                    app:tint="@color/p2_teal" />
 
                 <TextView
                     style="@style/TextAppearance.EduLens.Body"
@@ -214,14 +220,15 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="@string/scan_qr_req_device"
-                    android:textColor="@color/text_primary"
+                    android:textColor="@color/uc_text_primary"
                     android:textSize="13sp" />
 
                 <ImageView
                     android:layout_width="20dp"
                     android:layout_height="20dp"
                     android:contentDescription="@null"
-                    android:src="@drawable/ic_check_circle" />
+                    android:src="@drawable/ic_check_circle"
+                    app:tint="@color/color_success" />
             </LinearLayout>
 
             <!-- Action Buttons for Quick Demo & Error Simulations -->
@@ -229,33 +236,42 @@
                 android:id="@+id/btnUploadQrImage"
                 style="@style/Widget.EduLens.Button.Outlined"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_md"
-                android:layout_marginBottom="@dimen/space_8"
+                android:layout_height="48dp"
+                android:layout_marginBottom="8dp"
+                android:strokeColor="@color/uc_border_card"
                 android:text="Tải ảnh QR từ máy để quét"
+                android:textColor="@color/uc_text_primary"
+                app:cornerRadius="14dp"
                 app:icon="@drawable/ic_download"
                 app:iconGravity="textStart"
-                app:iconTint="@color/color_primary" />
+                app:iconTint="@color/p2_teal" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnQuickScan"
-                style="@style/Widget.EduLens.Button.Filled"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_lg"
-                android:layout_marginBottom="@dimen/space_8"
+                android:layout_height="52dp"
+                android:layout_marginBottom="8dp"
+                android:backgroundTint="@color/p2_teal"
                 android:text="@string/scan_qr_btn_quick"
+                android:textColor="#FFFFFF"
+                android:textStyle="bold"
+                app:cornerRadius="14dp"
                 app:icon="@drawable/ic_qr_scan"
                 app:iconGravity="textStart"
-                app:iconTint="@color/white" />
+                app:iconTint="#FFFFFF" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnSimulateErrors"
                 style="@style/Widget.EduLens.Button.Outlined"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/button_height_md"
+                android:layout_height="48dp"
+                android:strokeColor="@color/uc_border_card"
                 android:text="@string/scan_qr_btn_simulate"
+                android:textColor="@color/uc_text_secondary"
+                app:cornerRadius="14dp"
                 app:icon="@drawable/ic_chevron_right"
                 app:iconGravity="textEnd"
-                app:iconTint="@color/text_secondary" />
+                app:iconTint="@color/uc_text_secondary" />
 
         </LinearLayout>
     </ScrollView>

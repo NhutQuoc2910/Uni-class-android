@@ -59,4 +59,34 @@
     <color name="nordic_focus_ring">#1A253745</color>
     <color name="nordic_otp_ring">#26253745</color>
     <color name="nordic_brand_uc">#3B82F6</color>
+
+    <!-- 12-Color Unified Theme Tokens (Palette 1 + Palette 2) -->
+    <!-- Palette 1: Nordic Slate -->
+    <color name="p1_obsidian">#06141B</color>
+    <color name="p1_midnight">#11212D</color>
+    <color name="p1_slate">#253745</color>
+    <color name="p1_steel">#4A5C6A</color>
+    <color name="p1_pewter">#9BA8AB</color>
+    <color name="p1_silver">#CCD0CF</color>
+
+    <!-- Palette 2: Modern Slate & Lavender -->
+    <color name="p2_ink">#191D23</color>
+    <color name="p2_teal">#57707A</color>
+    <color name="p2_secondary">#7B919C</color>
+    <color name="p2_surface">#989DAA</color>
+    <color name="p2_lavender">#C5BAC4</color>
+    <color name="p2_warm_bg">#DEDCDC</color>
+
+    <!-- Semantic Theme Tokens (Default: Light Mode - Warm Light #DEDCDC) -->
+    <color name="uc_bg_canvas">#DEDCDC</color>
+    <color name="uc_bg_top_bar">@color/uc_bg_canvas</color>
+    <color name="uc_bg_bottom_nav">@color/uc_bg_canvas</color>
+    <color name="uc_surface_card">#D9FFFFFF</color>
+    <color name="uc_surface_elevated">#CCD0CF</color>
+    <color name="uc_border_card">#73989DAA</color>
+    <color name="uc_text_primary">#191D23</color>
+    <color name="uc_text_secondary">#4A5C6A</color>
+    <color name="uc_text_muted">#57707A</color>
+    <color name="uc_nav_item_active">#191D23</color>
+    <color name="uc_nav_item_inactive">#4A5C6A</color>
 </resources>
