@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_12"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:orientation="vertical"
     android:padding="@dimen/space_16">
 
@@ -30,6 +30,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
+                android:textColor="@color/uc_text_primary"
                 tools:text="Bài tập 1: Xây dựng Layout XML" />
 
             <TextView
@@ -40,7 +41,7 @@
                 android:layout_marginTop="4dp"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/uc_text_secondary"
                 tools:text="Đã nộp · 24/10/2026 · 14:30" />
         </LinearLayout>
 
@@ -77,9 +78,9 @@
                 android:id="@+id/tvLecturerAvatarInitial"
                 android:layout_width="28dp"
                 android:layout_height="28dp"
-                android:background="@drawable/bg_circle_aura"
+                android:background="@drawable/bg_unified_top_logo"
                 android:gravity="center"
-                android:textColor="@color/color_primary"
+                android:textColor="@color/p2_lavender"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="K" />
@@ -93,6 +94,7 @@
                 android:layout_weight="1"
                 android:ellipsize="end"
                 android:maxLines="1"
+                android:textColor="@color/uc_text_primary"
                 android:textSize="13sp"
                 tools:text="ThS. Trần Minh Khoa" />
 
@@ -102,7 +104,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/space_8"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/uc_text_muted"
                 tools:text="26/10/2026" />
         </LinearLayout>
 
@@ -112,7 +114,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/space_8"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/uc_text_primary"
             android:textSize="13sp"
             tools:text="Bài làm tốt, cấu trúc rõ ràng." />
     </LinearLayout>

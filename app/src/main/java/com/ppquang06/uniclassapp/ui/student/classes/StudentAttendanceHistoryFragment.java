@@ -212,8 +212,8 @@ public class StudentAttendanceHistoryFragment extends Fragment {
             binding.pbAbsentProgress.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_error)));
         } else {
             binding.bannerWarning.getRoot().setVisibility(View.GONE);
-            binding.tvAbsentCount.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
-            binding.tvAbsentRatio.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
+            binding.tvAbsentCount.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
+            binding.tvAbsentRatio.setTextColor(ContextCompat.getColor(requireContext(), R.color.white));
             binding.pbAbsentProgress.setProgressTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_absence)));
         }
 

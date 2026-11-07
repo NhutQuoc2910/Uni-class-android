@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -36,15 +36,15 @@
                     android:layout_marginBottom="@dimen/space_16"
                     android:visibility="gone" />
 
-                <!-- Overview Card -->
+                <!-- Bento Hero Overview Card -->
                 <LinearLayout
                     android:id="@+id/cardOverview"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/space_16"
-                    android:background="@drawable/bg_surface_card"
+                    android:background="@drawable/bg_unified_bento_hero"
                     android:orientation="vertical"
-                    android:padding="@dimen/space_16">
+                    android:padding="20dp">
 
                     <TextView
                         android:id="@+id/tvClassName"
@@ -53,6 +53,8 @@
                         android:layout_height="wrap_content"
                         android:ellipsize="end"
                         android:maxLines="2"
+                        android:textColor="@color/white"
+                        android:textSize="20sp"
                         tools:text="Phát triển ứng dụng di động" />
 
                     <TextView
@@ -61,10 +63,10 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="@color/p1_pewter"
                         tools:text="Tiến độ học: Tuần 6 / 15 tuần" />
 
-                    <!-- 3 Stats Row -->
+                    <!-- 3 Bento Stats Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -78,17 +80,20 @@
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="6dp"
                             android:layout_weight="1"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingVertical="12dp">
 
                             <TextView
                                 android:id="@+id/tvPresentCount"
                                 style="@style/TextAppearance.EduLens.Headline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/color_success"
-                                android:textSize="24sp"
+                                android:textColor="#34D399"
+                                android:textSize="22sp"
                                 tools:text="4" />
 
                             <TextView
@@ -97,24 +102,27 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Có mặt"
-                                android:textColor="@color/text_secondary" />
+                                android:textColor="@color/p1_silver" />
                         </LinearLayout>
 
                         <!-- Stat 2: Absent -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginHorizontal="3dp"
                             android:layout_weight="1"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingVertical="12dp">
 
                             <TextView
                                 android:id="@+id/tvAbsentCount"
                                 style="@style/TextAppearance.EduLens.Headline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_primary"
-                                android:textSize="24sp"
+                                android:textColor="@color/white"
+                                android:textSize="22sp"
                                 tools:text="2" />
 
                             <TextView
@@ -123,24 +131,27 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Vắng"
-                                android:textColor="@color/text_secondary" />
+                                android:textColor="@color/p1_silver" />
                         </LinearLayout>
 
                         <!-- Stat 3: Remaining -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="6dp"
                             android:layout_weight="1"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:gravity="center"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:paddingVertical="12dp">
 
                             <TextView
                                 android:id="@+id/tvRemainingCount"
                                 style="@style/TextAppearance.EduLens.Headline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_primary"
-                                android:textSize="24sp"
+                                android:textColor="@color/p2_lavender"
+                                android:textSize="22sp"
                                 tools:text="9" />
 
                             <TextView
@@ -149,16 +160,9 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Buổi còn lại"
-                                android:textColor="@color/text_secondary" />
+                                android:textColor="@color/p1_silver" />
                         </LinearLayout>
                     </LinearLayout>
-
-                    <!-- Divider -->
-                    <View
-                        android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:layout_marginBottom="@dimen/space_12"
-                        android:background="@color/outline_border" />
 
                     <!-- Absence Progress Track -->
                     <LinearLayout
@@ -173,7 +177,7 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="Giới hạn vắng"
-                            android:textColor="@color/text_primary"
+                            android:textColor="@color/white"
                             android:textStyle="bold" />
 
                         <TextView
@@ -181,7 +185,7 @@
                             style="@style/TextAppearance.EduLens.Caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/text_primary"
+                            android:textColor="@color/white"
                             android:textStyle="bold"
                             tools:text="2/3 buổi" />
                     </LinearLayout>
@@ -194,12 +198,13 @@
                         android:layout_marginTop="@dimen/space_8"
                         android:max="3"
                         android:progress="2"
+                        android:progressBackgroundTint="#33FFFFFF"
                         android:progressTint="@color/color_absence" />
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
+                        android:layout_marginTop="6dp"
                         android:orientation="horizontal">
 
                         <TextView
@@ -208,14 +213,14 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
                             android:text="0 buổi"
-                            android:textColor="@color/text_muted" />
+                            android:textColor="@color/p1_pewter" />
 
                         <TextView
                             style="@style/TextAppearance.EduLens.Caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Ngưỡng cấm thi: 3 buổi (20%)"
-                            android:textColor="@color/color_error" />
+                            android:textColor="#F87171" />
                     </LinearLayout>
                 </LinearLayout>
 
@@ -226,7 +231,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/space_8"
                     android:text="DANH SÁCH TỪNG BUỔI HỌC"
-                    android:textColor="@color/text_muted"
+                    android:textColor="@color/uc_text_muted"
                     android:textStyle="bold" />
 
                 <!-- RecyclerView -->
@@ -246,7 +251,7 @@
                     android:gravity="center"
                     android:padding="@dimen/space_24"
                     android:text="Chưa có dữ liệu điểm danh"
-                    android:textColor="@color/text_muted"
+                    android:textColor="@color/uc_text_muted"
                     android:visibility="gone" />
 
             </LinearLayout>

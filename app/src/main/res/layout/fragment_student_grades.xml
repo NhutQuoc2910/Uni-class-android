@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -27,34 +27,34 @@
                 android:orientation="vertical"
                 android:padding="@dimen/space_16">
 
-                <!-- Average Score Card -->
+                <!-- Bento Hero Average Score Card -->
                 <LinearLayout
                     android:id="@+id/cardAverageScore"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/space_16"
-                    android:background="@drawable/bg_surface_card"
+                    android:background="@drawable/bg_unified_bento_hero"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:padding="@dimen/space_16">
+                    android:padding="20dp">
 
-                    <!-- Score container -->
+                    <!-- Score container (Lavender Highlight Stat Box) -->
                     <LinearLayout
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_format_pill"
+                        android:background="@drawable/bg_unified_bento_stat_highlight"
                         android:gravity="center"
-                        android:minWidth="76dp"
+                        android:minWidth="80dp"
                         android:orientation="vertical"
-                        android:paddingHorizontal="@dimen/space_12"
-                        android:paddingVertical="@dimen/space_8">
+                        android:paddingHorizontal="14dp"
+                        android:paddingVertical="10dp">
 
                         <TextView
                             android:id="@+id/tvAverageScore"
                             style="@style/TextAppearance.EduLens.Headline"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/color_primary"
+                            android:textColor="@color/p2_lavender"
                             android:textSize="30sp"
                             android:textStyle="bold"
                             tools:text="8.5" />
@@ -65,7 +65,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="Thang 10"
-                            android:textColor="@color/text_muted"
+                            android:textColor="@color/p1_pewter"
                             android:textSize="11sp" />
                     </LinearLayout>
 
@@ -83,6 +83,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:text="Điểm trung bình tích lũy"
+                            android:textColor="@color/white"
+                            android:textSize="16sp"
                             android:textStyle="bold" />
 
                         <TextView
@@ -91,7 +93,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="4dp"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="@color/p1_silver"
                             tools:text="Đã hoàn thành 3 bài tập · 2 bài đã có điểm" />
                     </LinearLayout>
                 </LinearLayout>
@@ -104,7 +106,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="@dimen/space_8"
                     android:text="CHI TIẾT ĐIỂM TỪNG BÀI TẬP"
-                    android:textColor="@color/text_muted"
+                    android:textColor="@color/uc_text_muted"
                     android:textStyle="bold" />
 
                 <!-- RecyclerView for grades list -->
@@ -124,7 +126,7 @@
                     android:gravity="center"
                     android:padding="@dimen/space_24"
                     android:text="Chưa có dữ liệu bài tập hoặc bảng điểm"
-                    android:textColor="@color/text_muted"
+                    android:textColor="@color/uc_text_muted"
                     android:visibility="gone" />
 
             </LinearLayout>
