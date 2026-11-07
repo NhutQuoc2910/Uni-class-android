@@ -5,10 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/list_item_height"
     android:layout_marginBottom="@dimen/space_8"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:gravity="center_vertical"
     android:orientation="horizontal"
-    android:paddingHorizontal="@dimen/space_12">
+    android:paddingHorizontal="14dp">
 
     <FrameLayout
         android:id="@+id/flFileTypeBadge"
@@ -40,7 +40,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="@string/docs_and_homework" />
+            android:text="@string/docs_and_homework"
+            android:textColor="@color/uc_text_primary" />
 
         <TextView
             android:id="@+id/tvDocumentMeta"
@@ -48,7 +49,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:text="2.4 MB · PDF" />
+            android:text="2.4 MB · PDF"
+            android:textColor="@color/uc_text_secondary" />
     </LinearLayout>
 
     <ImageView
@@ -56,7 +58,8 @@
         android:layout_width="24dp"
         android:layout_height="24dp"
         android:contentDescription="@null"
-        android:src="@drawable/ic_download" />
+        android:src="@drawable/ic_download"
+        app:tint="@color/color_primary" />
 
     <ImageButton
         android:id="@+id/btnDeleteDoc"

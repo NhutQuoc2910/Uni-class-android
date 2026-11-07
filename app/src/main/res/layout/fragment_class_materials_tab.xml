@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
-    <!-- Material Type Filter Chips (Figma 63:712) -->
+    <!-- Material Type Filter Chips -->
     <HorizontalScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
                 android:gravity="center"
                 android:padding="@dimen/space_24"
                 android:text="@string/empty_materials"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/uc_text_muted"
                 android:visibility="gone" />
 
         </FrameLayout>

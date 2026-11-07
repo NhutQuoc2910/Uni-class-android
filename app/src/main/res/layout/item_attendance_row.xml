@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="70dp"
     android:layout_marginBottom="@dimen/space_8"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:gravity="center_vertical"
     android:orientation="horizontal"
     android:paddingHorizontal="@dimen/space_16">
@@ -23,7 +23,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="Buổi 1" />
+            android:text="Buổi 1"
+            android:textColor="@color/uc_text_primary" />
 
         <TextView
             android:id="@+id/tvSessionDate"
@@ -33,7 +34,8 @@
             android:layout_marginTop="2dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:text="28/10/2026 · 07:30" />
+            android:text="28/10/2026 · 07:30"
+            android:textColor="@color/uc_text_secondary" />
     </LinearLayout>
 
     <TextView

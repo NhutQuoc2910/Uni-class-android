@@ -4,33 +4,34 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F8FAFC">
+    android:background="@color/uc_bg_canvas">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <!-- Custom Header Bar matching reference image (A1 - Danh sách lớp đang học) -->
+        <!-- Unified Header Bar -->
         <RelativeLayout
             android:id="@+id/headerBarRoot"
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="@color/white"
-            android:elevation="1dp"
+            android:layout_height="60dp"
+            android:background="@color/uc_bg_top_bar"
             android:paddingHorizontal="16dp">
 
-            <!-- Right: Search Action Text ("Tìm") -->
+            <!-- Right: Search Action Pill ("Tìm") -->
             <TextView
                 android:id="@+id/btnSearchHeader"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:padding="6dp"
+                android:background="@drawable/bg_unified_top_action_btn"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="7dp"
                 android:text="@string/search"
-                android:textColor="#2563EB"
-                android:textSize="14sp"
+                android:textColor="@color/uc_text_primary"
+                android:textSize="12sp"
                 android:textStyle="bold" />
 
             <!-- Left: Avatar Badge ("Sinh viên") + Title ("Lớp học của tôi") -->
@@ -48,11 +49,12 @@
                     style="@style/TextAppearance.EduLens.Badge"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_badge_pill"
+                    android:background="@drawable/bg_unified_lavender_pill"
                     android:paddingHorizontal="@dimen/space_12"
                     android:paddingVertical="@dimen/space_4"
                     android:text="@string/role_badge_student"
-                    android:textColor="@color/color_primary" />
+                    android:textColor="@color/p2_ink"
+                    android:textSize="11sp" />
 
                 <TextView
                     android:id="@+id/tvHeaderTitle"
@@ -60,7 +62,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
                     android:text="@string/my_classes_title"
-                    android:textColor="#0F172A"
+                    android:textColor="@color/uc_text_primary"
                     android:textSize="18sp"
                     android:textStyle="bold" />
 
@@ -68,18 +70,13 @@
 
         </RelativeLayout>
 
-        <!-- Divider Line -->
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#E2E8F0" />
-
         <!-- Semester & Class Count Header Row -->
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingHorizontal="16dp"
-            android:paddingVertical="14dp">
+            android:paddingTop="8dp"
+            android:paddingBottom="12dp">
 
             <TextView
                 android:id="@+id/tvClassCount"
@@ -87,7 +84,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
-                android:textColor="#64748B"
+                android:textColor="@color/uc_text_secondary"
                 android:textSize="12sp"
                 tools:text="4 lớp đang học" />
 
@@ -98,7 +95,7 @@
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:layout_toStartOf="@id/tvClassCount"
-                android:textColor="#0F172A"
+                android:textColor="@color/uc_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="Học kỳ 1 · 2026–2027" />
@@ -133,7 +130,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:indeterminateTint="#2563EB"
+                android:indeterminateTint="@color/color_primary"
                 android:visibility="gone" />
 
             <!-- 3. Empty State -->
@@ -159,7 +156,7 @@
         </FrameLayout>
     </LinearLayout>
 
-    <!-- Extended FAB for joining class -->
+    <!-- Extended FAB for joining class (Adaptive Primary CTA token) -->
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
         android:id="@+id/fabJoinClass"
         android:layout_width="wrap_content"
@@ -170,11 +167,11 @@
         android:contentDescription="@string/register_title"
         android:text="+ Tham gia lớp"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/uc_btn_primary_text"
         android:textSize="14sp"
         android:textStyle="bold"
-        app:backgroundTint="#2563EB"
+        app:backgroundTint="@color/uc_btn_primary_bg"
         app:cornerRadius="24dp"
-        app:elevation="6dp" />
+        app:elevation="4dp" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

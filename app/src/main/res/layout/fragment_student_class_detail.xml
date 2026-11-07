@@ -4,23 +4,24 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
         android:id="@+id/topAppBar"
         layout="@layout/view_top_app_bar" />
 
-    <!-- Class Header Card -->
+    <!-- Bento Class Hero Card -->
     <LinearLayout
         android:id="@+id/headerContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/color_surface"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:background="@drawable/bg_unified_bento_hero"
         android:orientation="vertical"
-        android:paddingHorizontal="@dimen/space_16"
-        android:paddingTop="@dimen/space_8"
-        android:paddingBottom="@dimen/space_12">
+        android:padding="20dp">
 
         <TextView
             android:id="@+id/tvClassName"
@@ -29,6 +30,8 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="2"
+            android:textColor="@color/white"
+            android:textSize="20sp"
             tools:text="Phát triển ứng dụng di động" />
 
         <TextView
@@ -36,51 +39,54 @@
             style="@style/TextAppearance.EduLens.Body"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/space_4"
-            android:textColor="@color/text_secondary"
+            android:layout_marginTop="6dp"
+            android:textColor="@color/p1_pewter"
+            android:textSize="13sp"
             tools:text="NT118.Q11 · Phòng B1.12 · ThS. Trần Minh Khoa" />
 
         <!-- Button "Bảng điểm & Nhận xét" -->
         <com.google.android.material.button.MaterialButton
             android:id="@+id/btnViewGrades"
-            style="@style/Widget.EduLens.Button.Outlined"
+            style="@style/Widget.Material3.Button.TextButton"
             android:layout_width="wrap_content"
             android:layout_height="36dp"
-            android:layout_marginTop="@dimen/space_8"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/bg_unified_bento_stat_highlight"
+            android:insetTop="0dp"
+            android:insetBottom="0dp"
             android:minHeight="36dp"
-            android:paddingHorizontal="@dimen/space_12"
+            android:paddingHorizontal="14dp"
             android:paddingVertical="0dp"
             android:text="Bảng điểm &amp; Nhận xét"
+            android:textAllCaps="false"
+            android:textColor="@color/p2_lavender"
             android:textSize="12sp"
+            android:textStyle="bold"
+            app:backgroundTint="@null"
             app:icon="@drawable/ic_assignment"
-            app:iconPadding="@dimen/space_4"
+            app:iconPadding="6dp"
             app:iconSize="16dp"
-            app:iconTint="@color/color_primary" />
+            app:iconTint="@color/p2_lavender" />
     </LinearLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/outline_border" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/tab_bar_height"
-        android:background="@color/color_surface"
+        android:background="@color/uc_bg_canvas"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/color_primary"
+        app:tabIndicatorColor="@color/uc_nav_item_active"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabRippleColor="@null"
-        app:tabSelectedTextColor="@color/color_primary"
-        app:tabTextColor="@color/text_secondary" />
+        app:tabSelectedTextColor="@color/uc_nav_item_active"
+        app:tabTextColor="@color/uc_nav_item_inactive" />
 
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/outline_border" />
+        android:background="@color/uc_border_card" />
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -97,6 +103,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:indeterminateTint="@color/color_primary"
             android:visibility="gone" />
     </FrameLayout>
 
