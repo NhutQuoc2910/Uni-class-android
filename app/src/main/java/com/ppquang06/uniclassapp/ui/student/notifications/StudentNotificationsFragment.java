@@ -94,6 +94,9 @@ public class StudentNotificationsFragment extends Fragment {
     private void setupListeners() {
         binding.swipeRefresh.setOnRefreshListener(this::loadNotifications);
         binding.chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> applyCurrentFilter());
+        binding.cardNotifStatTotal.setOnClickListener(v -> binding.chipAll.setChecked(true));
+        binding.cardNotifStatUnread.setOnClickListener(v -> binding.chipUnread.setChecked(true));
+        binding.cardNotifStatUrgent.setOnClickListener(v -> binding.chipUrgent.setChecked(true));
     }
 
     private void observeViewModel() {
@@ -141,6 +144,30 @@ public class StudentNotificationsFragment extends Fragment {
 
     private void applyCurrentFilter() {
         if (binding == null) return;
+
+        int totalCount = masterList.size();
+        int unreadCount = 0;
+        int urgentCount = 0;
+        for (NotificationItemResponse item : masterList) {
+            if (item != null) {
+                if (item.isUnread()) {
+                    unreadCount++;
+                }
+                if ("URGENT".equalsIgnoreCase(item.getCategory())) {
+                    urgentCount++;
+                }
+            }
+        }
+
+        binding.tvNotifTotalCount.setText(String.valueOf(totalCount));
+        binding.tvNotifUnreadCount.setText(String.valueOf(unreadCount));
+        binding.tvNotifUrgentCount.setText(String.valueOf(urgentCount));
+
+        if (unreadCount > 0) {
+            binding.tvNotifHeroSubtitle.setText("Bạn có " + unreadCount + " thông báo chưa đọc");
+        } else {
+            binding.tvNotifHeroSubtitle.setText("Tất cả thông báo đã được cập nhật");
+        }
 
         int checkedId = binding.chipGroupFilter.getCheckedChipId();
         NotificationFilter filter = NotificationFilter.ALL;

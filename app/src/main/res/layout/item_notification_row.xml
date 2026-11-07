@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_8"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:minHeight="90dp"
     android:orientation="vertical"
     android:padding="@dimen/space_12">
@@ -46,14 +46,16 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="@string/nav_notifications" />
+                android:text="@string/nav_notifications"
+                android:textColor="@color/uc_text_primary" />
 
             <TextView
                 android:id="@+id/tvNotifTime"
                 style="@style/TextAppearance.EduLens.Caption"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/today_date" />
+                android:text="@string/today_date"
+                android:textColor="@color/uc_text_secondary" />
         </LinearLayout>
 
         <TextView
@@ -90,7 +92,8 @@
         android:layout_marginTop="@dimen/space_8"
         android:ellipsize="end"
         android:maxLines="2"
-        android:text="@string/edu_lens_subtitle" />
+        android:text="@string/edu_lens_subtitle"
+        android:textColor="@color/uc_text_secondary" />
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/btnDownloadQr"
@@ -104,9 +107,11 @@
         android:text="Tải mã QR về máy"
         android:textSize="12sp"
         android:visibility="gone"
+        app:backgroundTint="@color/uc_btn_primary_bg"
+        android:textColor="@color/uc_btn_primary_text"
         app:icon="@drawable/ic_download"
         app:iconGravity="textStart"
         app:iconPadding="@dimen/space_4"
         app:iconSize="16dp"
-        app:iconTint="@color/white" />
+        app:iconTint="@color/uc_btn_primary_text" />
 </LinearLayout>

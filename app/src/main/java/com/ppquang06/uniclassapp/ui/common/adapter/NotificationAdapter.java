@@ -1,12 +1,15 @@
 package com.ppquang06.uniclassapp.ui.common.adapter;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.ItemNotificationRowBinding;
@@ -173,6 +176,18 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
 
             binding.tvNotifTitle.setText(title);
             binding.tvNotifContent.setText(body);
+
+            try {
+                Context context = binding.getRoot().getContext();
+                if (context != null) {
+                    binding.tvNotifTitle.setTextColor(ContextCompat.getColor(context, R.color.uc_text_primary));
+                    int secondaryColor = ContextCompat.getColor(context, R.color.uc_text_secondary);
+                    binding.tvNotifContent.setTextColor(secondaryColor);
+                    binding.tvNotifTime.setTextColor(secondaryColor);
+                }
+            } catch (Exception ignored) {
+                // Fallback for JVM unit tests where Context or Resources are unavailable
+            }
 
             if (!courseCode.isEmpty() && !formattedDate.isEmpty()) {
                 binding.tvNotifTime.setText(courseCode + " · " + formattedDate);
