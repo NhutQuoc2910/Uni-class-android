@@ -6,10 +6,10 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="10dp"
-    app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="14dp"
+    app:cardBackgroundColor="@color/uc_surface_card"
+    app:cardCornerRadius="16dp"
     app:cardElevation="0dp"
-    app:strokeColor="#E2E8F0"
+    app:strokeColor="@color/uc_stroke_grid"
     app:strokeWidth="1dp">
 
     <LinearLayout
@@ -45,7 +45,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
                 android:textAlignment="center"
-                android:textColor="#64748B"
+                android:textColor="@color/uc_text_secondary"
                 android:textSize="11sp"
                 tools:text="Đã công bố" />
         </LinearLayout>
@@ -63,7 +63,7 @@
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="#0F172A"
+                android:textColor="@color/uc_text_primary"
                 android:textSize="14sp"
                 android:textStyle="bold"
                 tools:text="NT118.Q11 - Phát triển ứng dụng di động" />
@@ -73,7 +73,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="4dp"
-                android:textColor="#334155"
+                android:textColor="@color/uc_text_primary"
                 android:textSize="12sp"
                 android:textStyle="bold"
                 tools:text="Ngày gốc: 20/10/2026" />
@@ -83,7 +83,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:textColor="#64748B"
+                android:textColor="@color/uc_text_secondary"
                 android:textSize="12sp"
                 tools:text="07:30 - 11:30 · Phòng B3.10" />
 
@@ -94,7 +94,7 @@
                 android:layout_marginTop="2dp"
                 android:ellipsize="end"
                 android:maxLines="2"
-                android:textColor="#64748B"
+                android:textColor="@color/uc_text_secondary"
                 android:textSize="12sp"
                 tools:text="Lý do: Giảng viên đi công tác" />
 
@@ -116,10 +116,10 @@
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="0dp"
                     android:text="@string/btn_revoke_exception"
-                    android:textColor="#DC2626"
+                    android:textColor="@color/color_error"
                     android:textSize="12sp"
                     android:visibility="gone"
-                    app:strokeColor="#DC2626" />
+                    app:strokeColor="@color/color_error" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPublishException"

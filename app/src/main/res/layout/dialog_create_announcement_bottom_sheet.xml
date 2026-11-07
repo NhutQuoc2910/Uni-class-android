@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_bottom_sheet"
     android:orientation="vertical"
     android:paddingHorizontal="@dimen/space_20"
     android:paddingTop="@dimen/space_12"
@@ -80,7 +80,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_12"
-        android:background="@drawable/bg_surface_card"
+        android:background="@drawable/bg_feedback_box"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:padding="@dimen/space_12">

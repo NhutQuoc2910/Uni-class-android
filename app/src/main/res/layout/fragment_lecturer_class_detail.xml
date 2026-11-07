@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -32,31 +32,32 @@
                     android:orientation="vertical"
                     android:padding="@dimen/space_16">
 
-                    <!-- Header Card (Figma 74:1143) -->
+                    <!-- Bento Hero Container (Class Header + 3 Metrics) -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_surface_card"
+                        android:background="@drawable/bg_unified_bento_hero"
                         android:orientation="vertical"
-                        android:padding="@dimen/space_16">
+                        android:padding="20dp">
 
                         <TextView
                             android:id="@+id/tvClassName"
-                            style="@style/TextAppearance.EduLens.Headline"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="2"
-                            android:textColor="@color/text_primary"
+                            android:textColor="#FFFFFF"
+                            android:textSize="18sp"
+                            android:textStyle="bold"
                             tools:text="Thiết kế giao diện người dùng" />
 
                         <TextView
                             android:id="@+id/tvClassCodeSemester"
-                            style="@style/TextAppearance.EduLens.Body"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_4"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="#CCD0CF"
+                            android:textSize="13sp"
                             tools:text="NT118.O21 · HK1 (2026-2027)" />
 
                         <LinearLayout
@@ -72,7 +73,8 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
-                                android:textColor="@color/text_muted"
+                                android:textColor="#9BA8AB"
+                                android:textSize="12sp"
                                 tools:text="Phòng B5.12" />
 
                             <!-- Pill for Invite Code -->
@@ -80,7 +82,7 @@
                                 android:id="@+id/btnCopyInviteCode"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_badge_pill"
+                                android:background="@drawable/bg_unified_bento_stat_highlight"
                                 android:clickable="true"
                                 android:focusable="true"
                                 android:foreground="?attr/selectableItemBackground"
@@ -94,7 +96,7 @@
                                     android:layout_height="14dp"
                                     android:contentDescription="@null"
                                     android:src="@drawable/ic_content_copy"
-                                    app:tint="@color/color_primary" />
+                                    app:tint="#C5BAC4" />
 
                                 <TextView
                                     android:id="@+id/tvInviteCode"
@@ -102,102 +104,111 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:layout_marginStart="@dimen/space_4"
-                                    android:textColor="@color/color_primary"
+                                    android:textColor="#C5BAC4"
                                     tools:text="Mã: K7M-2QX" />
                             </LinearLayout>
                         </LinearLayout>
-                    </LinearLayout>
 
-                    <!-- 3 Metric Cards Row -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_12"
-                        android:baselineAligned="false"
-                        android:orientation="horizontal">
-
-                        <!-- Metric 1: Students -->
+                        <!-- 3 Metric Boxes Row -->
                         <LinearLayout
-                            android:layout_width="0dp"
+                            android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginEnd="@dimen/space_4"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_surface_card"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="@dimen/space_12">
+                            android:layout_marginTop="16dp"
+                            android:baselineAligned="false"
+                            android:orientation="horizontal">
 
-                            <TextView
-                                android:id="@+id/tvEnrolledCount"
-                                style="@style/TextAppearance.EduLens.Title"
-                                android:layout_width="wrap_content"
+                            <!-- Metric 1: Students -->
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/color_primary"
-                                tools:text="45" />
+                                android:layout_marginEnd="@dimen/space_4"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_unified_bento_stat"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
 
-                            <TextView
-                                style="@style/TextAppearance.EduLens.Caption"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    android:id="@+id/tvEnrolledCount"
+                                    style="@style/TextAppearance.EduLens.Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    tools:text="45" />
+
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Caption"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/space_4"
+                                    android:text="@string/metric_students"
+                                    android:textColor="#9BA8AB"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+
+                            <!-- Metric 2: Assignments -->
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_4"
-                                android:text="@string/metric_students"
-                                android:textColor="@color/text_secondary" />
-                        </LinearLayout>
+                                android:layout_marginHorizontal="@dimen/space_4"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_unified_bento_stat"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
 
-                        <!-- Metric 2: Assignments -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginHorizontal="@dimen/space_4"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_surface_card"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="@dimen/space_12">
+                                <TextView
+                                    android:id="@+id/tvAssignmentCount"
+                                    style="@style/TextAppearance.EduLens.Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#FFFFFF"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    tools:text="4" />
 
-                            <TextView
-                                android:id="@+id/tvAssignmentCount"
-                                style="@style/TextAppearance.EduLens.Title"
-                                android:layout_width="wrap_content"
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Caption"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/space_4"
+                                    android:text="@string/metric_assignments"
+                                    android:textColor="#9BA8AB"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
+
+                            <!-- Metric 3: Attendance -->
+                            <LinearLayout
+                                android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/color_primary"
-                                tools:text="4" />
+                                android:layout_marginStart="@dimen/space_4"
+                                android:layout_weight="1"
+                                android:background="@drawable/bg_unified_bento_stat"
+                                android:gravity="center"
+                                android:orientation="vertical"
+                                android:paddingVertical="10dp">
 
-                            <TextView
-                                style="@style/TextAppearance.EduLens.Caption"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_4"
-                                android:text="@string/metric_assignments"
-                                android:textColor="@color/text_secondary" />
-                        </LinearLayout>
+                                <TextView
+                                    android:id="@+id/tvAttendanceRate"
+                                    style="@style/TextAppearance.EduLens.Title"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:textColor="#C5BAC4"
+                                    android:textSize="18sp"
+                                    android:textStyle="bold"
+                                    tools:text="92%" />
 
-                        <!-- Metric 3: Attendance -->
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_4"
-                            android:layout_weight="1"
-                            android:background="@drawable/bg_surface_card"
-                            android:gravity="center"
-                            android:orientation="vertical"
-                            android:paddingVertical="@dimen/space_12">
-
-                            <TextView
-                                android:id="@+id/tvAttendanceRate"
-                                style="@style/TextAppearance.EduLens.Title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:textColor="@color/color_primary"
-                                tools:text="92%" />
-
-                            <TextView
-                                style="@style/TextAppearance.EduLens.Caption"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_marginTop="@dimen/space_4"
-                                android:text="@string/metric_attendance"
-                                android:textColor="@color/text_secondary" />
+                                <TextView
+                                    style="@style/TextAppearance.EduLens.Caption"
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:layout_marginTop="@dimen/space_4"
+                                    android:text="@string/metric_attendance"
+                                    android:textColor="#9BA8AB"
+                                    android:textSize="11sp" />
+                            </LinearLayout>
                         </LinearLayout>
                     </LinearLayout>
 
@@ -218,29 +229,35 @@
                             android:layout_weight="1"
                             android:paddingHorizontal="@dimen/space_4"
                             android:text="@string/lecturer_action_members"
+                            android:textColor="@color/uc_text_primary"
                             android:textSize="12sp"
+                            app:backgroundTint="@color/uc_surface_elevated"
                             app:icon="@drawable/ic_group"
                             app:iconGravity="textStart"
                             app:iconPadding="@dimen/space_4"
                             app:iconSize="16dp"
-                            app:iconTint="@color/color_primary" />
+                            app:iconTint="@color/uc_text_primary"
+                            app:strokeColor="@color/uc_border_card"
+                            app:strokeWidth="1dp" />
 
                         <!-- Open QR Session -->
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnOpenQrSession"
-                            style="@style/Widget.EduLens.Button.Outlined"
+                            style="@style/Widget.EduLens.Button.Filled"
                             android:layout_width="0dp"
                             android:layout_height="@dimen/button_height_md"
                             android:layout_marginHorizontal="@dimen/space_4"
                             android:layout_weight="1.2"
                             android:paddingHorizontal="@dimen/space_4"
                             android:text="@string/lecturer_action_qr"
+                            android:textColor="@color/uc_btn_primary_text"
                             android:textSize="12sp"
+                            app:backgroundTint="@color/uc_btn_primary_bg"
                             app:icon="@drawable/ic_qr_scan"
                             app:iconGravity="textStart"
                             app:iconPadding="@dimen/space_4"
                             app:iconSize="16dp"
-                            app:iconTint="@color/color_primary" />
+                            app:iconTint="@color/uc_btn_primary_text" />
 
                         <!-- Class Statistics -->
                         <com.google.android.material.button.MaterialButton
@@ -252,12 +269,16 @@
                             android:layout_weight="1"
                             android:paddingHorizontal="@dimen/space_4"
                             android:text="@string/lecturer_action_stats"
+                            android:textColor="@color/uc_text_primary"
                             android:textSize="12sp"
+                            app:backgroundTint="@color/uc_surface_elevated"
                             app:icon="@drawable/ic_bar_chart"
                             app:iconGravity="textStart"
                             app:iconPadding="@dimen/space_4"
                             app:iconSize="16dp"
-                            app:iconTint="@color/color_primary" />
+                            app:iconTint="@color/uc_text_primary"
+                            app:strokeColor="@color/uc_border_card"
+                            app:strokeWidth="1dp" />
                     </LinearLayout>
 
                     <!-- Section: Announcements -->
@@ -302,9 +323,12 @@
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:background="@drawable/bg_unified_surface_card"
+                        android:gravity="center"
+                        android:padding="16dp"
                         android:text="Chưa có thông báo nào trong lớp"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
 
                     <!-- Section: Materials -->
@@ -349,9 +373,12 @@
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:background="@drawable/bg_unified_surface_card"
+                        android:gravity="center"
+                        android:padding="16dp"
                         android:text="Chưa có tài liệu nào trong lớp"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
 
                     <!-- Section: Assignments -->
@@ -396,9 +423,12 @@
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:background="@drawable/bg_unified_surface_card"
+                        android:gravity="center"
+                        android:padding="16dp"
                         android:text="Chưa có bài tập nào trong lớp"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
 
                     <!-- Section: Class Schedules -->
@@ -442,9 +472,12 @@
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:background="@drawable/bg_unified_surface_card"
+                        android:gravity="center"
+                        android:padding="16dp"
                         android:text="@string/empty_class_schedules"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
 
                     <!-- Section: Schedule Exceptions -->
@@ -488,9 +521,12 @@
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/space_4"
+                        android:layout_marginTop="@dimen/space_8"
+                        android:background="@drawable/bg_unified_surface_card"
+                        android:gravity="center"
+                        android:padding="16dp"
                         android:text="@string/empty_class_exceptions"
-                        android:textColor="@color/text_muted"
+                        android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>

@@ -35,6 +35,10 @@
     <color name="uc_nav_item_inactive">#4A5C6A</color>
     <color name="uc_btn_primary_bg">#253745</color>
     <color name="uc_btn_primary_text">#FFFFFF</color>
+    <color name="uc_stroke_grid">@color/uc_border_card</color>
+    <color name="uc_slate_500">#57707A</color>
+    <color name="uc_slate_400">#7B919C</color>
+    <color name="uc_mauve_accent">#C5BAC4</color>
 
     <!-- Unified App Semantic Tokens (Mapped to 12-Color Theme for Light Mode) -->
     <color name="color_primary">#253745</color>

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -46,7 +46,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_16"
                 android:text="@string/create_class_success_title"
-                android:textColor="@color/text_primary" />
+                android:textColor="@color/uc_text_primary" />
 
             <TextView
                 android:id="@+id/tvClassSubtitle"
@@ -55,15 +55,15 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_4"
                 android:gravity="center"
-                android:textColor="@color/text_secondary"
+                android:textColor="@color/uc_text_secondary"
                 tools:text="Thiết kế giao diện người dùng · NT118.O21" />
 
-            <!-- Large Invite Code Card (Figma 74:1142) -->
+            <!-- Large Invite Code Bento Hero Card (Figma 74:1142) -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_24"
-                android:background="@drawable/bg_surface_card"
+                android:background="@drawable/bg_unified_bento_hero"
                 android:gravity="center_horizontal"
                 android:orientation="vertical"
                 android:padding="@dimen/space_20">
@@ -74,7 +74,7 @@
                     android:layout_height="wrap_content"
                     android:letterSpacing="0.08"
                     android:text="MÃ THAM GIA LỚP HỌC"
-                    android:textColor="@color/text_muted"
+                    android:textColor="#9BA8AB"
                     android:textStyle="bold" />
 
                 <TextView
@@ -84,8 +84,8 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_8"
                     android:letterSpacing="0.15"
-                    android:textColor="@color/color_primary"
-                    android:textSize="34sp"
+                    android:textColor="#C5BAC4"
+                    android:textSize="28sp"
                     android:textStyle="bold"
                     tools:text="K7M-2QX" />
 
@@ -96,7 +96,7 @@
                     android:layout_marginTop="@dimen/space_8"
                     android:gravity="center"
                     android:text="@string/create_class_success_subtitle"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="#CCD0CF" />
 
             </LinearLayout>
 
@@ -109,16 +109,18 @@
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnCopyCode"
-                    style="@style/Widget.EduLens.Button.Outlined"
+                    style="@style/Widget.EduLens.Button.Filled"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_marginEnd="@dimen/space_8"
                     android:layout_weight="1"
                     android:minHeight="48dp"
                     android:text="@string/btn_copy_code"
+                    android:textColor="@color/uc_btn_primary_text"
+                    app:backgroundTint="@color/uc_btn_primary_bg"
                     app:icon="@drawable/ic_content_copy"
                     app:iconGravity="textStart"
-                    app:iconTint="@color/color_primary" />
+                    app:iconTint="@color/uc_btn_primary_text" />
 
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnShareCode"
@@ -129,9 +131,13 @@
                     android:layout_weight="1"
                     android:minHeight="48dp"
                     android:text="@string/btn_share_code"
+                    android:textColor="@color/uc_text_primary"
+                    app:backgroundTint="@color/uc_surface_elevated"
                     app:icon="@drawable/ic_share"
                     app:iconGravity="textStart"
-                    app:iconTint="@color/color_primary" />
+                    app:iconTint="@color/uc_text_primary"
+                    app:strokeColor="@color/uc_border_card"
+                    app:strokeWidth="1dp" />
             </LinearLayout>
 
             <View
@@ -148,7 +154,10 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_16"
                 android:minHeight="48dp"
-                android:text="@string/btn_enter_class" />
+                android:text="@string/btn_enter_class"
+                android:textColor="@color/uc_btn_primary_text"
+                app:backgroundTint="@color/uc_btn_primary_bg"
+                app:iconTint="@color/uc_btn_primary_text" />
 
         </LinearLayout>
     </ScrollView>

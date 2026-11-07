@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -16,15 +16,15 @@
         android:id="@+id/tabLayoutClassStatus"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:background="@color/color_surface"
+        android:background="@color/uc_bg_canvas"
         app:tabGravity="fill"
-        app:tabIndicatorColor="@color/color_primary"
+        app:tabIndicatorColor="@color/uc_nav_item_active"
         app:tabIndicatorFullWidth="false"
         app:tabIndicatorHeight="3dp"
         app:tabMode="fixed"
         app:tabRippleColor="@null"
-        app:tabSelectedTextColor="@color/color_primary"
-        app:tabTextColor="@color/text_secondary">
+        app:tabSelectedTextColor="@color/uc_nav_item_active"
+        app:tabTextColor="@color/uc_text_secondary">
 
         <com.google.android.material.tabs.TabItem
             android:layout_width="wrap_content"
@@ -36,11 +36,6 @@
             android:layout_height="wrap_content"
             android:text="@string/lecturer_tab_archived" />
     </com.google.android.material.tabs.TabLayout>
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="@color/outline_border" />
 
     <!-- Semester & Class Count Header -->
     <LinearLayout
@@ -131,10 +126,10 @@
             android:layout_marginEnd="@dimen/space_16"
             android:layout_marginBottom="@dimen/space_16"
             android:text="@string/btn_create_class"
-            android:textColor="@color/white"
-            app:backgroundTint="@color/color_primary"
+            android:textColor="@color/uc_btn_primary_text"
+            app:backgroundTint="@color/uc_btn_primary_bg"
             app:icon="@drawable/ic_add"
-            app:iconTint="@color/white" />
+            app:iconTint="@color/uc_btn_primary_text" />
 
     </FrameLayout>
 </LinearLayout>
