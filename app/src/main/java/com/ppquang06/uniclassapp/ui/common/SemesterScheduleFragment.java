@@ -146,30 +146,32 @@ public class SemesterScheduleFragment extends Fragment {
     private void updateModeToggleUi() {
         if (binding == null || getContext() == null) return;
 
-        int colorPrimary = ContextCompat.getColor(requireContext(), R.color.color_primary);
-        int colorTextSecondary = ContextCompat.getColor(requireContext(), R.color.text_secondary);
-        int colorSurface = ContextCompat.getColor(requireContext(), R.color.color_surface);
+        int activeBgColor = ContextCompat.getColor(requireContext(), R.color.uc_btn_primary_bg);
+        int activeTextColor = ContextCompat.getColor(requireContext(), R.color.uc_btn_primary_text);
+        int inactiveTextColor = ContextCompat.getColor(requireContext(), R.color.uc_text_secondary);
 
         if (isWeeklyMode) {
             binding.layoutWeeklyMode.setVisibility(View.VISIBLE);
             binding.layoutListMode.setVisibility(View.GONE);
 
             binding.btnModeWeekly.setBackgroundResource(R.drawable.bg_badge_pill);
-            binding.btnModeWeekly.setBackgroundTintList(ColorStateList.valueOf(colorSurface));
-            binding.btnModeWeekly.setTextColor(colorPrimary);
+            binding.btnModeWeekly.setBackgroundTintList(ColorStateList.valueOf(activeBgColor));
+            binding.btnModeWeekly.setTextColor(activeTextColor);
 
             binding.btnModeList.setBackground(null);
-            binding.btnModeList.setTextColor(colorTextSecondary);
+            binding.btnModeList.setBackgroundTintList(null);
+            binding.btnModeList.setTextColor(inactiveTextColor);
         } else {
             binding.layoutWeeklyMode.setVisibility(View.GONE);
             binding.layoutListMode.setVisibility(View.VISIBLE);
 
             binding.btnModeList.setBackgroundResource(R.drawable.bg_badge_pill);
-            binding.btnModeList.setBackgroundTintList(ColorStateList.valueOf(colorSurface));
-            binding.btnModeList.setTextColor(colorPrimary);
+            binding.btnModeList.setBackgroundTintList(ColorStateList.valueOf(activeBgColor));
+            binding.btnModeList.setTextColor(activeTextColor);
 
             binding.btnModeWeekly.setBackground(null);
-            binding.btnModeWeekly.setTextColor(colorTextSecondary);
+            binding.btnModeWeekly.setBackgroundTintList(null);
+            binding.btnModeWeekly.setTextColor(inactiveTextColor);
         }
     }
 
@@ -293,16 +295,18 @@ public class SemesterScheduleFragment extends Fragment {
             // Day body column FrameLayout
             FrameLayout dayFrame = new FrameLayout(requireContext());
             dayFrame.setLayoutParams(new LinearLayout.LayoutParams(dayColWidthPx, totalColumnHeightPx));
-            dayFrame.setBackgroundColor(isToday ? Color.parseColor("#F8FAFC") : colorSurface);
+            int todayColBg = ContextCompat.getColor(requireContext(), R.color.uc_surface_elevated);
+            dayFrame.setBackgroundColor(isToday ? todayColBg : colorSurface);
 
             // Background horizontal grid lines for each period
+            int strokeGridColor = ContextCompat.getColor(requireContext(), R.color.uc_stroke_grid);
             for (int p = 1; p <= periods.size(); p++) {
                 View gridLine = new View(requireContext());
                 FrameLayout.LayoutParams lineLp = new FrameLayout.LayoutParams(
                         ViewGroup.LayoutParams.MATCH_PARENT, dividerPx);
                 lineLp.topMargin = p * (periodHeightPx + dividerPx) - dividerPx;
                 gridLine.setLayoutParams(lineLp);
-                gridLine.setBackgroundColor(Color.parseColor("#F1F5F9"));
+                gridLine.setBackgroundColor(strokeGridColor);
                 dayFrame.addView(gridLine);
             }
 
@@ -353,6 +357,8 @@ public class SemesterScheduleFragment extends Fragment {
         TextView tvPeriod = cardView.findViewById(R.id.tvCellPeriod);
         TextView tvRoom = cardView.findViewById(R.id.tvCellRoom);
 
+        if (getContext() == null) return;
+
         tvCode.setText(!TextUtils.isEmpty(cellData.getClassCode()) ? cellData.getClassCode() : "");
         tvName.setText(!TextUtils.isEmpty(cellData.getClassName()) ? cellData.getClassName() : "Lớp học");
         tvPeriod.setText(cellData.getPeriodRangeLabel() + " (" + cellData.getStartTime() + "-" + cellData.getEndTime() + ")");
@@ -368,48 +374,50 @@ public class SemesterScheduleFragment extends Fragment {
             tvRoom.setVisibility(View.GONE);
         }
 
+        tvName.setPaintFlags(tvName.getPaintFlags() & ~Paint.STRIKE_THRU_TEXT_FLAG);
+
         CellType type = cellData.getCellType();
         if (type == CellType.MAKEUP) {
             card.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_success_container));
-            card.setStrokeColor(Color.parseColor("#86EFAC"));
+            card.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.color_success));
             tvCode.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_success));
-            tvName.setTextColor(Color.parseColor("#064E3B"));
-            tvPeriod.setTextColor(Color.parseColor("#166534"));
-            tvRoom.setTextColor(Color.parseColor("#14532D"));
+            tvName.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_primary));
+            tvPeriod.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_secondary));
+            tvRoom.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_success));
             tvBadge.setVisibility(View.VISIBLE);
             tvBadge.setText(cellData.getStatusBadgeLabel());
             tvBadge.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_success)));
             tvBadge.setTextColor(Color.WHITE);
         } else if (type == CellType.CANCELLED) {
             card.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_error_container));
-            card.setStrokeColor(Color.parseColor("#FCA5A5"));
+            card.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.color_error));
             tvCode.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_error));
-            tvName.setTextColor(Color.parseColor("#7F1D1D"));
+            tvName.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_primary));
             tvName.setPaintFlags(tvName.getPaintFlags() | Paint.STRIKE_THRU_TEXT_FLAG);
-            tvPeriod.setTextColor(Color.parseColor("#991B1B"));
-            tvRoom.setTextColor(Color.parseColor("#991B1B"));
+            tvPeriod.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_secondary));
+            tvRoom.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_error));
             tvBadge.setVisibility(View.VISIBLE);
             tvBadge.setText(cellData.getStatusBadgeLabel());
             tvBadge.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_error)));
             tvBadge.setTextColor(Color.WHITE);
         } else if (type == CellType.MODIFIED) {
             card.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_warning_container));
-            card.setStrokeColor(Color.parseColor("#FDE68A"));
+            card.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.color_warning));
             tvCode.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_warning));
-            tvName.setTextColor(Color.parseColor("#78350F"));
-            tvPeriod.setTextColor(Color.parseColor("#92400E"));
-            tvRoom.setTextColor(Color.parseColor("#78350F"));
+            tvName.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_primary));
+            tvPeriod.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_secondary));
+            tvRoom.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_warning));
             tvBadge.setVisibility(View.VISIBLE);
             tvBadge.setText(cellData.getStatusBadgeLabel());
             tvBadge.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_warning)));
             tvBadge.setTextColor(Color.WHITE);
         } else {
-            card.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.color_primary_container));
-            card.setStrokeColor(Color.parseColor("#BFDBFE"));
+            card.setCardBackgroundColor(ContextCompat.getColor(requireContext(), R.color.uc_surface_elevated));
+            card.setStrokeColor(ContextCompat.getColor(requireContext(), R.color.uc_border_card));
             tvCode.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary));
-            tvName.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_primary));
-            tvPeriod.setTextColor(ContextCompat.getColor(requireContext(), R.color.text_secondary));
-            tvRoom.setTextColor(ContextCompat.getColor(requireContext(), R.color.color_primary_dark));
+            tvName.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_primary));
+            tvPeriod.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_secondary));
+            tvRoom.setTextColor(ContextCompat.getColor(requireContext(), R.color.uc_text_secondary));
             tvBadge.setVisibility(View.GONE);
         }
 
