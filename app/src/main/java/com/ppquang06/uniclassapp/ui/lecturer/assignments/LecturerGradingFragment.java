@@ -206,6 +206,9 @@ public class LecturerGradingFragment extends Fragment {
         String code = item.getStudentCode() != null ? "MSSV: " + item.getStudentCode() : "";
         binding.tvStudentCode.setText(code);
         binding.tvCurrentStudentInfo.setText(item.getStudentName() + " - " + item.getStudentCode());
+        if (binding.tvStudentPositionIndicator != null && !submissions.isEmpty()) {
+            binding.tvStudentPositionIndicator.setText(String.format(Locale.getDefault(), "%d / %d", (index + 1), submissions.size()));
+        }
 
         // File details
         if (!TextUtils.isEmpty(item.getFileUrl())) {

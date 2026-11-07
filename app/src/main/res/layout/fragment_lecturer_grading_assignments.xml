@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -31,15 +31,19 @@
                 android:paddingBottom="@dimen/space_16"
                 tools:listitem="@layout/item_assignment_row" />
 
+            <!-- Surface Card Empty State -->
             <TextView
                 android:id="@+id/tvEmptyGradingAssignments"
                 style="@style/TextAppearance.EduLens.Body"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
+                android:layout_marginHorizontal="@dimen/space_24"
+                android:background="@drawable/bg_unified_surface_card"
                 android:gravity="center"
+                android:padding="@dimen/space_20"
                 android:text="@string/empty_grading_assignments_message"
-                android:textColor="@color/text_muted"
+                android:textColor="@color/uc_text_secondary"
                 android:visibility="gone" />
 
             <ProgressBar

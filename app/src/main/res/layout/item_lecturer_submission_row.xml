@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/space_8"
-    android:background="@drawable/bg_surface_card"
+    android:background="@drawable/bg_unified_surface_card"
     android:clickable="true"
     android:focusable="true"
     android:foreground="?attr/selectableItemBackground"
@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_primary"
+            android:textColor="@color/uc_text_primary"
             tools:text="Nguyễn Văn An" />
 
         <TextView
@@ -57,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:textColor="@color/text_secondary"
+            android:textColor="@color/uc_text_secondary"
             tools:text="MSSV: 21520001" />
 
         <TextView
@@ -68,7 +68,7 @@
             android:layout_marginTop="2dp"
             android:ellipsize="end"
             android:maxLines="1"
-            android:textColor="@color/text_muted"
+            android:textColor="@color/uc_text_muted"
             tools:text="Nộp lúc: 20:30 · 28/10/2026" />
 
         <TextView
@@ -111,7 +111,7 @@
             android:layout_marginStart="@dimen/space_4"
             android:contentDescription="@null"
             android:src="@drawable/ic_chevron_right"
-            app:tint="@color/text_muted" />
+            app:tint="@color/uc_text_muted" />
     </LinearLayout>
 
 </LinearLayout>

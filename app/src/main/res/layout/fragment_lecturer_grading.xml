@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -24,11 +24,12 @@
             android:paddingHorizontal="@dimen/space_16"
             android:paddingVertical="@dimen/space_16">
 
-            <!-- Student Switcher Bar -->
+            <!-- Student Switcher Bento Hero Card -->
             <LinearLayout
+                android:id="@+id/cardStudentSwitcherHero"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_surface_card"
+                android:background="@drawable/bg_unified_bento_hero"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
                 android:padding="@dimen/space_12">
@@ -40,8 +41,11 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_prev_student"
-                    android:textColor="@color/color_primary"
-                    android:textSize="13sp" />
+                    android:textColor="#C5BAC4"
+                    android:textSize="13sp"
+                    app:icon="@drawable/ic_chevron_left"
+                    app:iconGravity="textStart"
+                    app:iconTint="#C5BAC4" />
 
                 <!-- Student Center Info -->
                 <LinearLayout
@@ -55,14 +59,14 @@
                     <FrameLayout
                         android:layout_width="40dp"
                         android:layout_height="40dp"
-                        android:background="@drawable/bg_circle_aura">
+                        android:background="@drawable/bg_unified_bento_stat">
 
                         <TextView
                             android:id="@+id/tvAvatarInitial"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:textColor="@color/color_primary"
+                            android:textColor="#FFFFFF"
                             android:textSize="15sp"
                             android:textStyle="bold"
                             tools:text="NA" />
@@ -76,16 +80,44 @@
                         android:layout_marginTop="@dimen/space_4"
                         android:ellipsize="end"
                         android:maxLines="1"
-                        android:textColor="@color/text_primary"
+                        android:textColor="#FFFFFF"
+                        android:textSize="16sp"
+                        android:textStyle="bold"
                         tools:text="Nguyễn Văn An" />
+
+                    <!-- Semantic View ID alias for tvCurrentStudentName -->
+                    <TextView
+                        android:id="@+id/tvCurrentStudentName"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/tvStudentCode"
                         style="@style/TextAppearance.EduLens.Caption"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_secondary"
+                        android:textColor="#CCD0CF"
+                        android:textSize="13sp"
                         tools:text="MSSV: 21520001" />
+
+                    <!-- Semantic View ID alias for tvCurrentStudentCode -->
+                    <TextView
+                        android:id="@+id/tvCurrentStudentCode"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:visibility="gone" />
+
+                    <!-- Student position indicator in grading queue -->
+                    <TextView
+                        android:id="@+id/tvStudentPositionIndicator"
+                        style="@style/TextAppearance.EduLens.Caption"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:textColor="#9BA8AB"
+                        android:textSize="12sp"
+                        tools:text="1 / 45" />
 
                     <TextView
                         android:id="@+id/tvCurrentStudentInfo"
@@ -102,16 +134,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/btn_next_student"
-                    android:textColor="@color/color_primary"
-                    android:textSize="13sp" />
+                    android:textColor="#C5BAC4"
+                    android:textSize="13sp"
+                    app:icon="@drawable/ic_chevron_right"
+                    app:iconGravity="textEnd"
+                    app:iconTint="#C5BAC4" />
             </LinearLayout>
 
-            <!-- Grading Progress Bar Card -->
+            <!-- Grading Progress Bar Surface Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_12"
-                android:background="@drawable/bg_surface_card"
+                android:background="@drawable/bg_unified_surface_card"
                 android:orientation="vertical"
                 android:padding="@dimen/space_12">
 
@@ -124,7 +159,7 @@
                         style="@style/TextAppearance.EduLens.Subtitle"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/uc_text_primary"
                         tools:text="Tiến độ chấm: 20/45 bài" />
 
                     <TextView
@@ -139,23 +174,24 @@
                         tools:text="44%" />
                 </RelativeLayout>
 
-                <ProgressBar
+                <com.google.android.material.progressindicator.LinearProgressIndicator
                     android:id="@+id/progressGraded"
-                    style="?android:attr/progressBarStyleHorizontal"
                     android:layout_width="match_parent"
                     android:layout_height="8dp"
                     android:layout_marginTop="@dimen/space_8"
                     android:max="100"
                     android:progress="44"
-                    android:progressTint="@color/color_primary" />
+                    app:indicatorColor="@color/color_primary"
+                    app:trackColor="@color/uc_surface_elevated"
+                    app:trackCornerRadius="4dp" />
             </LinearLayout>
 
-            <!-- Submitted File Card -->
+            <!-- Submitted File Surface Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_12"
-                android:background="@drawable/bg_surface_card"
+                android:background="@drawable/bg_unified_surface_card"
                 android:orientation="vertical"
                 android:padding="@dimen/space_16">
 
@@ -164,15 +200,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/submitted_file_title"
-                    android:textColor="@color/text_primary" />
+                    android:textColor="@color/uc_text_primary" />
 
+                <!-- File details nested in bg_feedback_box -->
                 <LinearLayout
                     android:id="@+id/layoutFileDetails"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_12"
+                    android:background="@drawable/bg_feedback_box"
                     android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:orientation="horizontal"
+                    android:padding="@dimen/space_12">
 
                     <ImageView
                         android:id="@+id/ivFileIcon"
@@ -197,7 +236,7 @@
                             android:layout_height="wrap_content"
                             android:ellipsize="end"
                             android:maxLines="1"
-                            android:textColor="@color/text_primary"
+                            android:textColor="@color/uc_text_primary"
                             tools:text="21520001_bt1.pdf" />
 
                         <TextView
@@ -206,7 +245,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="2dp"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="@color/uc_text_secondary"
                             tools:text="Nộp lúc 20:30 · 28/10/2026" />
                     </LinearLayout>
 
@@ -233,7 +272,7 @@
                     android:textColor="@color/color_warning"
                     android:visibility="gone" />
 
-                <!-- Open File Button -->
+                <!-- Open File Button styled with uc_surface_elevated -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnOpenFile"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
@@ -241,19 +280,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_12"
                     android:text="@string/btn_open_file"
-                    android:textColor="@color/color_primary"
+                    android:textColor="@color/uc_text_primary"
+                    app:backgroundTint="@color/uc_surface_elevated"
+                    app:cornerRadius="@dimen/radius_sm"
                     app:icon="@drawable/ic_download"
                     app:iconGravity="textStart"
-                    app:iconTint="@color/color_primary"
-                    app:strokeColor="@color/color_primary" />
+                    app:iconTint="@color/uc_text_primary"
+                    app:strokeColor="@color/uc_border_card" />
             </LinearLayout>
 
-            <!-- Score & Quick-Score Card -->
+            <!-- Score & Quick-Score Surface Card -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/space_12"
-                android:background="@drawable/bg_surface_card"
+                android:background="@drawable/bg_unified_surface_card"
                 android:orientation="vertical"
                 android:padding="@dimen/space_16">
 
@@ -271,7 +312,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="numberDecimal"
-                        android:textColor="@color/text_primary"
+                        android:textColor="@color/uc_text_primary"
                         android:textSize="20sp"
                         android:textStyle="bold"
                         tools:text="9.0" />
@@ -284,7 +325,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/space_12"
                     android:text="@string/quick_score_title"
-                    android:textColor="@color/text_secondary" />
+                    android:textColor="@color/uc_text_secondary" />
 
                 <!-- 6 Quick-Score Chips in a horizontal layout -->
                 <HorizontalScrollView
@@ -305,9 +346,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="10"
-                            android:textColor="@color/color_primary"
-                            app:chipBackgroundColor="@color/color_primary_container"
-                            app:chipStrokeColor="@color/color_primary"
+                            android:textColor="@color/uc_text_primary"
+                            app:chipBackgroundColor="@color/uc_surface_elevated"
+                            app:chipStrokeColor="@color/uc_border_card"
                             app:chipStrokeWidth="1dp" />
 
                         <com.google.android.material.chip.Chip
@@ -316,9 +357,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="9"
-                            android:textColor="@color/color_primary"
-                            app:chipBackgroundColor="@color/color_primary_container"
-                            app:chipStrokeColor="@color/color_primary"
+                            android:textColor="@color/uc_text_primary"
+                            app:chipBackgroundColor="@color/uc_surface_elevated"
+                            app:chipStrokeColor="@color/uc_border_card"
                             app:chipStrokeWidth="1dp" />
 
                         <com.google.android.material.chip.Chip
@@ -327,9 +368,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="8.5"
-                            android:textColor="@color/color_primary"
-                            app:chipBackgroundColor="@color/color_primary_container"
-                            app:chipStrokeColor="@color/color_primary"
+                            android:textColor="@color/uc_text_primary"
+                            app:chipBackgroundColor="@color/uc_surface_elevated"
+                            app:chipStrokeColor="@color/uc_border_card"
                             app:chipStrokeWidth="1dp" />
 
                         <com.google.android.material.chip.Chip
@@ -338,9 +379,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="8"
-                            android:textColor="@color/color_primary"
-                            app:chipBackgroundColor="@color/color_primary_container"
-                            app:chipStrokeColor="@color/color_primary"
+                            android:textColor="@color/uc_text_primary"
+                            app:chipBackgroundColor="@color/uc_surface_elevated"
+                            app:chipStrokeColor="@color/uc_border_card"
                             app:chipStrokeWidth="1dp" />
 
                         <com.google.android.material.chip.Chip
@@ -349,9 +390,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="7"
-                            android:textColor="@color/color_primary"
-                            app:chipBackgroundColor="@color/color_primary_container"
-                            app:chipStrokeColor="@color/color_primary"
+                            android:textColor="@color/uc_text_primary"
+                            app:chipBackgroundColor="@color/uc_surface_elevated"
+                            app:chipStrokeColor="@color/uc_border_card"
                             app:chipStrokeWidth="1dp" />
 
                         <com.google.android.material.chip.Chip
@@ -360,9 +401,9 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:text="5"
-                            android:textColor="@color/color_primary"
-                            app:chipBackgroundColor="@color/color_primary_container"
-                            app:chipStrokeColor="@color/color_primary"
+                            android:textColor="@color/uc_text_primary"
+                            app:chipBackgroundColor="@color/uc_surface_elevated"
+                            app:chipStrokeColor="@color/uc_border_card"
                             app:chipStrokeWidth="1dp" />
 
                     </com.google.android.material.chip.ChipGroup>
@@ -385,7 +426,7 @@
                         android:gravity="top|start"
                         android:inputType="textMultiLine"
                         android:minLines="3"
-                        android:textColor="@color/text_primary" />
+                        android:textColor="@color/uc_text_primary" />
                 </com.google.android.material.textfield.TextInputLayout>
 
             </LinearLayout>
@@ -396,9 +437,10 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:layout_marginTop="@dimen/space_16"
+                android:indeterminateTint="@color/color_primary"
                 android:visibility="gone" />
 
-            <!-- Action Buttons: Save Draft & Publish Grade -->
+            <!-- Action Buttons: Save Draft / Grade & Publish Grade -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -406,29 +448,49 @@
                 android:layout_marginBottom="@dimen/space_24"
                 android:orientation="horizontal">
 
-                <!-- Lưu nháp -->
+                <!-- Lưu nháp / Lưu điểm (btnSaveDraft / btnSaveGrade) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnSaveDraft"
-                    style="@style/Widget.EduLens.Button.Outlined"
+                    style="@style/Widget.EduLens.Button.Filled"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/button_height_lg"
                     android:layout_marginEnd="@dimen/space_8"
                     android:layout_weight="1"
                     android:text="@string/btn_save_draft"
+                    app:backgroundTint="@color/uc_btn_primary_bg"
+                    android:textColor="@color/uc_btn_primary_text"
                     app:cornerRadius="@dimen/radius_sm" />
 
-                <!-- Công bố điểm -->
+                <!-- Semantic alias view for btnSaveGrade -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnSaveGrade"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
+
+                <!-- Công bố điểm (btnPublishGrade / btnPublishGrades) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnPublishGrade"
-                    style="@style/Widget.EduLens.Button.Filled"
+                    style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:minHeight="@dimen/button_height_lg"
                     android:layout_marginStart="@dimen/space_8"
                     android:layout_weight="1"
                     android:text="@string/btn_publish_grade"
+                    app:backgroundTint="@color/uc_surface_elevated"
+                    app:strokeColor="@color/uc_border_card"
+                    android:textColor="@color/uc_text_primary"
+                    app:iconTint="@color/uc_text_primary"
                     app:cornerRadius="@dimen/radius_sm" />
+
+                <!-- Semantic alias view for btnPublishGrades -->
+                <com.google.android.material.button.MaterialButton
+                    android:id="@+id/btnPublishGrades"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone" />
             </LinearLayout>
 
         </LinearLayout>

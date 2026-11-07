@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <include
@@ -28,11 +28,12 @@
                 android:paddingHorizontal="@dimen/space_16"
                 android:paddingVertical="@dimen/space_16">
 
-                <!-- Header Card: Assignment Info -->
+                <!-- Unified Bento Hero Header: Assignment Info & Submission Progress -->
                 <LinearLayout
+                    android:id="@+id/cardAssignmentHero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/bg_surface_card"
+                    android:background="@drawable/bg_unified_bento_hero"
                     android:orientation="vertical"
                     android:padding="@dimen/space_16">
 
@@ -41,9 +42,12 @@
                         style="@style/TextAppearance.EduLens.Headline"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/text_primary"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
                         tools:text="Bài tập 1: Layouts &amp; Navigation" />
 
+                    <!-- Meta Information Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -56,10 +60,10 @@
                             style="@style/TextAppearance.EduLens.Caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_pill_gray"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:paddingHorizontal="@dimen/space_8"
                             android:paddingVertical="2dp"
-                            android:textColor="@color/text_primary"
+                            android:textColor="#C5BAC4"
                             android:textStyle="bold"
                             tools:text="NT118.O21" />
 
@@ -70,69 +74,89 @@
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/space_8"
                             android:layout_weight="1"
-                            android:textColor="@color/text_secondary"
+                            android:textColor="#9BA8AB"
                             tools:text="Hạn nộp: 23:59 · 30/10/2026" />
+
+                        <!-- Semantic View ID alias for tvAssignmentMeta -->
+                        <TextView
+                            android:id="@+id/tvAssignmentMeta"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="#9BA8AB"
+                            android:textSize="12sp"
+                            android:visibility="gone" />
                     </LinearLayout>
-                </LinearLayout>
 
-                <!-- Submissions Progress & Metrics Card -->
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_12"
-                    android:background="@drawable/bg_surface_card"
-                    android:orientation="vertical"
-                    android:padding="@dimen/space_16">
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content">
-
-                        <TextView
-                            style="@style/TextAppearance.EduLens.Subtitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentStart="true"
-                            android:layout_centerVertical="true"
-                            android:text="Tiến độ nộp bài"
-                            android:textColor="@color/text_primary" />
-
-                        <TextView
-                            android:id="@+id/tvSubmittedRatio"
-                            style="@style/TextAppearance.EduLens.Subtitle"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentEnd="true"
-                            android:layout_centerVertical="true"
-                            android:textColor="@color/color_primary"
-                            android:textStyle="bold"
-                            tools:text="Đã nộp: 42 / 45" />
-                    </RelativeLayout>
-
-                    <!-- Visual Progress Bar -->
-                    <ProgressBar
-                        android:id="@+id/progressSubmissions"
-                        style="?android:attr/progressBarStyleHorizontal"
-                        android:layout_width="match_parent"
-                        android:layout_height="8dp"
-                        android:layout_marginTop="@dimen/space_12"
-                        android:max="100"
-                        android:progress="85"
-                        android:progressTint="@color/color_primary" />
-
-                    <!-- 3 Status Count Chips -->
+                    <!-- Progress Section inside Bento Hero -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/space_16"
+                        android:orientation="vertical">
+
+                        <RelativeLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content">
+
+                            <TextView
+                                style="@style/TextAppearance.EduLens.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentStart="true"
+                                android:layout_centerVertical="true"
+                                android:text="Tiến độ nộp bài"
+                                android:textColor="#CCD0CF"
+                                android:textSize="13sp" />
+
+                            <TextView
+                                android:id="@+id/tvSubmittedRatio"
+                                style="@style/TextAppearance.EduLens.Subtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_alignParentEnd="true"
+                                android:layout_centerVertical="true"
+                                android:textColor="#C5BAC4"
+                                android:textSize="13sp"
+                                android:textStyle="bold"
+                                tools:text="Đã nộp: 42 / 45" />
+
+                            <!-- Semantic View ID alias for tvSubmittedFraction -->
+                            <TextView
+                                android:id="@+id/tvSubmittedFraction"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:textColor="#C5BAC4"
+                                android:visibility="gone" />
+                        </RelativeLayout>
+
+                        <!-- Visual Progress Bar -->
+                        <com.google.android.material.progressindicator.LinearProgressIndicator
+                            android:id="@+id/progressSubmissions"
+                            android:layout_width="match_parent"
+                            android:layout_height="8dp"
+                            android:layout_marginTop="@dimen/space_8"
+                            android:max="100"
+                            android:progress="85"
+                            app:indicatorColor="#C5BAC4"
+                            app:trackColor="#3D4D55"
+                            app:trackCornerRadius="4dp" />
+                    </LinearLayout>
+
+                    <!-- 3 Status Count Bento Stat Boxes -->
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/space_12"
+                        android:baselineAligned="false"
                         android:orientation="horizontal">
 
                         <!-- Đúng hạn -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
+                            android:layout_marginEnd="@dimen/space_4"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_pill_green"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:paddingVertical="@dimen/space_8">
@@ -142,25 +166,28 @@
                                 style="@style/TextAppearance.EduLens.Headline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/color_success"
+                                android:textColor="#FFFFFF"
                                 android:textSize="18sp"
+                                android:textStyle="bold"
                                 tools:text="38" />
 
                             <TextView
                                 style="@style/TextAppearance.EduLens.Caption"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:text="@string/status_on_time"
-                                android:textColor="@color/color_success" />
+                                android:textColor="#9BA8AB"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <!-- Nộp trễ -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_8"
+                            android:layout_marginHorizontal="@dimen/space_4"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_pill_warning"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:paddingVertical="@dimen/space_8">
@@ -170,25 +197,28 @@
                                 style="@style/TextAppearance.EduLens.Headline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/color_warning"
+                                android:textColor="#C5BAC4"
                                 android:textSize="18sp"
+                                android:textStyle="bold"
                                 tools:text="4" />
 
                             <TextView
                                 style="@style/TextAppearance.EduLens.Caption"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:text="@string/status_late"
-                                android:textColor="@color/color_warning" />
+                                android:textColor="#9BA8AB"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                         <!-- Chưa nộp -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/space_8"
+                            android:layout_marginStart="@dimen/space_4"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_pill_gray"
+                            android:background="@drawable/bg_unified_bento_stat"
                             android:gravity="center"
                             android:orientation="vertical"
                             android:paddingVertical="@dimen/space_8">
@@ -198,16 +228,19 @@
                                 style="@style/TextAppearance.EduLens.Headline"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:textColor="@color/text_secondary"
+                                android:textColor="#FFFFFF"
                                 android:textSize="18sp"
+                                android:textStyle="bold"
                                 tools:text="3" />
 
                             <TextView
                                 style="@style/TextAppearance.EduLens.Caption"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
                                 android:text="@string/status_not_submitted"
-                                android:textColor="@color/text_secondary" />
+                                android:textColor="#9BA8AB"
+                                android:textSize="11sp" />
                         </LinearLayout>
 
                     </LinearLayout>
@@ -225,8 +258,8 @@
                     app:tabIndicatorHeight="3dp"
                     app:tabMode="fixed"
                     app:tabRippleColor="@color/color_primary_container"
-                    app:tabSelectedTextColor="@color/color_primary"
-                    app:tabTextColor="@color/text_secondary">
+                    app:tabSelectedTextColor="@color/uc_text_primary"
+                    app:tabTextColor="@color/uc_text_secondary">
 
                     <com.google.android.material.tabs.TabItem
                         android:layout_width="wrap_content"
@@ -245,18 +278,21 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_horizontal"
                     android:layout_marginTop="@dimen/space_24"
+                    android:indeterminateTint="@color/color_primary"
                     android:visibility="gone" />
 
-                <!-- Empty state placeholder -->
+                <!-- Empty state placeholder card -->
                 <TextView
                     android:id="@+id/tvEmptySubmissions"
                     style="@style/TextAppearance.EduLens.Body"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_24"
+                    android:layout_marginTop="@dimen/space_16"
+                    android:background="@drawable/bg_unified_surface_card"
                     android:gravity="center"
+                    android:padding="@dimen/space_20"
                     android:text="Chưa có bài nộp nào trong danh mục này."
-                    android:textColor="@color/text_secondary"
+                    android:textColor="@color/uc_text_secondary"
                     android:visibility="gone" />
 
                 <!-- Submissions RecyclerView -->

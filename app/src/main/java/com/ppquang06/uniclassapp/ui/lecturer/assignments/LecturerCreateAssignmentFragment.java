@@ -55,9 +55,28 @@ public class LecturerCreateAssignmentFragment extends Fragment {
         }
 
         setupTopBar();
+        setupTargetClassHeader();
         setupDateTimePickers();
         setupSubmitButton();
         observeViewModel();
+    }
+
+    private void setupTargetClassHeader() {
+        if (!TextUtils.isEmpty(className)) {
+            binding.tvTargetClassName.setText(className);
+        } else {
+            binding.tvTargetClassName.setText(R.string.create_assignment_title);
+        }
+        if (!TextUtils.isEmpty(classCode)) {
+            binding.tvTargetClassCode.setText("Mã lớp: " + classCode);
+        } else {
+            binding.tvTargetClassCode.setText("Tạo bài tập mới cho lớp");
+        }
+
+        binding.btnPickAssignmentFile.setOnClickListener(v -> {
+            Toast.makeText(requireContext(), "Vui lòng nhập đường dẫn tệp đính kèm ở ô bên dưới", Toast.LENGTH_SHORT).show();
+            binding.etAttachmentUrl.requestFocus();
+        });
     }
 
     private void setupTopBar() {
