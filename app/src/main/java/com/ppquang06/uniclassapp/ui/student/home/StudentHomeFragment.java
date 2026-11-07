@@ -185,11 +185,18 @@ public class StudentHomeFragment extends Fragment {
         });
 
         binding.tvSeeAllAssignments.setOnClickListener(v -> {
-            if (getActivity() instanceof StudentMainActivity) {
-                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_classes);
-            } else {
+            try {
                 NavHostFragment.findNavController(StudentHomeFragment.this)
-                        .navigate(R.id.nav_student_classes);
+                        .navigate(R.id.nav_student_upcoming_assignments);
+            } catch (Exception e) {
+                try {
+                    Navigation.findNavController(requireActivity(), R.id.nav_host_student)
+                            .navigate(R.id.nav_student_upcoming_assignments);
+                } catch (Exception ex) {
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), R.string.student_upcoming_assignments_title, Toast.LENGTH_SHORT).show();
+                    }
+                }
             }
         });
 
@@ -208,6 +215,12 @@ public class StudentHomeFragment extends Fragment {
         binding.metricAttendance.cardMetric.setOnClickListener(v -> {
             if (getActivity() instanceof StudentMainActivity) {
                 ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_scan_qr);
+            }
+        });
+
+        binding.metricAssignments.cardMetric.setOnClickListener(v -> {
+            if (binding.tvSeeAllAssignments != null) {
+                binding.tvSeeAllAssignments.performClick();
             }
         });
 

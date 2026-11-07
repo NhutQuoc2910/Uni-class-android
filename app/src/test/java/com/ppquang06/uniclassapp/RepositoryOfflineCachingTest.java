@@ -239,6 +239,9 @@ public class RepositoryOfflineCachingTest {
         public Call<ApiResponse<List<AssignmentItem>>> getGradingAssignments() { return null; }
 
         @Override
+        public Call<ApiResponse<List<AssignmentItem>>> getUpcomingAssignments() { return null; }
+
+        @Override
         public Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule() { return null; }
 
         @Override

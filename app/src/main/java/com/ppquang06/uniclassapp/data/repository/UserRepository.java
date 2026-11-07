@@ -102,6 +102,10 @@ public class UserRepository {
         return apiService.getGradingAssignments();
     }
 
+    public Call<ApiResponse<List<AssignmentItem>>> getUpcomingAssignments() {
+        return apiService.getUpcomingAssignments();
+    }
+
     public Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule() {
         return apiService.getTodaySchedule();
     }

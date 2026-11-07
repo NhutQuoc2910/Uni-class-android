@@ -66,6 +66,9 @@ public interface UserClassApiService {
     @GET("home/grading-assignments")
     Call<ApiResponse<List<AssignmentItem>>> getGradingAssignments();
 
+    @GET("home/upcoming-assignments")
+    Call<ApiResponse<List<AssignmentItem>>> getUpcomingAssignments();
+
     @GET("home/today-schedule")
     Call<ApiResponse<List<TodayScheduleItem>>> getTodaySchedule();
 

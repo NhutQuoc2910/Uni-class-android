@@ -30,6 +30,7 @@ public class HomeViewModel extends BaseViewModel {
     private final MutableLiveData<UiState<List<NotificationItemResponse>>> notificationsState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<UserResponse>> currentUserState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<List<AssignmentItem>>> gradingAssignmentsState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<List<AssignmentItem>>> upcomingAssignmentsState = new MutableLiveData<>(UiState.idle());
 
     public HomeViewModel(@NonNull Application application) {
         this(application, new UserRepository(application));
@@ -66,6 +67,10 @@ public class HomeViewModel extends BaseViewModel {
 
     public LiveData<UiState<List<AssignmentItem>>> getGradingAssignmentsState() {
         return gradingAssignmentsState;
+    }
+
+    public LiveData<UiState<List<AssignmentItem>>> getUpcomingAssignmentsState() {
+        return upcomingAssignmentsState;
     }
 
     public void loadHomeSummary() {
@@ -109,6 +114,14 @@ public class HomeViewModel extends BaseViewModel {
                 userRepository.getGradingAssignments(),
                 gradingAssignmentsState,
                 "Không thể tải danh sách bài tập cần chấm"
+        );
+    }
+
+    public void loadUpcomingAssignments() {
+        executeCall(
+                userRepository.getUpcomingAssignments(),
+                upcomingAssignmentsState,
+                "Không thể tải danh sách bài tập sắp đến hạn"
         );
     }
 }

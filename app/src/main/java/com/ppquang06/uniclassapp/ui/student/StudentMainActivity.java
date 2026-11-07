@@ -22,7 +22,9 @@ import com.ppquang06.uniclassapp.LoginActivity;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.ActivityStudentMainBinding;
+import com.ppquang06.uniclassapp.service.UniClassFirebaseMessagingService;
 import com.ppquang06.uniclassapp.utils.FcmTokenHelper;
+import com.ppquang06.uniclassapp.utils.RealtimeNotificationPoller;
 import com.ppquang06.uniclassapp.utils.RoleRouter;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 import com.ppquang06.uniclassapp.utils.ThemeHelper;
@@ -30,10 +32,14 @@ import com.ppquang06.uniclassapp.utils.ThemeHelper;
 public class StudentMainActivity extends AppCompatActivity {
 
     private ActivityStudentMainBinding binding;
+    private RealtimeNotificationPoller notificationPoller;
 
     private final ActivityResultLauncher<String> notificationPermissionLauncher =
             registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                 FcmTokenHelper.syncFcmToken(this);
+                if (notificationPoller != null) {
+                    notificationPoller.start();
+                }
             });
 
     @Override
@@ -67,7 +73,26 @@ public class StudentMainActivity extends AppCompatActivity {
         });
 
         setupNavigation();
+        UniClassFirebaseMessagingService.ensureNotificationChannels(this);
+        notificationPoller = new RealtimeNotificationPoller(this);
         requestNotificationPermissionAndSyncToken();
+        notificationPoller.start();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        if (notificationPoller != null) {
+            notificationPoller.start();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        if (notificationPoller != null) {
+            notificationPoller.stop();
+        }
+        super.onDestroy();
     }
 
     private void requestNotificationPermissionAndSyncToken() {

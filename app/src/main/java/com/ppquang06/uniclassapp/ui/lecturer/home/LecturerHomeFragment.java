@@ -220,6 +220,28 @@ public class LecturerHomeFragment extends Fragment {
                 }
             }
         });
+
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> {
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_profile);
+            }
+        });
+
+        binding.metricCourses.cardMetric.setOnClickListener(v -> {
+            if (getActivity() instanceof LecturerMainActivity) {
+                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_classes);
+            }
+        });
+
+        binding.metricPending.cardMetric.setOnClickListener(v -> {
+            if (binding.tvSeeAllAssignments != null) binding.tvSeeAllAssignments.performClick();
+        });
+
+        binding.btnEmptyCreateCourse.setOnClickListener(v -> {
+            com.ppquang06.uniclassapp.ui.lecturer.classes.CreateClassBottomSheetDialogFragment sheet =
+                    com.ppquang06.uniclassapp.ui.lecturer.classes.CreateClassBottomSheetDialogFragment.newInstance();
+            sheet.show(getChildFragmentManager(), "CreateClassBottomSheet");
+        });
     }
 
     private void bindUserData() {
@@ -353,30 +375,7 @@ public class LecturerHomeFragment extends Fragment {
             binding.btnHeroEnterClass.setVisibility(View.VISIBLE);
 
             TodayScheduleItem finalHeroItem = heroItem;
-            binding.topAppBar.ivAvatar.setOnClickListener(v -> {
-            if (getActivity() instanceof LecturerMainActivity) {
-                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_profile);
-            }
-        });
-
-        binding.metricCourses.cardMetric.setOnClickListener(v -> {
-            if (getActivity() instanceof LecturerMainActivity) {
-                ((LecturerMainActivity) getActivity()).switchToTab(R.id.nav_lecturer_classes);
-            }
-        });
-
-        binding.metricPending.cardMetric.setOnClickListener(v -> {
-            if (binding.tvSeeAllAssignments != null) binding.tvSeeAllAssignments.performClick();
-        });
-
-        binding.btnEmptyCreateCourse.setOnClickListener(v -> {
-            try {
-                NavHostFragment.findNavController(LecturerHomeFragment.this)
-                        .navigate(R.id.nav_lecturer_create_class);
-            } catch (Exception ignored) {}
-        });
-
-        binding.btnHeroOpenQr.setOnClickListener(v -> {
+            binding.btnHeroOpenQr.setOnClickListener(v -> {
                 Bundle args = new Bundle();
                 args.putString("classId", finalHeroItem.getClassId() != null ? finalHeroItem.getClassId() : "");
                 args.putString("classCode", finalHeroItem.getClassCode() != null ? finalHeroItem.getClassCode() : "");

@@ -170,7 +170,7 @@
     <!-- Join Class Dialog -->
     <string name="join_class_title">Tham gia lớp học</string>
     <string name="join_class_code_hint">Mã mời tham gia lớp</string>
-    <string name="join_class_example_hint">Ví dụ: SE104_2026</string>
+    <string name="join_class_example_hint">Ví dụ: K7M-2QX</string>
     <string name="join_class_cancel">Hủy</string>
     <string name="join_class_submit">Tham gia</string>
 
@@ -483,6 +483,8 @@
     <string name="hero_empty_today_sub_lecturer">Chúc quý thầy/cô một ngày làm việc hiệu quả!</string>
     <string name="lecturer_grading_assignments_title">Bài tập cần chấm</string>
     <string name="empty_grading_assignments_message">Không có bài tập nào cần chấm</string>
+    <string name="student_upcoming_assignments_title">Bài tập sắp đến hạn</string>
+    <string name="empty_upcoming_assignments_message">Không có bài tập nào sắp đến hạn</string>
     <string name="lecturer_today_schedule_title">Lịch dạy hôm nay</string>
     <string name="empty_lecturer_today_schedule_message">Hôm nay không có ca dạy nào</string>
 
