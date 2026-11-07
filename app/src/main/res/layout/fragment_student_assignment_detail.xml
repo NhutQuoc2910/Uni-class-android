@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/color_background"
+    android:background="@color/uc_bg_canvas"
     android:orientation="vertical">
 
     <!-- Top App Bar -->
@@ -46,22 +46,23 @@
                         android:layout_marginBottom="@dimen/space_12"
                         android:visibility="gone" />
 
-                    <!-- 1. Assignment Header Card -->
+                    <!-- 1. Assignment Bento Hero Card -->
                     <LinearLayout
                         android:id="@+id/cardAssignmentHeader"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_12"
-                        android:background="@drawable/bg_surface_card"
+                        android:background="@drawable/bg_unified_bento_hero"
                         android:orientation="vertical"
-                        android:padding="@dimen/space_16">
+                        android:padding="20dp">
 
                         <TextView
                             android:id="@+id/tvClassName"
                             style="@style/TextAppearance.EduLens.Caption"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:textColor="@color/color_primary"
+                            android:textColor="@color/p2_lavender"
+                            android:textStyle="bold"
                             tools:text="NT118.P11 - Phát triển ứng dụng trên thiết bị di động" />
 
                         <TextView
@@ -69,8 +70,10 @@
                             style="@style/TextAppearance.EduLens.Headline"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/space_4"
-                            tools:text="Bài tập lớn: Thiết kế ứng dụng EduLens" />
+                            android:layout_marginTop="6dp"
+                            android:textColor="@color/white"
+                            android:textSize="20sp"
+                            tools:text="Bài tập lớn: Thiết kế ứng dụng UniClass" />
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -96,6 +99,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginStart="@dimen/space_12"
                                 android:layout_weight="1"
+                                android:textColor="@color/p1_silver"
                                 tools:text="Hạn nộp: 23:59 · 30/10/2026" />
                         </LinearLayout>
 
@@ -106,7 +110,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_8"
                             android:text="Thang điểm: 10.0"
-                            android:textColor="@color/text_muted" />
+                            android:textColor="@color/p1_pewter" />
                     </LinearLayout>
 
                     <!-- 2. Submission Section Card -->
@@ -115,7 +119,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="@dimen/space_12"
-                        android:background="@drawable/bg_surface_card"
+                        android:background="@drawable/bg_unified_surface_card"
                         android:orientation="vertical"
                         android:padding="@dimen/space_16">
 
@@ -125,9 +129,10 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/space_12"
-                            android:text="@string/assignment_submission_section" />
+                            android:text="@string/assignment_submission_section"
+                            android:textColor="@color/uc_text_primary" />
 
-                        <!-- State A: Dropzone Container (visible when not submitted & no file chosen) -->
+                        <!-- State A: Dropzone Container -->
                         <LinearLayout
                             android:id="@+id/layoutDropzone"
                             android:layout_width="match_parent"
@@ -164,7 +169,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/space_4"
                                 android:text="@string/assignment_dropzone_caption"
-                                android:textColor="@color/text_muted" />
+                                android:textColor="@color/uc_text_muted" />
 
                             <!-- 4 Format Pills -->
                             <LinearLayout
@@ -182,7 +187,7 @@
                                     android:paddingHorizontal="@dimen/space_8"
                                     android:paddingVertical="@dimen/space_4"
                                     android:text="PDF"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textColor="@color/uc_text_secondary" />
 
                                 <TextView
                                     style="@style/TextAppearance.EduLens.Badge"
@@ -193,7 +198,7 @@
                                     android:paddingHorizontal="@dimen/space_8"
                                     android:paddingVertical="@dimen/space_4"
                                     android:text="Word"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textColor="@color/uc_text_secondary" />
 
                                 <TextView
                                     style="@style/TextAppearance.EduLens.Badge"
@@ -204,7 +209,7 @@
                                     android:paddingHorizontal="@dimen/space_8"
                                     android:paddingVertical="@dimen/space_4"
                                     android:text="ZIP"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textColor="@color/uc_text_secondary" />
 
                                 <TextView
                                     style="@style/TextAppearance.EduLens.Badge"
@@ -214,16 +219,16 @@
                                     android:paddingHorizontal="@dimen/space_8"
                                     android:paddingVertical="@dimen/space_4"
                                     android:text="Ảnh"
-                                    android:textColor="@color/text_secondary" />
+                                    android:textColor="@color/uc_text_secondary" />
                             </LinearLayout>
                         </LinearLayout>
 
-                        <!-- State B: Selected File Card (visible when file is chosen but not yet submitted) -->
+                        <!-- State B: Selected File Card -->
                         <LinearLayout
                             android:id="@+id/layoutSelectedFile"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:background="@drawable/bg_surface_card"
+                            android:background="@drawable/bg_feedback_box"
                             android:orientation="vertical"
                             android:padding="@dimen/space_12"
                             android:visibility="gone">
@@ -255,6 +260,7 @@
                                         android:layout_height="wrap_content"
                                         android:ellipsize="middle"
                                         android:maxLines="1"
+                                        android:textColor="@color/uc_text_primary"
                                         tools:text="bao_cao_nhom_final.pdf" />
 
                                     <TextView
@@ -273,7 +279,8 @@
                                     android:layout_height="36dp"
                                     android:background="?attr/selectableItemBackgroundBorderless"
                                     android:contentDescription="Xóa tệp đã chọn"
-                                    android:src="@drawable/ic_close" />
+                                    android:src="@drawable/ic_close"
+                                    app:tint="@color/uc_text_secondary" />
                             </LinearLayout>
 
                             <ProgressBar
@@ -283,10 +290,11 @@
                                 android:layout_height="4dp"
                                 android:layout_marginTop="@dimen/space_8"
                                 android:indeterminate="true"
+                                android:indeterminateTint="@color/color_primary"
                                 android:visibility="gone" />
                         </LinearLayout>
 
-                        <!-- State C: Submitted File Card (visible when submitted == true) -->
+                        <!-- State C: Submitted File Card -->
                         <LinearLayout
                             android:id="@+id/layoutSubmittedFile"
                             android:layout_width="match_parent"
@@ -297,7 +305,7 @@
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
-                                android:background="@drawable/bg_surface_card"
+                                android:background="@drawable/bg_feedback_box"
                                 android:gravity="center_vertical"
                                 android:orientation="horizontal"
                                 android:padding="@dimen/space_12">
@@ -323,6 +331,7 @@
                                         android:layout_height="wrap_content"
                                         android:ellipsize="middle"
                                         android:maxLines="1"
+                                        android:textColor="@color/uc_text_primary"
                                         tools:text="bao_cao_nhom_final.pdf" />
 
                                     <TextView
@@ -331,6 +340,7 @@
                                         android:layout_width="wrap_content"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="2dp"
+                                        android:textColor="@color/uc_text_secondary"
                                         tools:text="Đã nộp lúc 10:15 · 28/10/2026" />
                                 </LinearLayout>
 
@@ -349,7 +359,7 @@
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="@dimen/space_12"
-                                android:background="@drawable/bg_surface_card"
+                                android:background="@drawable/bg_feedback_box"
                                 android:orientation="vertical"
                                 android:padding="@dimen/space_12">
 
@@ -359,7 +369,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
                                     android:text="@string/assignment_grading_pending"
-                                    android:textColor="@color/text_muted" />
+                                    android:textColor="@color/uc_text_muted" />
 
                                 <LinearLayout
                                     android:id="@+id/layoutScoreAndFeedback"
@@ -378,7 +388,8 @@
                                             style="@style/TextAppearance.EduLens.Subtitle"
                                             android:layout_width="wrap_content"
                                             android:layout_height="wrap_content"
-                                            android:text="Điểm số: " />
+                                            android:text="Điểm số: "
+                                            android:textColor="@color/uc_text_primary" />
 
                                         <TextView
                                             android:id="@+id/tvScoreValue"
@@ -395,6 +406,7 @@
                                         android:layout_width="match_parent"
                                         android:layout_height="wrap_content"
                                         android:layout_marginTop="@dimen/space_4"
+                                        android:textColor="@color/uc_text_secondary"
                                         tools:text="Nhận xét: Bài làm tốt, giao diện đúng yêu cầu." />
                                 </LinearLayout>
                             </LinearLayout>
@@ -407,7 +419,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginBottom="80dp"
-                        android:background="@drawable/bg_surface_card"
+                        android:background="@drawable/bg_unified_surface_card"
                         android:orientation="vertical"
                         android:padding="@dimen/space_16">
 
@@ -417,7 +429,8 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginBottom="@dimen/space_8"
-                            android:text="@string/assignment_requirements_title" />
+                            android:text="@string/assignment_requirements_title"
+                            android:textColor="@color/uc_text_primary" />
 
                         <TextView
                             android:id="@+id/tvAssignmentDescription"
@@ -425,15 +438,16 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:lineSpacingExtra="4dp"
+                            android:textColor="@color/uc_text_secondary"
                             tools:text="Sinh viên hoàn thành ứng dụng quản lý lớp học bằng Android Java..." />
 
-                        <!-- Attachment row (visible if attachmentUrl non-empty) -->
+                        <!-- Attachment row -->
                         <LinearLayout
                             android:id="@+id/layoutAttachment"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="@dimen/space_12"
-                            android:background="@drawable/bg_surface_card"
+                            android:background="@drawable/bg_feedback_box"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center_vertical"
@@ -462,7 +476,8 @@
                                     android:layout_height="wrap_content"
                                     android:ellipsize="middle"
                                     android:maxLines="1"
-                                    android:text="@string/assignment_attachment_title" />
+                                    android:text="@string/assignment_attachment_title"
+                                    android:textColor="@color/uc_text_primary" />
 
                                 <TextView
                                     style="@style/TextAppearance.EduLens.Caption"
@@ -470,7 +485,7 @@
                                     android:layout_height="wrap_content"
                                     android:layout_marginTop="2dp"
                                     android:text="Nhấn để mở tài liệu đính kèm"
-                                    android:textColor="@color/text_muted" />
+                                    android:textColor="@color/uc_text_muted" />
                             </LinearLayout>
 
                             <ImageView
@@ -487,14 +502,14 @@
             </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
-        <!-- Bottom Action Bar (pinned) -->
+        <!-- Bottom Action Bar (pinned, matches canvas background) -->
         <LinearLayout
             android:id="@+id/layoutBottomActionBar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
-            android:background="@color/color_surface"
-            android:elevation="8dp"
+            android:background="@color/uc_bg_canvas"
+            android:elevation="0dp"
             android:orientation="vertical"
             android:paddingHorizontal="@dimen/space_16"
             android:paddingVertical="@dimen/space_12">
@@ -503,14 +518,14 @@
                 android:id="@+id/btnSubmit"
                 style="@style/Widget.EduLens.Button.Filled"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="46dp"
                 android:text="@string/btn_submit_assignment" />
 
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/btnResubmit"
                 style="@style/Widget.EduLens.Button.Outlined"
                 android:layout_width="match_parent"
-                android:layout_height="44dp"
+                android:layout_height="46dp"
                 android:layout_marginTop="@dimen/space_8"
                 android:text="@string/btn_resubmit_assignment"
                 android:visibility="gone" />
