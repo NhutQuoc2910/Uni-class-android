@@ -32,7 +32,7 @@ import retrofit2.Call;
  * Repository encapsulating assignment, submission, and grading operations along with
  * offline Room caching via {@link AssignmentDao}.
  */
-public class AssignmentRepository {
+public class AssignmentRepository extends BaseRepository {
 
     private final UserClassApiService apiService;
     @Nullable

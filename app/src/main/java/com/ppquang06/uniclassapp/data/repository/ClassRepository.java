@@ -49,7 +49,7 @@ import retrofit2.Response;
  * Repository encapsulating class management endpoints and offline Room caching
  * via {@link ClassDao} and {@link AssignmentDao}.
  */
-public class ClassRepository {
+public class ClassRepository extends BaseRepository {
 
     private final UserClassApiService apiService;
     @Nullable
@@ -57,7 +57,6 @@ public class ClassRepository {
     @Nullable
     private final AssignmentDao assignmentDao;
     private final Executor executor;
-    private final Gson gson = new Gson();
 
     public ClassRepository(@NonNull Context context) {
         UniClassDatabase db = UniClassDatabase.getInstance(context);
@@ -515,62 +514,4 @@ public class ClassRepository {
         return result;
     }
 
-    @NonNull
-    private String extractErrorMessage(@NonNull Response<?> response, @NonNull String fallbackMessage) {
-        if (response.body() instanceof ApiResponse) {
-            ApiResponse<?> apiResponse = (ApiResponse<?>) response.body();
-            if (apiResponse.getMessage() != null && !apiResponse.getMessage().trim().isEmpty()) {
-                return apiResponse.getMessage();
-            }
-        }
-        ResponseBody errorBody = response.errorBody();
-        if (errorBody != null) {
-            try {
-                String errorJson = errorBody.string();
-                if (errorJson != null && !errorJson.trim().isEmpty()) {
-                    ApiResponse<?> errorResponse = gson.fromJson(errorJson, ApiResponse.class);
-                    if (errorResponse != null && errorResponse.getMessage() != null
-                            && !errorResponse.getMessage().trim().isEmpty()) {
-                        return errorResponse.getMessage();
-                    }
-                    JsonObject jsonObject = gson.fromJson(errorJson, JsonObject.class);
-                    if (jsonObject != null) {
-                        if (jsonObject.has("error") && !jsonObject.get("error").isJsonNull()) {
-                            String err = jsonObject.get("error").getAsString();
-                            if (err != null && !err.trim().isEmpty()) {
-                                return err;
-                            }
-                        }
-                        if (jsonObject.has("detail") && !jsonObject.get("detail").isJsonNull()) {
-                            String detail = jsonObject.get("detail").getAsString();
-                            if (detail != null && !detail.trim().isEmpty()) {
-                                return detail;
-                            }
-                        }
-                    }
-                }
-            } catch (Exception ignored) {
-            }
-        }
-        return fallbackMessage;
-    }
-
-    private static <V> void dispatchState(@NonNull MutableLiveData<V> liveData, @NonNull V value) {
-        try {
-            if (Looper.getMainLooper() != null) {
-                if (Looper.myLooper() == Looper.getMainLooper()) {
-                    liveData.setValue(value);
-                } else {
-                    liveData.postValue(value);
-                }
-            } else {
-                liveData.setValue(value);
-            }
-        } catch (RuntimeException e) {
-            try {
-                liveData.postValue(value);
-            } catch (RuntimeException ignored) {
-            }
-        }
-    }
 }

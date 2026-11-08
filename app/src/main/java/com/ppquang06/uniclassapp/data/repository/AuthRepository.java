@@ -22,7 +22,7 @@ import retrofit2.Call;
 /**
  * Repository encapsulating all authentication network operations via {@link AuthApiService}.
  */
-public class AuthRepository {
+public class AuthRepository extends BaseRepository {
 
     private final AuthApiService authApiService;
 

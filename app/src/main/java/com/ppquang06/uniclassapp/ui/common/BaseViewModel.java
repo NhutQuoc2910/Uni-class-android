@@ -25,7 +25,7 @@ import retrofit2.Response;
  * Base ViewModel that provides thread-safe Retrofit Call lifecycle management,
  * automatic UiState loading/success/error dispatching, and call cancellation on cleanup.
  */
-public class BaseViewModel extends AndroidViewModel {
+public abstract class BaseViewModel extends AndroidViewModel {
 
     private final Set<Call<?>> activeCalls = Collections.newSetFromMap(new ConcurrentHashMap<>());
     private final Gson gson = new Gson();

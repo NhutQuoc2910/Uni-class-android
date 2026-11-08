@@ -17,7 +17,7 @@ import retrofit2.Call;
 /**
  * Repository encapsulating attendance check-in and live QR session operations.
  */
-public class AttendanceRepository {
+public class AttendanceRepository extends BaseRepository {
 
     private final UserClassApiService apiService;
 
