@@ -95,6 +95,7 @@ public class StudentHomeFragment extends Fragment {
 
         if (binding != null) {
             updateTodayDate();
+            bindUserData();
             if (cachedSchedules != null) {
                 bindTodaySchedule(cachedSchedules);
             }
@@ -278,16 +279,11 @@ public class StudentHomeFragment extends Fragment {
                 }
 
                 binding.tvGreetingUser.setText(
-                        greeting + ", " + user.getFullName() + "!"
+                        greeting + ",\n" + user.getFullName() + "!"
                 );
             }
 
-            if (!TextUtils.isEmpty(user.getAvatarUrl())) {
-                com.bumptech.glide.Glide.with(this)
-                        .load(user.getAvatarUrl())
-                        .circleCrop()
-                        .into(binding.topAppBar.ivAvatar);
-            }
+            com.ppquang06.uniclassapp.utils.AvatarUiHelper.loadTopBarAvatar(binding.topAppBar.ivAvatar, user.getAvatarUrl());
         }
     }
 

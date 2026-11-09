@@ -134,6 +134,7 @@ public class StudentScanQrFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        updateTopBarAvatar();
         isScanned.set(false);
         refreshSecuritySensors();
         if (homeViewModel != null) {
@@ -370,6 +371,16 @@ public class StudentScanQrFragment extends Fragment {
                 ((com.ppquang06.uniclassapp.ui.student.StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_profile);
             }
         });
+        updateTopBarAvatar();
+    }
+
+    private void updateTopBarAvatar() {
+        if (getContext() != null && binding != null && binding.topAppBar != null) {
+            com.ppquang06.uniclassapp.data.model.response.UserResponse user =
+                    com.ppquang06.uniclassapp.utils.SessionManager.getInstance(requireContext()).getUser();
+            com.ppquang06.uniclassapp.utils.AvatarUiHelper.loadTopBarAvatar(
+                    binding.topAppBar.ivAvatar, user != null ? user.getAvatarUrl() : null);
+        }
     }
 
     private void setupFlashToggle() {

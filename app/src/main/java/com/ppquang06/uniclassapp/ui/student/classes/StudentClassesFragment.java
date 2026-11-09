@@ -49,6 +49,12 @@ public class StudentClassesFragment extends Fragment {
         loadClasses();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateTopBarAvatar();
+    }
+
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.my_classes_title);
         binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
@@ -57,6 +63,16 @@ public class StudentClassesFragment extends Fragment {
                 ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_profile);
             }
         });
+        updateTopBarAvatar();
+    }
+
+    private void updateTopBarAvatar() {
+        if (getContext() != null && binding != null) {
+            com.ppquang06.uniclassapp.data.model.response.UserResponse user =
+                    com.ppquang06.uniclassapp.utils.SessionManager.getInstance(requireContext()).getUser();
+            com.ppquang06.uniclassapp.utils.AvatarUiHelper.loadTopBarAvatar(
+                    binding.topAppBar.ivAvatar, user != null ? user.getAvatarUrl() : null);
+        }
     }
 
     private void setupRecyclerView() {

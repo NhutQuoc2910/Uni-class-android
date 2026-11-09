@@ -65,12 +65,19 @@ public class StudentProfileFragment extends Fragment {
         loadLiveUserData();
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        bindUserData(null);
+    }
+
     private void setupTopBar() {
         binding.topAppBar.tvTitle.setText(R.string.nav_profile);
-        binding.topAppBar.tvRoleBadge.setVisibility(View.GONE);
-        binding.topAppBar.ivAvatar.setVisibility(View.GONE);
-        binding.topAppBar.btnTopBarAction.setVisibility(View.VISIBLE);
-        binding.topAppBar.btnTopBarAction.setOnClickListener(v -> openEditProfile());
+        binding.topAppBar.tvRoleBadge.setVisibility(View.VISIBLE);
+        binding.topAppBar.tvRoleBadge.setText(R.string.role_badge_student);
+        binding.topAppBar.ivAvatar.setVisibility(View.VISIBLE);
+        binding.topAppBar.btnTopBarAction.setVisibility(View.GONE);
+        binding.topAppBar.ivAvatar.setOnClickListener(v -> pickAvatarLauncher.launch("image/*"));
     }
 
     private void observeViewModel() {
@@ -100,7 +107,8 @@ public class StudentProfileFragment extends Fragment {
                     UserResponse current = SessionManager.getInstance(requireContext()).getUser();
                     String fullName = current != null ? current.getFullName() : "";
                     String phone = current != null ? current.getPhone() : "";
-                    UpdateProfileRequest req = new UpdateProfileRequest(fullName, phone, res.getFileUrl(), null);
+                    String resolvedAvatarUrl = UriFileMultipartHelper.resolveFullFileUrl(res.getFileUrl());
+                    UpdateProfileRequest req = new UpdateProfileRequest(fullName, phone, resolvedAvatarUrl, null);
                     profileViewModel.updateProfile(req);
                 } else {
                     binding.pbAvatarLoading.setVisibility(View.GONE);
@@ -151,20 +159,18 @@ public class StudentProfileFragment extends Fragment {
                 initial = fullName.trim().substring(0, 1).toUpperCase();
             }
 
+            com.ppquang06.uniclassapp.utils.AvatarUiHelper.loadTopBarAvatar(binding.topAppBar.ivAvatar, user.getAvatarUrl());
+
             if (!TextUtils.isEmpty(user.getAvatarUrl())) {
+                String avatarUrl = UriFileMultipartHelper.resolveFullFileUrl(user.getAvatarUrl());
                 binding.ivAvatarProfile.setVisibility(View.VISIBLE);
                 binding.tvAvatarInitial.setVisibility(View.GONE);
                 Glide.with(this)
-                        .load(user.getAvatarUrl())
+                        .load(avatarUrl)
                         .circleCrop()
                         .placeholder(R.drawable.bg_circle_aura)
                         .error(R.drawable.bg_circle_aura)
                         .into(binding.ivAvatarProfile);
-
-                Glide.with(this)
-                        .load(user.getAvatarUrl())
-                        .circleCrop()
-                        .into(binding.topAppBar.ivAvatar);
             } else {
                 binding.ivAvatarProfile.setVisibility(View.GONE);
                 binding.tvAvatarInitial.setVisibility(View.VISIBLE);
