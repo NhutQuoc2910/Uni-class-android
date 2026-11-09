@@ -5,11 +5,6 @@ import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.content.pm.PackageManager;
 import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.ImageDecoder;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
@@ -22,7 +17,6 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.widget.PopupMenu;
 import androidx.camera.core.Camera;
 import androidx.camera.core.CameraSelector;
 import androidx.camera.core.ImageAnalysis;
@@ -30,6 +24,7 @@ import androidx.camera.core.Preview;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.Navigation;
 
 import com.google.common.util.concurrent.ListenableFuture;
@@ -39,10 +34,13 @@ import com.google.mlkit.vision.barcode.BarcodeScanning;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 import com.ppquang06.uniclassapp.R;
+import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentScanQrBinding;
-import com.ppquang06.uniclassapp.utils.QrCodeGenerator;
+import com.ppquang06.uniclassapp.ui.common.HomeViewModel;
+import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper;
+import com.ppquang06.uniclassapp.utils.HardwareSensorAttendanceHelper;
 
-import java.io.InputStream;
+import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -64,8 +62,15 @@ public class StudentScanQrFragment extends Fragment {
     public static final String SIM_MODE_DEVICE_ALREADY_USED = "DEVICE_ALREADY_USED";
 
     private FragmentStudentScanQrBinding binding;
+    private HomeViewModel homeViewModel;
     private ObjectAnimator scanLineAnimator;
     private boolean isFlashOn = false;
+    private int currentZoomLevel = 1;
+
+    private String currentBssid = HardwareSensorAttendanceHelper.DEFAULT_FALLBACK_BSSID;
+    private double currentLat = HardwareSensorAttendanceHelper.DEFAULT_FALLBACK_LAT;
+    private double currentLng = HardwareSensorAttendanceHelper.DEFAULT_FALLBACK_LNG;
+    private String currentDeviceId = "android-student-device-01";
 
     private ExecutorService cameraExecutor;
     private ProcessCameraProvider cameraProvider;
@@ -82,12 +87,22 @@ public class StudentScanQrFragment extends Fragment {
                 }
             });
 
-    private final ActivityResultLauncher<String> pickQrImageLauncher =
-            registerForActivityResult(new ActivityResultContracts.GetContent(), uri -> {
-                if (uri != null) {
-                    processPickedImageUri(uri);
-                }
-            });
+    public static float resolveZoomRatio(int zoomLevel) {
+        if (zoomLevel == 2) return 2.0f;
+        if (zoomLevel == 3) return 3.0f;
+        return 1.0f;
+    }
+
+    public static String formatShortBssid(String bssid) {
+        if (bssid == null || bssid.trim().isEmpty()) {
+            return "WiFi · Sẵn sàng";
+        }
+        String clean = bssid.trim();
+        if (clean.length() >= 5) {
+            return "WiFi · " + clean.substring(clean.length() - 5);
+        }
+        return "WiFi · " + clean;
+    }
 
     @Nullable
     @Override
@@ -100,12 +115,14 @@ public class StudentScanQrFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        homeViewModel = new ViewModelProvider(this).get(HomeViewModel.class);
+
         setupTopBar();
         setupFlashToggle();
+        setupZoomControls();
         setupScanLineAnimation();
-        setupQuickScan();
-        setupSimulationMenu();
-        setupUploadQrButton();
+        setupSecurityBar();
+        observeLiveSessions();
 
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             startCamera();
@@ -118,6 +135,10 @@ public class StudentScanQrFragment extends Fragment {
     public void onResume() {
         super.onResume();
         isScanned.set(false);
+        refreshSecuritySensors();
+        if (homeViewModel != null) {
+            homeViewModel.loadNotifications();
+        }
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED) {
             if (cameraProvider == null) {
                 startCamera();
@@ -127,83 +148,105 @@ public class StudentScanQrFragment extends Fragment {
         }
     }
 
-    private void setupUploadQrButton() {
-        if (binding != null && binding.btnUploadQrImage != null) {
-            binding.btnUploadQrImage.setOnClickListener(v -> pickQrImageLauncher.launch("image/*"));
-        }
+    private void observeLiveSessions() {
+        homeViewModel.getNotificationsState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            if (state.isSuccess() && state.getData() != null) {
+                NotificationItemResponse active = NotificationFilterHelper.findActiveQrNotification(state.getData());
+                if (active != null) {
+                    binding.cardQrLiveBanner.setVisibility(View.VISIBLE);
+                    String courseText = (active.getCourseCode() != null && !active.getCourseCode().trim().isEmpty())
+                            ? active.getCourseCode() + " · " + active.getTitle()
+                            : active.getTitle();
+                    binding.tvQrBannerCourse.setText(courseText);
+                    binding.cardQrLiveBanner.setOnClickListener(v -> {
+                        String sessionId = active.getId().startsWith("att-") ? active.getId().substring(4) : active.getId();
+                        navigateVerifying(
+                                sessionId,
+                                currentBssid,
+                                String.valueOf(currentLat),
+                                String.valueOf(currentLng),
+                                currentDeviceId
+                        );
+                    });
+                } else {
+                    binding.cardQrLiveBanner.setVisibility(View.GONE);
+                }
+            }
+        });
+        homeViewModel.loadNotifications();
     }
 
-    private void processPickedImageUri(Uri uri) {
-        if (uri == null || getContext() == null) {
-            return;
-        }
+    private void setupZoomControls() {
+        binding.btnZoom1x.setOnClickListener(v -> setZoomLevel(1));
+        binding.btnZoom2x.setOnClickListener(v -> setZoomLevel(2));
+        binding.btnZoom3x.setOnClickListener(v -> setZoomLevel(3));
+    }
 
-        try {
-            Bitmap bitmap = null;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
-                ImageDecoder.Source source = ImageDecoder.createSource(requireContext().getContentResolver(), uri);
-                bitmap = ImageDecoder.decodeBitmap(source, (decoder, info, src) -> decoder.setMutableRequired(true));
-            } else {
-                try (InputStream is = requireContext().getContentResolver().openInputStream(uri)) {
-                    if (is != null) {
-                        bitmap = BitmapFactory.decodeStream(is);
-                    }
-                }
-            }
-
-            String decodedPayload = null;
-            if (bitmap != null) {
-                decodedPayload = QrCodeGenerator.decodeQrBitmap(bitmap);
-            }
-
-            if (decodedPayload != null && decodedPayload.startsWith("UNICLASS:")) {
-                if (isScanned.compareAndSet(false, true)) {
-                    onBarcodeDetected(decodedPayload);
-                }
-                return;
-            }
-
-            // Fallback via ML Kit InputImage
+    private void setZoomLevel(int level) {
+        currentZoomLevel = level;
+        if (camera != null) {
             try {
-                InputImage image = InputImage.fromFilePath(requireContext(), uri);
-                if (barcodeScanner == null) {
-                    BarcodeScannerOptions options = new BarcodeScannerOptions.Builder()
-                            .setBarcodeFormats(Barcode.FORMAT_QR_CODE)
-                            .build();
-                    barcodeScanner = BarcodeScanning.getClient(options);
-                }
-                barcodeScanner.process(image)
-                        .addOnSuccessListener(barcodes -> {
-                            boolean found = false;
-                            for (Barcode barcode : barcodes) {
-                                String raw = barcode.getRawValue();
-                                if (raw != null && raw.startsWith("UNICLASS:") && isScanned.compareAndSet(false, true)) {
-                                    found = true;
-                                    onBarcodeDetected(raw);
-                                    break;
-                                }
-                            }
-                            if (!found && getContext() != null) {
-                                Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
-                            }
-                        })
-                        .addOnFailureListener(e -> {
-                            if (getContext() != null) {
-                                Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            } catch (Exception mlEx) {
-                Log.e(TAG, "ML Kit fallback error", mlEx);
-                if (getContext() != null) {
-                    Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
-                }
-            }
-        } catch (Exception e) {
-            Log.e(TAG, "Error decoding picked image URI", e);
-            if (getContext() != null) {
-                Toast.makeText(requireContext(), "Không tìm thấy mã QR hợp lệ trong ảnh đã chọn", Toast.LENGTH_SHORT).show();
+                camera.getCameraControl().setZoomRatio(resolveZoomRatio(level));
+            } catch (Exception e) {
+                Log.w(TAG, "Failed to set zoom ratio", e);
             }
         }
+        updateZoomButtonsUi(level);
+    }
+
+    private void updateZoomButtonsUi(int level) {
+        if (binding == null || getContext() == null) return;
+        binding.btnZoom1x.setBackgroundResource(level == 1 ? R.drawable.bg_zoom_pill_active : R.drawable.bg_zoom_pill_idle);
+        binding.btnZoom1x.setTextColor(ContextCompat.getColor(requireContext(), level == 1 ? R.color.p1_midnight : R.color.p1_silver));
+
+        binding.btnZoom2x.setBackgroundResource(level == 2 ? R.drawable.bg_zoom_pill_active : R.drawable.bg_zoom_pill_idle);
+        binding.btnZoom2x.setTextColor(ContextCompat.getColor(requireContext(), level == 2 ? R.color.p1_midnight : R.color.p1_silver));
+
+        binding.btnZoom3x.setBackgroundResource(level == 3 ? R.drawable.bg_zoom_pill_active : R.drawable.bg_zoom_pill_idle);
+        binding.btnZoom3x.setTextColor(ContextCompat.getColor(requireContext(), level == 3 ? R.color.p1_midnight : R.color.p1_silver));
+    }
+
+    private void setupSecurityBar() {
+        refreshSecuritySensors();
+
+        View.OnClickListener openSecuritySheet = v -> {
+            SecurityCheckBottomSheetDialogFragment sheet = SecurityCheckBottomSheetDialogFragment.newInstance(
+                    currentBssid,
+                    currentLat,
+                    currentLng,
+                    currentDeviceId
+            );
+            sheet.show(getChildFragmentManager(), "SecurityCheckSheet");
+        };
+
+        binding.cardSecWifi.setOnClickListener(openSecuritySheet);
+        binding.cardSecGps.setOnClickListener(openSecuritySheet);
+        binding.cardSecDevice.setOnClickListener(openSecuritySheet);
+        binding.btnRecheckSecurity.setOnClickListener(v -> {
+            refreshSecuritySensors();
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Đã cập nhật trạng thái cảm biến thiết bị", Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void refreshSecuritySensors() {
+        if (getContext() == null || binding == null) return;
+        currentBssid = HardwareSensorAttendanceHelper.getBssid(getContext());
+        currentDeviceId = HardwareSensorAttendanceHelper.getDeviceId(getContext());
+
+        binding.tvSecWifiText.setText(formatShortBssid(currentBssid));
+        String shortDev = currentDeviceId.length() > 6 ? currentDeviceId.substring(0, 6) : currentDeviceId;
+        binding.tvSecDeviceText.setText("Thiết bị · " + shortDev);
+
+        HardwareSensorAttendanceHelper.getCurrentLocation(getContext(), (lat, lng) -> {
+            currentLat = lat;
+            currentLng = lng;
+            if (binding != null && binding.tvSecGpsText != null) {
+                binding.tvSecGpsText.setText(String.format(Locale.US, "GPS · %.2f, %.2f", lat, lng));
+            }
+        });
     }
 
     private void startCamera() {
@@ -272,6 +315,9 @@ public class StudentScanQrFragment extends Fragment {
         try {
             cameraProvider.unbindAll();
             camera = cameraProvider.bindToLifecycle(getViewLifecycleOwner(), cameraSelector, preview, imageAnalysis);
+            if (currentZoomLevel != 1) {
+                camera.getCameraControl().setZoomRatio(resolveZoomRatio(currentZoomLevel));
+            }
             if (binding.ivQrCenter != null) {
                 binding.ivQrCenter.setVisibility(View.GONE);
             }
@@ -296,14 +342,15 @@ public class StudentScanQrFragment extends Fragment {
             sessionId = rawValue;
         }
 
-        Bundle bundle = new Bundle();
-        bundle.putString(ARG_SESSION_ID, sessionId);
+        Bundle bundle = createVerifyingBundle(
+                sessionId,
+                currentBssid,
+                String.valueOf(currentLat),
+                String.valueOf(currentLng),
+                currentDeviceId,
+                ""
+        );
         bundle.putString("qrPayload", rawValue);
-        bundle.putString(ARG_WIFI_BSSID, "");
-        bundle.putString(ARG_LATITUDE, "");
-        bundle.putString(ARG_LONGITUDE, "");
-        bundle.putString(ARG_DEVICE_ID, "");
-        bundle.putString(ARG_SIMULATION_MODE, "");
 
         try {
             Navigation.findNavController(requireView()).navigate(R.id.nav_student_scan_verifying, bundle);
@@ -336,8 +383,8 @@ public class StudentScanQrFragment extends Fragment {
                 binding.btnFlash.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_warning_container)));
                 Toast.makeText(requireContext(), "Flash bật", Toast.LENGTH_SHORT).show();
             } else {
-                binding.btnFlash.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.text_primary)));
-                binding.btnFlash.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.color_surface_variant)));
+                binding.btnFlash.setIconTint(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.p2_lavender)));
+                binding.btnFlash.setBackgroundTintList(ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.p1_midnight)));
                 Toast.makeText(requireContext(), "Flash tắt", Toast.LENGTH_SHORT).show();
             }
         });
@@ -355,53 +402,9 @@ public class StudentScanQrFragment extends Fragment {
         });
     }
 
-    private void setupQuickScan() {
-        binding.btnQuickScan.setOnClickListener(v -> {
-            // Valid seeded session NT118.Q11
-            navigateVerifying(
-                    "DEMO_OPEN",
-                    "00:11:22:33:44:55",
-                    "10.8700",
-                    "106.8031",
-                    "android-student-device-01",
-                    ""
-            );
-        });
-    }
-
-    private void setupSimulationMenu() {
-        binding.btnSimulateErrors.setOnClickListener(v -> {
-            PopupMenu popup = new PopupMenu(requireContext(), v);
-            popup.getMenu().add(0, 1, 0, getString(R.string.scan_qr_sim_qr_expired));
-            popup.getMenu().add(0, 2, 1, getString(R.string.scan_qr_sim_wifi_mismatch));
-            popup.getMenu().add(0, 3, 2, getString(R.string.scan_qr_sim_gps_out));
-            popup.getMenu().add(0, 4, 3, getString(R.string.scan_qr_sim_device_used));
-
-            popup.setOnMenuItemClickListener(item -> {
-                switch (item.getItemId()) {
-                    case 1:
-                        navigateVerifying("DEMO_EXPIRED", "00:11:22:33:44:55", "10.8700", "106.8031", "android-student-device-01", SIM_MODE_QR_EXPIRED);
-                        return true;
-                    case 2:
-                        navigateVerifying("DEMO_OPEN", "99:99:99:99:99:99", "10.8700", "106.8031", "android-student-device-01", SIM_MODE_WIFI_MISMATCH);
-                        return true;
-                    case 3:
-                        navigateVerifying("DEMO_OPEN", "00:11:22:33:44:55", "10.0000", "105.0000", "android-student-device-01", SIM_MODE_GPS_OUT_OF_RANGE);
-                        return true;
-                    case 4:
-                        navigateVerifying("DEMO_OPEN", "00:11:22:33:44:55", "10.8700", "106.8031", "PROXIED_DEVICE_ID", SIM_MODE_DEVICE_ALREADY_USED);
-                        return true;
-                    default:
-                        return false;
-                }
-            });
-            popup.show();
-        });
-    }
-
     private void navigateVerifying(String sessionId, String wifiBssid, String latitude,
-                                  String longitude, String deviceId, String simulationMode) {
-        Bundle bundle = createVerifyingBundle(sessionId, wifiBssid, latitude, longitude, deviceId, simulationMode);
+                                  String longitude, String deviceId) {
+        Bundle bundle = createVerifyingBundle(sessionId, wifiBssid, latitude, longitude, deviceId, "");
         try {
             Navigation.findNavController(requireView()).navigate(R.id.nav_student_scan_verifying, bundle);
         } catch (Exception e) {

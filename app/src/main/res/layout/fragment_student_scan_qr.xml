@@ -16,6 +16,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:clipToPadding="false"
         android:fillViewport="true">
 
         <LinearLayout
@@ -23,17 +24,74 @@
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:orientation="vertical"
-            android:paddingHorizontal="20dp"
-            android:paddingTop="16dp"
+            android:paddingHorizontal="16dp"
+            android:paddingTop="12dp"
             android:paddingBottom="24dp">
 
-            <!-- Viewfinder Area (240x240dp) -->
+            <!-- Live Session Banner (Connected to backend notifications state) -->
+            <LinearLayout
+                android:id="@+id/cardQrLiveBanner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="12dp"
+                android:background="@drawable/bg_unified_bento_hero"
+                android:clickable="true"
+                android:focusable="true"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:paddingHorizontal="14dp"
+                android:paddingVertical="10dp"
+                android:visibility="gone">
+
+                <View
+                    android:layout_width="8dp"
+                    android:layout_height="8dp"
+                    android:background="@drawable/bg_circle_green" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="10dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/tvQrBannerStatus"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Phiên điểm danh trực tiếp đang mở"
+                        android:textColor="#C5BAC4"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvQrBannerCourse"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="1dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="NT118.Q11 · Phát triển ứng dụng di động"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_chevron_right"
+                    app:tint="#C5BAC4" />
+            </LinearLayout>
+
+            <!-- Expanded CameraX Viewfinder (320dp height, 28dp corners) -->
             <FrameLayout
                 android:id="@+id/frameViewfinder"
-                android:layout_width="240dp"
-                android:layout_height="240dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/bg_qr_frame">
+                android:layout_width="match_parent"
+                android:layout_height="320dp"
+                android:background="@drawable/bg_qr_frame"
+                android:clipToOutline="true">
 
                 <!-- Real CameraX Live Preview -->
                 <androidx.camera.view.PreviewView
@@ -44,27 +102,86 @@
                 <!-- Center QR Placeholder Icon -->
                 <ImageView
                     android:id="@+id/ivQrCenter"
-                    android:layout_width="80dp"
-                    android:layout_height="80dp"
+                    android:layout_width="72dp"
+                    android:layout_height="72dp"
                     android:layout_gravity="center"
-                    android:alpha="0.3"
-                    android:contentDescription="@null"
+                    android:alpha="0.25"
+                    android:importantForAccessibility="no"
                     android:src="@drawable/ic_qr_code"
                     app:tint="@color/p2_lavender" />
 
-                <!-- Scanning Line -->
+                <!-- 4 Lavender Corner Brackets -->
+                <ImageView
+                    android:id="@+id/ivBracketTl"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="top|start"
+                    android:layout_margin="14dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_corner_bracket_tl" />
+
+                <ImageView
+                    android:id="@+id/ivBracketTr"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="top|end"
+                    android:layout_margin="14dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_corner_bracket_tr" />
+
+                <ImageView
+                    android:id="@+id/ivBracketBl"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_margin="14dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_corner_bracket_bl" />
+
+                <ImageView
+                    android:id="@+id/ivBracketBr"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_margin="14dp"
+                    android:importantForAccessibility="no"
+                    android:src="@drawable/ic_corner_bracket_br" />
+
+                <!-- Scanning Laser Line -->
                 <View
                     android:id="@+id/viewScanLine"
                     android:layout_width="match_parent"
                     android:layout_height="3dp"
                     android:background="@drawable/bg_qr_scanner_line" />
 
+                <!-- Top Floating Instruction Pill -->
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="top|center_horizontal"
+                    android:layout_marginTop="14dp"
+                    android:background="@drawable/bg_zoom_pill_idle"
+                    android:gravity="center"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="5dp">
+
+                    <TextView
+                        android:id="@+id/tvInstructionTitle"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Đưa mã QR trên màn chiếu vào khung ngắm"
+                        android:textColor="#FFFFFF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
                 <!-- Flash Toggle Button (Floating on Viewfinder) -->
                 <com.google.android.material.button.MaterialButton
                     android:id="@+id/btnFlash"
                     style="@style/Widget.Material3.Button.IconButton.Filled.Tonal"
-                    android:layout_width="40dp"
-                    android:layout_height="40dp"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
                     android:layout_gravity="top|end"
                     android:layout_margin="10dp"
                     android:contentDescription="Bật/Tắt Flash"
@@ -72,192 +189,266 @@
                     android:insetTop="0dp"
                     android:insetRight="0dp"
                     android:insetBottom="0dp"
-                    app:backgroundTint="@color/uc_surface_card"
+                    app:backgroundTint="#B311212D"
                     app:icon="@drawable/ic_flash"
                     app:iconGravity="textStart"
                     app:iconPadding="0dp"
-                    app:iconTint="@color/uc_text_primary" />
+                    app:iconTint="@color/p2_lavender" />
+
+                <!-- Bottom Floating CameraX Zoom Selector (1x / 2x / 3x) -->
+                <LinearLayout
+                    android:id="@+id/layoutZoomBar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="bottom|center_horizontal"
+                    android:layout_marginBottom="12dp"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:id="@+id/btnZoom1x"
+                        android:layout_width="36dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_zoom_pill_active"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="1x"
+                        android:textColor="@color/p1_midnight"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnZoom2x"
+                        android:layout_width="36dp"
+                        android:layout_height="28dp"
+                        android:layout_marginHorizontal="6dp"
+                        android:background="@drawable/bg_zoom_pill_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="2x"
+                        android:textColor="#CCD0CF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/btnZoom3x"
+                        android:layout_width="36dp"
+                        android:layout_height="28dp"
+                        android:background="@drawable/bg_zoom_pill_idle"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:text="3x"
+                        android:textColor="#CCD0CF"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </FrameLayout>
 
-            <!-- Instructions -->
-            <TextView
-                android:id="@+id/tvInstructionTitle"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:text="@string/scan_qr_viewfinder_instruction"
-                android:textColor="@color/uc_text_primary"
-                android:textSize="15sp"
-                android:textStyle="bold" />
-
+            <!-- Sub-instruction below viewfinder -->
             <TextView
                 android:id="@+id/tvInstructionSub"
                 style="@style/TextAppearance.EduLens.Caption"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:layout_marginTop="10dp"
                 android:gravity="center"
-                android:text="@string/scan_qr_viewfinder_subinstruction"
-                android:textColor="@color/uc_text_secondary" />
+                android:text="Mã QR trên màn chiếu tự động làm mới mỗi 15-30 giây để chống gian lận"
+                android:textColor="@color/uc_text_secondary"
+                android:textSize="11sp" />
 
-            <!-- Before Scanning Section -->
-            <TextView
-                style="@style/TextAppearance.EduLens.Badge"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
-                android:layout_marginBottom="8dp"
-                android:letterSpacing="0.04"
-                android:text="@string/scan_qr_before_title"
-                android:textColor="@color/uc_text_secondary" />
-
-            <!-- Requirement 1: WiFi -->
+            <!-- Security Check Pill Bar Header -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
                 android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_unified_surface_card"
                 android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_wifi"
-                    app:tint="@color/p2_teal" />
+                android:orientation="horizontal">
 
                 <TextView
-                    style="@style/TextAppearance.EduLens.Body"
+                    style="@style/TextAppearance.EduLens.Badge"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/scan_qr_req_wifi"
-                    android:textColor="@color/uc_text_primary"
-                    android:textSize="13sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_check_circle"
-                    app:tint="@color/color_success" />
-            </LinearLayout>
-
-            <!-- Requirement 2: GPS -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:background="@drawable/bg_unified_surface_card"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="12dp">
-
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_gps"
-                    app:tint="@color/p2_teal" />
+                    android:letterSpacing="0.04"
+                    android:text="ĐIỀU KIỆN AN TOÀN ĐIỂM DANH"
+                    android:textColor="@color/uc_text_secondary"
+                    android:textSize="11sp" />
 
                 <TextView
-                    style="@style/TextAppearance.EduLens.Body"
-                    android:layout_width="0dp"
+                    android:id="@+id/btnRecheckSecurity"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="@string/scan_qr_req_gps"
-                    android:textColor="@color/uc_text_primary"
-                    android:textSize="13sp" />
-
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_check_circle"
-                    app:tint="@color/color_success" />
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:text="Kiểm tra lại ↻"
+                    android:textColor="@color/p2_teal"
+                    android:textSize="11sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-            <!-- Requirement 3: Device -->
+            <!-- 1-Row 3-Column Security Pill Bar -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="16dp"
-                android:background="@drawable/bg_unified_surface_card"
-                android:gravity="center_vertical"
-                android:orientation="horizontal"
-                android:padding="12dp">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_marginEnd="12dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_smartphone"
-                    app:tint="@color/p2_teal" />
-
-                <TextView
-                    style="@style/TextAppearance.EduLens.Body"
+                <!-- Pill 1: WiFi -->
+                <LinearLayout
+                    android:id="@+id/cardSecWifi"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:text="@string/scan_qr_req_device"
-                    android:textColor="@color/uc_text_primary"
-                    android:textSize="13sp" />
+                    android:background="@drawable/bg_unified_surface_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="10dp">
 
-                <ImageView
-                    android:layout_width="20dp"
-                    android:layout_height="20dp"
-                    android:contentDescription="@null"
-                    android:src="@drawable/ic_check_circle"
-                    app:tint="@color/color_success" />
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_wifi"
+                        app:tint="@color/color_success" />
+
+                    <TextView
+                        android:id="@+id/tvSecWifiText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="WiFi · Sẵn sàng"
+                        android:textColor="@color/uc_text_primary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Pill 2: GPS -->
+                <LinearLayout
+                    android:id="@+id/cardSecGps"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="6dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_unified_surface_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="10dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_gps"
+                        app:tint="@color/color_success" />
+
+                    <TextView
+                        android:id="@+id/tvSecGpsText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="GPS · Định vị"
+                        android:textColor="@color/uc_text_primary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+
+                <!-- Pill 3: Device -->
+                <LinearLayout
+                    android:id="@+id/cardSecDevice"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_unified_surface_card"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="6dp"
+                    android:paddingVertical="10dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_smartphone"
+                        app:tint="@color/color_success" />
+
+                    <TextView
+                        android:id="@+id/tvSecDeviceText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:text="Thiết bị · Sẵn sàng"
+                        android:textColor="@color/uc_text_primary"
+                        android:textSize="11sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
             </LinearLayout>
 
-            <!-- Action Buttons for Quick Demo & Error Simulations -->
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnUploadQrImage"
-                style="@style/Widget.EduLens.Button.Outlined"
+            <!-- Production Guidance Card -->
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:layout_marginBottom="8dp"
-                android:strokeColor="@color/uc_border_card"
-                android:text="Tải ảnh QR từ máy để quét"
-                android:textColor="@color/uc_text_primary"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_download"
-                app:iconGravity="textStart"
-                app:iconTint="@color/p2_teal" />
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_unified_surface_card"
+                android:gravity="center_vertical"
+                android:orientation="horizontal"
+                android:padding="14dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnQuickScan"
-                android:layout_width="match_parent"
-                android:layout_height="52dp"
-                android:layout_marginBottom="8dp"
-                android:backgroundTint="@color/p2_teal"
-                android:text="@string/scan_qr_btn_quick"
-                android:textColor="#FFFFFF"
-                android:textStyle="bold"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_qr_scan"
-                app:iconGravity="textStart"
-                app:iconTint="#FFFFFF" />
+                <FrameLayout
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:background="@drawable/bg_unified_lavender_pill">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/btnSimulateErrors"
-                style="@style/Widget.EduLens.Button.Outlined"
-                android:layout_width="match_parent"
-                android:layout_height="48dp"
-                android:strokeColor="@color/uc_border_card"
-                android:text="@string/scan_qr_btn_simulate"
-                android:textColor="@color/uc_text_secondary"
-                app:cornerRadius="14dp"
-                app:icon="@drawable/ic_chevron_right"
-                app:iconGravity="textEnd"
-                app:iconTint="@color/uc_text_secondary" />
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:layout_gravity="center"
+                        android:importantForAccessibility="no"
+                        android:src="@drawable/ic_shield_check"
+                        app:tint="@color/p1_midnight" />
+                </FrameLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="12dp"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Tự động nhận diện &amp; Xác thực"
+                        android:textColor="@color/uc_text_primary"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="2dp"
+                        android:text="Chỉ cần hướng camera vào mã QR của giảng viên, hệ thống sẽ tự động quét và đối chiếu cảm biến an toàn."
+                        android:textColor="@color/uc_text_secondary"
+                        android:textSize="11sp" />
+                </LinearLayout>
+            </LinearLayout>
 
         </LinearLayout>
     </ScrollView>

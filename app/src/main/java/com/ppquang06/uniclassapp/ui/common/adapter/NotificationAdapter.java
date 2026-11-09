@@ -14,6 +14,7 @@ import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.ItemNotificationRowBinding;
 import com.ppquang06.uniclassapp.ui.common.UiBadgeHelper;
+import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,10 +33,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         void onDownloadQrClick(NotificationItemResponse item);
     }
 
+    public interface OnScanQrNowClickListener {
+        void onScanQrNowClick(NotificationItemResponse item);
+    }
+
+    public interface OnToggleReadClickListener {
+        void onToggleReadClick(NotificationItemResponse item);
+    }
+
     private final List<NotificationItemResponse> items = new ArrayList<>();
     private OnNotificationClickListener listener;
     private OnDeleteNotificationListener deleteListener;
     private OnDownloadQrClickListener downloadQrClickListener;
+    private OnScanQrNowClickListener scanQrNowClickListener;
+    private OnToggleReadClickListener toggleReadClickListener;
 
     public NotificationAdapter() {}
 
@@ -70,6 +81,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         this.downloadQrClickListener = listener;
     }
 
+    public void setOnScanQrNowClickListener(OnScanQrNowClickListener listener) {
+        this.scanQrNowClickListener = listener;
+    }
+
+    public void setOnToggleReadClickListener(OnToggleReadClickListener listener) {
+        this.toggleReadClickListener = listener;
+    }
+
     public OnNotificationClickListener getOnNotificationClickListener() {
         return listener;
     }
@@ -82,7 +101,19 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
         return downloadQrClickListener;
     }
 
+    public OnScanQrNowClickListener getOnScanQrNowClickListener() {
+        return scanQrNowClickListener;
+    }
+
+    public OnToggleReadClickListener getOnToggleReadClickListener() {
+        return toggleReadClickListener;
+    }
+
     public static boolean shouldShowDownloadQr(NotificationItemResponse item, OnDownloadQrClickListener listener) {
+        return item != null && item.getId() != null && item.getId().startsWith("att-") && listener != null;
+    }
+
+    public static boolean shouldShowScanQrNow(NotificationItemResponse item, OnScanQrNowClickListener listener) {
         return item != null && item.getId() != null && item.getId().startsWith("att-") && listener != null;
     }
 
@@ -147,7 +178,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
         NotificationItemResponse item = items.get(position);
-        holder.bind(item, listener, deleteListener, downloadQrClickListener);
+        holder.bind(item, listener, deleteListener, downloadQrClickListener, scanQrNowClickListener, toggleReadClickListener);
     }
 
     @Override
@@ -167,7 +198,9 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 NotificationItemResponse item,
                 OnNotificationClickListener listener,
                 OnDeleteNotificationListener deleteListener,
-                OnDownloadQrClickListener downloadQrClickListener
+                OnDownloadQrClickListener downloadQrClickListener,
+                OnScanQrNowClickListener scanQrNowClickListener,
+                OnToggleReadClickListener toggleReadClickListener
         ) {
             String title = item != null && item.getTitle() != null ? item.getTitle() : "";
             String body = item != null && item.getBody() != null ? item.getBody() : "";
@@ -177,6 +210,24 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             binding.tvNotifTitle.setText(title);
             binding.tvNotifContent.setText(body);
 
+            boolean isUnread = item != null && item.isUnread();
+            if (binding.viewUnreadDot != null) {
+                binding.viewUnreadDot.setVisibility(isUnread ? View.VISIBLE : View.GONE);
+            }
+            if (binding.tvCategoryBadge != null) {
+                binding.tvCategoryBadge.setText(NotificationFilterHelper.resolveCategoryBadgeLabel(item));
+            }
+            if (binding.btnToggleRead != null) {
+                if (toggleReadClickListener != null) {
+                    binding.btnToggleRead.setVisibility(View.VISIBLE);
+                    binding.btnToggleRead.setText(isUnread ? "Đã đọc ✓" : "Chưa đọc");
+                    binding.btnToggleRead.setOnClickListener(v -> toggleReadClickListener.onToggleReadClick(item));
+                } else {
+                    binding.btnToggleRead.setVisibility(View.GONE);
+                    binding.btnToggleRead.setOnClickListener(null);
+                }
+            }
+
             try {
                 Context context = binding.getRoot().getContext();
                 if (context != null) {
@@ -184,6 +235,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                     int secondaryColor = ContextCompat.getColor(context, R.color.uc_text_secondary);
                     binding.tvNotifContent.setTextColor(secondaryColor);
                     binding.tvNotifTime.setTextColor(secondaryColor);
+                    binding.getRoot().setAlpha(isUnread ? 1.0f : 0.85f);
                 }
             } catch (Exception ignored) {
                 // Fallback for JVM unit tests where Context or Resources are unavailable
@@ -197,7 +249,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 binding.tvNotifTime.setText(formattedDate);
             }
 
-            if (item != null && "URGENT".equalsIgnoreCase(item.getCategory())) {
+            if (item != null && NotificationFilterHelper.isUrgentItem(item)) {
                 binding.tvUrgentTag.setVisibility(View.VISIBLE);
             } else {
                 binding.tvUrgentTag.setVisibility(View.GONE);
@@ -215,7 +267,14 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
                 binding.btnDeleteNotif.setOnClickListener(null);
             }
 
-            if (shouldShowDownloadQr(item, downloadQrClickListener)) {
+            boolean showDownload = shouldShowDownloadQr(item, downloadQrClickListener);
+            boolean showScanNow = shouldShowScanQrNow(item, scanQrNowClickListener);
+
+            if (binding.layoutNotifActions != null) {
+                binding.layoutNotifActions.setVisibility((showDownload || showScanNow) ? View.VISIBLE : View.GONE);
+            }
+
+            if (showDownload) {
                 binding.btnDownloadQr.setVisibility(View.VISIBLE);
                 binding.btnDownloadQr.setOnClickListener(v -> {
                     if (downloadQrClickListener != null) {
@@ -225,6 +284,20 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
             } else {
                 binding.btnDownloadQr.setVisibility(View.GONE);
                 binding.btnDownloadQr.setOnClickListener(null);
+            }
+
+            if (binding.btnScanQrNow != null) {
+                if (showScanNow) {
+                    binding.btnScanQrNow.setVisibility(View.VISIBLE);
+                    binding.btnScanQrNow.setOnClickListener(v -> {
+                        if (scanQrNowClickListener != null) {
+                            scanQrNowClickListener.onScanQrNowClick(item);
+                        }
+                    });
+                } else {
+                    binding.btnScanQrNow.setVisibility(View.GONE);
+                    binding.btnScanQrNow.setOnClickListener(null);
+                }
             }
 
             binding.getRoot().setOnClickListener(v -> {

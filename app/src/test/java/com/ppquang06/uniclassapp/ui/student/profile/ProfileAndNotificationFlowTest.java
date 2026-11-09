@@ -3,6 +3,7 @@ package com.ppquang06.uniclassapp.ui.student.profile;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import com.google.gson.Gson;
@@ -12,8 +13,11 @@ import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
+import com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter;
 import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper;
+import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper.CategoryFilter;
 import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper.NotificationFilter;
+import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper.StatusFilter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -212,5 +216,71 @@ public class ProfileAndNotificationFlowTest {
         assertEquals("STUDENT", user.getRole());
         assertEquals("22520001", user.getStudentId());
         assertTrue(user.getActive());
+    }
+
+    @Test
+    public void filterByStatusAndCategory_separatesBentoStatusAndChipCategories() {
+        List<NotificationItemResponse> list = new ArrayList<>(sampleList);
+        list.add(0, new NotificationItemResponse(
+                "att-session-01",
+                "Điểm danh đang mở: Phát triển ứng dụng di động",
+                "Phiên điểm danh lớp NT118.Q11 đang mở.",
+                "NT118.Q11",
+                "2026-11-09T07:00:00Z",
+                "URGENT",
+                true
+        ));
+
+        // 1. Status = UNREAD, Category = QR -> only att-session-01
+        List<NotificationItemResponse> unreadQr = NotificationFilterHelper.filterByStatusAndCategory(
+                list, StatusFilter.UNREAD, CategoryFilter.QR);
+        assertEquals(1, unreadQr.size());
+        assertEquals("att-session-01", unreadQr.get(0).getId());
+
+        // 2. Status = UNREAD, Category = ASSIGNMENTS -> n-3 only (n-2 is read)
+        List<NotificationItemResponse> unreadAssignments = NotificationFilterHelper.filterByStatusAndCategory(
+                list, StatusFilter.UNREAD, CategoryFilter.ASSIGNMENTS);
+        assertEquals(1, unreadAssignments.size());
+        assertEquals("n-3", unreadAssignments.get(0).getId());
+
+        // 3. Status = ALL, Category = ASSIGNMENTS -> n-2 and n-3
+        List<NotificationItemResponse> allAssignments = NotificationFilterHelper.filterByStatusAndCategory(
+                list, StatusFilter.ALL, CategoryFilter.ASSIGNMENTS);
+        assertEquals(2, allAssignments.size());
+
+        // 4. Status = URGENT, Category = ALL -> att-session-01 and n-1
+        List<NotificationItemResponse> allUrgent = NotificationFilterHelper.filterByStatusAndCategory(
+                list, StatusFilter.URGENT, CategoryFilter.ALL);
+        assertEquals(2, allUrgent.size());
+    }
+
+    @Test
+    public void markAllAsRead_marksEveryItemReadAndReturnsUpdatedCount() {
+        int marked = NotificationFilterHelper.markAllAsRead(sampleList);
+        assertEquals(3, marked);
+        for (NotificationItemResponse item : sampleList) {
+            assertFalse(item.isUnread());
+        }
+    }
+
+    @Test
+    public void resolveCategoryBadgeLabel_andFindActiveQrNotification_workCorrectly() {
+        NotificationItemResponse qrItem = new NotificationItemResponse(
+                "att-99", "Điểm danh đang mở", "Body", "NT118", "2026-11-09T07:00:00Z", "URGENT", true
+        );
+        assertEquals("Điểm danh QR", NotificationFilterHelper.resolveCategoryBadgeLabel(qrItem));
+        assertEquals("Bài tập & Hạn nộp", NotificationFilterHelper.resolveCategoryBadgeLabel(sampleList.get(1)));
+        assertEquals("Bảng điểm", NotificationFilterHelper.resolveCategoryBadgeLabel(sampleList.get(3)));
+        assertEquals("Thông báo lớp", NotificationFilterHelper.resolveCategoryBadgeLabel(sampleList.get(4)));
+
+        assertNull(NotificationFilterHelper.findActiveQrNotification(sampleList));
+        List<NotificationItemResponse> withQr = new ArrayList<>(sampleList);
+        withQr.add(0, qrItem);
+        assertEquals(qrItem, NotificationFilterHelper.findActiveQrNotification(withQr));
+
+        NotificationAdapter.OnScanQrNowClickListener scanListener = item -> {};
+        assertTrue(NotificationAdapter.shouldShowScanQrNow(qrItem, scanListener));
+        assertFalse(NotificationAdapter.shouldShowScanQrNow(sampleList.get(0), scanListener));
+        assertFalse(NotificationAdapter.shouldShowScanQrNow(qrItem, null));
     }
 }

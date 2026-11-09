@@ -15,14 +15,15 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.widget.LinearLayoutManager;
 
 import com.ppquang06.uniclassapp.R;
-import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.data.model.response.AssignmentItem;
 import com.ppquang06.uniclassapp.data.model.response.NotificationItemResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentStudentNotificationsBinding;
 import com.ppquang06.uniclassapp.ui.common.HomeViewModel;
 import com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter;
 import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper;
-import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper.NotificationFilter;
+import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper.CategoryFilter;
+import com.ppquang06.uniclassapp.ui.common.notifications.NotificationFilterHelper.StatusFilter;
+import com.ppquang06.uniclassapp.ui.student.StudentMainActivity;
 import com.ppquang06.uniclassapp.utils.QrCodeGenerator;
 import com.ppquang06.uniclassapp.utils.QrImageStorageHelper;
 
@@ -35,6 +36,7 @@ public class StudentNotificationsFragment extends Fragment {
     private HomeViewModel homeViewModel;
     private NotificationAdapter notificationAdapter;
     private final List<NotificationItemResponse> masterList = new ArrayList<>();
+    private StatusFilter currentStatusFilter = StatusFilter.ALL;
 
     @Nullable
     @Override
@@ -68,9 +70,26 @@ public class StudentNotificationsFragment extends Fragment {
 
     private void setupRecyclerView() {
         notificationAdapter = new NotificationAdapter(item -> {
-            // Click handler can be extended for deep linking
+            if (item != null && item.isUnread()) {
+                item.setUnread(false);
+                applyCurrentFilter();
+            }
         });
         notificationAdapter.setOnDownloadQrClickListener(this::handleDownloadQr);
+        notificationAdapter.setOnScanQrNowClickListener(item -> {
+            if (item != null) {
+                item.setUnread(false);
+            }
+            if (getActivity() instanceof StudentMainActivity) {
+                ((StudentMainActivity) getActivity()).switchToTab(R.id.nav_student_scan_qr);
+            }
+        });
+        notificationAdapter.setOnToggleReadClickListener(item -> {
+            if (item != null) {
+                item.setUnread(!item.isUnread());
+                applyCurrentFilter();
+            }
+        });
         binding.rvNotifications.setLayoutManager(new LinearLayoutManager(requireContext()));
         binding.rvNotifications.setAdapter(notificationAdapter);
     }
@@ -100,9 +119,28 @@ public class StudentNotificationsFragment extends Fragment {
     private void setupListeners() {
         binding.swipeRefresh.setOnRefreshListener(this::loadNotifications);
         binding.chipGroupFilter.setOnCheckedStateChangeListener((group, checkedIds) -> applyCurrentFilter());
-        binding.cardNotifStatTotal.setOnClickListener(v -> binding.chipAll.setChecked(true));
-        binding.cardNotifStatUnread.setOnClickListener(v -> binding.chipUnread.setChecked(true));
-        binding.cardNotifStatUrgent.setOnClickListener(v -> binding.chipUrgent.setChecked(true));
+        binding.cardNotifStatTotal.setOnClickListener(v -> {
+            currentStatusFilter = StatusFilter.ALL;
+            applyCurrentFilter();
+        });
+        binding.cardNotifStatUnread.setOnClickListener(v -> {
+            currentStatusFilter = StatusFilter.UNREAD;
+            applyCurrentFilter();
+        });
+        binding.cardNotifStatUrgent.setOnClickListener(v -> {
+            currentStatusFilter = StatusFilter.URGENT;
+            applyCurrentFilter();
+        });
+        binding.btnMarkAllRead.setOnClickListener(v -> {
+            int marked = NotificationFilterHelper.markAllAsRead(masterList);
+            applyCurrentFilter();
+            if (getContext() != null) {
+                String msg = marked > 0
+                        ? "Đã đánh dấu đã đọc " + marked + " thông báo"
+                        : "Tất cả thông báo đã ở trạng thái đã đọc";
+                Toast.makeText(getContext(), msg, Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void observeViewModel() {
@@ -159,7 +197,7 @@ public class StudentNotificationsFragment extends Fragment {
                 if (item.isUnread()) {
                     unreadCount++;
                 }
-                if ("URGENT".equalsIgnoreCase(item.getCategory())) {
+                if (NotificationFilterHelper.isUrgentItem(item)) {
                     urgentCount++;
                 }
             }
@@ -169,6 +207,19 @@ public class StudentNotificationsFragment extends Fragment {
         binding.tvNotifUnreadCount.setText(String.valueOf(unreadCount));
         binding.tvNotifUrgentCount.setText(String.valueOf(urgentCount));
 
+        binding.cardNotifStatTotal.setBackgroundResource(
+                currentStatusFilter == StatusFilter.ALL
+                        ? R.drawable.bg_unified_bento_stat_active
+                        : R.drawable.bg_unified_bento_stat);
+        binding.cardNotifStatUnread.setBackgroundResource(
+                currentStatusFilter == StatusFilter.UNREAD
+                        ? R.drawable.bg_unified_bento_stat_active
+                        : R.drawable.bg_unified_bento_stat);
+        binding.cardNotifStatUrgent.setBackgroundResource(
+                currentStatusFilter == StatusFilter.URGENT
+                        ? R.drawable.bg_unified_bento_stat_active
+                        : R.drawable.bg_unified_bento_stat);
+
         if (unreadCount > 0) {
             binding.tvNotifHeroSubtitle.setText("Bạn có " + unreadCount + " thông báo chưa đọc");
         } else {
@@ -176,25 +227,35 @@ public class StudentNotificationsFragment extends Fragment {
         }
 
         int checkedId = binding.chipGroupFilter.getCheckedChipId();
-        NotificationFilter filter = NotificationFilter.ALL;
-        if (checkedId == R.id.chipUnread) {
-            filter = NotificationFilter.UNREAD;
-        } else if (checkedId == R.id.chipUrgent) {
-            filter = NotificationFilter.URGENT;
+        CategoryFilter categoryFilter = CategoryFilter.ALL;
+        if (checkedId == R.id.chipQr) {
+            categoryFilter = CategoryFilter.QR;
         } else if (checkedId == R.id.chipAssignments) {
-            filter = NotificationFilter.ASSIGNMENTS;
+            categoryFilter = CategoryFilter.ASSIGNMENTS;
         } else if (checkedId == R.id.chipGrades) {
-            filter = NotificationFilter.GRADES;
+            categoryFilter = CategoryFilter.GRADES;
+        } else if (checkedId == R.id.chipGeneral) {
+            categoryFilter = CategoryFilter.GENERAL;
+        } else if (checkedId == R.id.chipUnread) {
+            currentStatusFilter = StatusFilter.UNREAD;
+        } else if (checkedId == R.id.chipUrgent) {
+            currentStatusFilter = StatusFilter.URGENT;
         }
 
-        List<NotificationItemResponse> filtered = NotificationFilterHelper.filterNotifications(masterList, filter);
+        List<NotificationItemResponse> filtered = NotificationFilterHelper.filterByStatusAndCategory(
+                masterList,
+                currentStatusFilter,
+                categoryFilter
+        );
         notificationAdapter.submitList(filtered);
 
         if (filtered.isEmpty()) {
             binding.rvNotifications.setVisibility(View.GONE);
+            binding.layoutEmptyNotifications.setVisibility(View.VISIBLE);
             binding.tvEmptyNotifications.setVisibility(View.VISIBLE);
         } else {
             binding.rvNotifications.setVisibility(View.VISIBLE);
+            binding.layoutEmptyNotifications.setVisibility(View.GONE);
             binding.tvEmptyNotifications.setVisibility(View.GONE);
         }
     }

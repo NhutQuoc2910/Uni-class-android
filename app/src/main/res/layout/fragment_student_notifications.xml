@@ -28,35 +28,64 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
 
-                <!-- Bento Notification Overview Hero -->
+                <!-- Bento Notification Overview Hero (Status Filter) -->
                 <LinearLayout
                     android:id="@+id/cardNotifHero"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="12dp"
-                    android:layout_marginBottom="8dp"
+                    android:layout_marginBottom="6dp"
                     android:background="@drawable/bg_unified_bento_hero"
                     android:orientation="vertical"
                     android:padding="18dp">
 
-                    <TextView
-                        android:id="@+id/tvNotifHeroSubtitle"
-                        android:layout_width="wrap_content"
+                    <LinearLayout
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Tổng quan thông báo học tập"
-                        android:textColor="#FFFFFF"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:gravity="top"
+                        android:orientation="horizontal">
 
-                    <TextView
-                        android:id="@+id/tvNotifHeroHint"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Chạm vào từng ô bên dưới để lọc nhanh danh sách"
-                        android:textColor="#9BA8AB"
-                        android:textSize="12sp" />
+                        <LinearLayout
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvNotifHeroSubtitle"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Tổng quan thông báo học tập"
+                                android:textColor="#FFFFFF"
+                                android:textSize="15sp"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:id="@+id/tvNotifHeroHint"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="2dp"
+                                android:text="Chạm vào từng ô bên dưới để lọc theo trạng thái"
+                                android:textColor="#9BA8AB"
+                                android:textSize="11sp" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/btnMarkAllRead"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:background="@drawable/bg_unified_bento_stat"
+                            android:clickable="true"
+                            android:focusable="true"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="6dp"
+                            android:text="✓ Đọc tất cả"
+                            android:textColor="#C5BAC4"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
 
                     <LinearLayout
                         android:layout_width="match_parent"
@@ -70,7 +99,7 @@
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
                             android:layout_weight="1"
-                            android:background="@drawable/bg_unified_bento_stat"
+                            android:background="@drawable/bg_unified_bento_stat_active"
                             android:clickable="true"
                             android:focusable="true"
                             android:gravity="center"
@@ -91,7 +120,7 @@
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
                                 android:text="Tất cả"
-                                android:textColor="#9BA8AB"
+                                android:textColor="#CCD0CF"
                                 android:textSize="11sp" />
                         </LinearLayout>
 
@@ -158,13 +187,13 @@
                     </LinearLayout>
                 </LinearLayout>
 
-                <!-- Filter Chips Row (Figma 64:921) -->
+                <!-- Category Filter Chips Row (Separated from Bento Status Filter) -->
                 <HorizontalScrollView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:clipToPadding="false"
                     android:paddingHorizontal="@dimen/space_16"
-                    android:paddingVertical="@dimen/space_8"
+                    android:paddingVertical="4dp"
                     android:scrollbars="none">
 
                     <com.google.android.material.chip.ChipGroup
@@ -181,35 +210,52 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:checked="true"
-                            android:text="@string/filter_all" />
+                            android:text="Tất cả danh mục" />
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chipUnread"
+                            android:id="@+id/chipQr"
                             style="@style/Widget.Material3.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/filter_unread" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chipUrgent"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/filter_urgent" />
+                            android:text="Điểm danh QR" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipAssignments"
                             style="@style/Widget.Material3.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/filter_assignments" />
+                            android:text="Bài tập &amp; Hạn nộp" />
 
                         <com.google.android.material.chip.Chip
                             android:id="@+id/chipGrades"
                             style="@style/Widget.Material3.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/filter_grades" />
+                            android:text="Bảng điểm" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipGeneral"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Lớp học &amp; Tài liệu" />
+
+                        <!-- Legacy chips kept hidden for backward compatibility -->
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipUnread"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_unread"
+                            android:visibility="gone" />
+
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chipUrgent"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/filter_urgent"
+                            android:visibility="gone" />
                     </com.google.android.material.chip.ChipGroup>
                 </HorizontalScrollView>
 
@@ -228,20 +274,55 @@
                         android:paddingTop="@dimen/space_8"
                         android:paddingBottom="@dimen/space_16" />
 
-                    <TextView
-                        android:id="@+id/tvEmptyNotifications"
-                        style="@style/TextAppearance.EduLens.Body"
+                    <!-- Balanced Empty State Card -->
+                    <LinearLayout
+                        android:id="@+id/layoutEmptyNotifications"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_gravity="center"
-                        android:layout_marginHorizontal="24dp"
-                        android:layout_marginVertical="16dp"
-                        android:background="@drawable/bg_unified_surface_card"
+                        android:layout_marginHorizontal="16dp"
+                        android:layout_marginVertical="12dp"
+                        android:background="@drawable/bg_unified_empty_onboarding"
                         android:gravity="center"
+                        android:orientation="vertical"
                         android:padding="24dp"
-                        android:text="@string/empty_notifications"
-                        android:textColor="@color/uc_text_secondary"
-                        android:visibility="gone" />
+                        android:visibility="gone">
+
+                        <FrameLayout
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:background="@drawable/bg_unified_lavender_pill">
+
+                            <ImageView
+                                android:layout_width="22dp"
+                                android:layout_height="22dp"
+                                android:layout_gravity="center"
+                                android:importantForAccessibility="no"
+                                android:src="@drawable/ic_notification"
+                                app:tint="@color/p1_midnight" />
+                        </FrameLayout>
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="10dp"
+                            android:gravity="center"
+                            android:text="Bạn đã xem hết mọi thông báo!"
+                            android:textColor="@color/uc_text_primary"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvEmptyNotifications"
+                            style="@style/TextAppearance.EduLens.Body"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:gravity="center"
+                            android:text="Khi giảng viên mở phiên điểm danh QR, giao bài tập mới hoặc công bố điểm, hệ thống sẽ cập nhật ngay tại đây."
+                            android:textColor="@color/uc_text_secondary"
+                            android:textSize="12sp" />
+                    </LinearLayout>
 
                     <ProgressBar
                         android:id="@+id/pbLoading"

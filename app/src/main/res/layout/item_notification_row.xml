@@ -8,18 +8,102 @@
     android:background="@drawable/bg_unified_surface_card"
     android:minHeight="90dp"
     android:orientation="vertical"
-    android:padding="@dimen/space_12">
+    android:padding="14dp">
 
+    <!-- Top Metadata Row: Unread Dot + Category Badge + Time + Urgent/Toggle Read/Delete -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center_vertical"
         android:orientation="horizontal">
 
+        <View
+            android:id="@+id/viewUnreadDot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_circle_green"
+            android:backgroundTint="@color/p2_teal" />
+
+        <TextView
+            android:id="@+id/tvCategoryBadge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_unified_bento_stat"
+            android:paddingHorizontal="8dp"
+            android:paddingVertical="2dp"
+            android:text="Thông báo lớp"
+            android:textColor="#FFFFFF"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/tvNotifTime"
+            style="@style/TextAppearance.EduLens.Caption"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:layout_weight="1"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:text="@string/today_date"
+            android:textColor="@color/uc_text_secondary"
+            android:textSize="11sp" />
+
+        <TextView
+            android:id="@+id/tvUrgentTag"
+            style="@style/TextAppearance.EduLens.Badge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="6dp"
+            android:background="@drawable/bg_tag_red"
+            android:paddingHorizontal="@dimen/space_8"
+            android:paddingVertical="2dp"
+            android:text="@string/tag_urgent"
+            android:textColor="@color/color_error"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/btnToggleRead"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:clickable="true"
+            android:focusable="true"
+            android:paddingHorizontal="6dp"
+            android:paddingVertical="2dp"
+            android:text="Đã đọc ✓"
+            android:textColor="@color/p2_teal"
+            android:textSize="10sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/btnDeleteNotif"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_marginStart="4dp"
+            android:background="?attr/selectableItemBackgroundBorderless"
+            android:contentDescription="@null"
+            android:padding="4dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_delete"
+            android:visibility="gone"
+            app:tint="@color/color_error" />
+    </LinearLayout>
+
+    <!-- Main Content Row: Icon Tile + Title & Body -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:gravity="top"
+        android:orientation="horizontal">
+
         <FrameLayout
             android:id="@+id/flNotifIconTile"
             android:layout_width="36dp"
             android:layout_height="36dp"
+            android:layout_marginEnd="10dp"
             android:background="@drawable/bg_circle_aura">
 
             <ImageView
@@ -35,7 +119,6 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginHorizontal="@dimen/space_12"
             android:layout_weight="1"
             android:orientation="vertical">
 
@@ -45,73 +128,76 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:ellipsize="end"
-                android:maxLines="1"
+                android:maxLines="2"
                 android:text="@string/nav_notifications"
-                android:textColor="@color/uc_text_primary" />
+                android:textColor="@color/uc_text_primary"
+                android:textSize="13sp"
+                android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/tvNotifTime"
-                style="@style/TextAppearance.EduLens.Caption"
+                android:id="@+id/tvNotifContent"
+                style="@style/TextAppearance.EduLens.Body"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/today_date"
-                android:textColor="@color/uc_text_secondary" />
+                android:layout_marginTop="4dp"
+                android:ellipsize="end"
+                android:maxLines="3"
+                android:text="@string/edu_lens_subtitle"
+                android:textColor="@color/uc_text_secondary"
+                android:textSize="12sp" />
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/tvUrgentTag"
-            style="@style/TextAppearance.EduLens.Badge"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/bg_tag_red"
-            android:paddingHorizontal="@dimen/space_8"
-            android:paddingVertical="2dp"
-            android:text="@string/tag_urgent"
-            android:textColor="@color/color_error"
-            android:visibility="gone" />
-
-        <ImageButton
-            android:id="@+id/btnDeleteNotif"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_marginStart="@dimen/space_8"
-            android:background="?attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@null"
-            android:padding="4dp"
-            android:scaleType="fitCenter"
-            android:src="@drawable/ic_delete"
-            android:visibility="gone"
-            app:tint="@color/color_error" />
     </LinearLayout>
 
-    <TextView
-        android:id="@+id/tvNotifContent"
-        style="@style/TextAppearance.EduLens.Body"
+    <!-- Inline Action Buttons Row (Scan QR Now + Download QR for Emulator) -->
+    <LinearLayout
+        android:id="@+id/layoutNotifActions"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/space_8"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:text="@string/edu_lens_subtitle"
-        android:textColor="@color/uc_text_secondary" />
+        android:layout_marginTop="10dp"
+        android:gravity="end|center_vertical"
+        android:orientation="horizontal"
+        android:visibility="gone">
 
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/btnDownloadQr"
-        style="@style/Widget.EduLens.Button.Filled"
-        android:layout_width="wrap_content"
-        android:layout_height="36dp"
-        android:layout_marginTop="@dimen/space_8"
-        android:minHeight="36dp"
-        android:paddingHorizontal="@dimen/space_12"
-        android:paddingVertical="0dp"
-        android:text="Tải mã QR về máy"
-        android:textSize="12sp"
-        android:visibility="gone"
-        app:backgroundTint="@color/uc_btn_primary_bg"
-        android:textColor="@color/uc_btn_primary_text"
-        app:icon="@drawable/ic_download"
-        app:iconGravity="textStart"
-        app:iconPadding="@dimen/space_4"
-        app:iconSize="16dp"
-        app:iconTint="@color/uc_btn_primary_text" />
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnDownloadQr"
+            style="@style/Widget.EduLens.Button.Outlined"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:layout_marginEnd="8dp"
+            android:minHeight="34dp"
+            android:paddingHorizontal="10dp"
+            android:paddingVertical="0dp"
+            android:strokeColor="@color/uc_border_card"
+            android:text="Tải ảnh QR"
+            android:textColor="@color/uc_text_primary"
+            android:textSize="11sp"
+            android:visibility="gone"
+            app:cornerRadius="10dp"
+            app:icon="@drawable/ic_download"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconSize="14dp"
+            app:iconTint="@color/p2_teal" />
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/btnScanQrNow"
+            style="@style/Widget.EduLens.Button.Filled"
+            android:layout_width="wrap_content"
+            android:layout_height="34dp"
+            android:minHeight="34dp"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="0dp"
+            android:text="Quét QR ngay →"
+            android:textColor="@color/uc_btn_primary_text"
+            android:textSize="11sp"
+            android:textStyle="bold"
+            android:visibility="gone"
+            app:backgroundTint="@color/uc_btn_primary_bg"
+            app:cornerRadius="10dp"
+            app:icon="@drawable/ic_qr_scan"
+            app:iconGravity="textStart"
+            app:iconPadding="4dp"
+            app:iconSize="14dp"
+            app:iconTint="@color/uc_btn_primary_text" />
+    </LinearLayout>
 </LinearLayout>

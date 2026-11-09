@@ -180,4 +180,15 @@ public class AttendanceScanFlowTest {
         assertTrue(parsedRes.isGpsVerified());
         assertEquals(12.5, parsedRes.getDistanceMeters(), 0.001);
     }
+
+    @Test
+    public void resolveZoomRatio_andFormatShortBssid_workCorrectly() {
+        assertEquals(1.0f, StudentScanQrFragment.resolveZoomRatio(1), 0.001f);
+        assertEquals(2.0f, StudentScanQrFragment.resolveZoomRatio(2), 0.001f);
+        assertEquals(3.0f, StudentScanQrFragment.resolveZoomRatio(3), 0.001f);
+        assertEquals(1.0f, StudentScanQrFragment.resolveZoomRatio(99), 0.001f);
+
+        assertEquals("WiFi · 44:55", StudentScanQrFragment.formatShortBssid("00:11:22:33:44:55"));
+        assertEquals("WiFi · Sẵn sàng", StudentScanQrFragment.formatShortBssid(null));
+    }
 }
