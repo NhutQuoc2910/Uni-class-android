@@ -14,16 +14,16 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.CreateClassScheduleRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.databinding.BottomSheetCreateScheduleBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 
 import java.util.Calendar;
 import java.util.Locale;
 
-public class CreateScheduleBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class CreateScheduleBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     public interface OnScheduleSavedListener {
         void onScheduleSaved();

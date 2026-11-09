@@ -13,12 +13,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.ChangePasswordRequest;
 import com.ppquang06.uniclassapp.databinding.DialogChangePasswordBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 
-public class ChangePasswordBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class ChangePasswordBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     private DialogChangePasswordBottomSheetBinding binding;
     private ProfileViewModel profileViewModel;

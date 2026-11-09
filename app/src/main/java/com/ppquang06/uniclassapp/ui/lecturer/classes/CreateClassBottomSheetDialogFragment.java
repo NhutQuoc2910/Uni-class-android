@@ -11,14 +11,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.CreateClassRequest;
 import com.ppquang06.uniclassapp.data.model.response.CourseClassItem;
 import com.ppquang06.uniclassapp.databinding.DialogCreateClassBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.ui.common.UiState;
 
-public class CreateClassBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class CreateClassBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     public interface OnClassCreatedListener {
         void onClassCreated(CourseClassItem newClass);

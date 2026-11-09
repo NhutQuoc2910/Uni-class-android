@@ -13,14 +13,14 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.UpdateProfileRequest;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.DialogEditProfileBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 
-public class EditProfileBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class EditProfileBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     public interface OnProfileUpdatedListener {
         void onProfileUpdated(UserResponse updatedUser);

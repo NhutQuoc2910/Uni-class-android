@@ -14,12 +14,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.CreateScheduleExceptionRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassScheduleItem;
 import com.ppquang06.uniclassapp.data.model.response.ScheduleExceptionItem;
 import com.ppquang06.uniclassapp.databinding.BottomSheetCreateScheduleExceptionBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -27,7 +27,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
-public class CreateScheduleExceptionBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class CreateScheduleExceptionBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     public interface OnExceptionSavedListener {
         void onExceptionSaved();

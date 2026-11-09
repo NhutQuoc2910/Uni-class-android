@@ -11,12 +11,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.lifecycle.ViewModelProvider;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.DialogUploadMaterialBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.ui.common.UiState;
 import com.ppquang06.uniclassapp.ui.student.classes.PickFileTypeBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
@@ -24,7 +24,7 @@ import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
 
-public class UploadMaterialBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class UploadMaterialBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     public interface OnMaterialUploadedListener {
         void onMaterialUploaded();

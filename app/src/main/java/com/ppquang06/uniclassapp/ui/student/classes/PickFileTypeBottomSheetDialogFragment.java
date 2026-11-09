@@ -12,11 +12,11 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.databinding.DialogPickFileTypeBottomSheetBinding;
+import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
-public class PickFileTypeBottomSheetDialogFragment extends BottomSheetDialogFragment {
+public class PickFileTypeBottomSheetDialogFragment extends BaseBottomSheetDialogFragment {
 
     public interface OnFilePickedListener {
         void onFilePicked(@NonNull Uri uri, @NonNull String fileName);
