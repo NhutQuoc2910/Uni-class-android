@@ -1,5 +1,6 @@
 package com.ppquang06.uniclassapp.ui.lecturer.assignments;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -18,13 +19,19 @@ import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.CreateAssignmentRequest;
+import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerCreateAssignmentBinding;
 import com.ppquang06.uniclassapp.ui.common.UiState;
+import com.ppquang06.uniclassapp.ui.student.classes.PickFileTypeBottomSheetDialogFragment;
+import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 import java.util.TimeZone;
+
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 
 public class LecturerCreateAssignmentFragment extends Fragment {
 
@@ -34,6 +41,8 @@ public class LecturerCreateAssignmentFragment extends Fragment {
     private String classId = "";
     private String classCode = "";
     private String className = "";
+    private String lastPickedFileName = "";
+    private boolean isUploadingAttachment = false;
 
     @Nullable
     @Override
@@ -73,10 +82,32 @@ public class LecturerCreateAssignmentFragment extends Fragment {
             binding.tvTargetClassCode.setText("Tạo bài tập mới cho lớp");
         }
 
-        binding.btnPickAssignmentFile.setOnClickListener(v -> {
-            Toast.makeText(requireContext(), "Vui lòng nhập đường dẫn tệp đính kèm ở ô bên dưới", Toast.LENGTH_SHORT).show();
-            binding.etAttachmentUrl.requestFocus();
-        });
+        binding.btnPickAssignmentFile.setOnClickListener(v -> openAttachmentFilePicker());
+        binding.tilAttachmentUrl.setStartIconOnClickListener(v -> openAttachmentFilePicker());
+    }
+
+    private void openAttachmentFilePicker() {
+        PickFileTypeBottomSheetDialogFragment sheet = PickFileTypeBottomSheetDialogFragment.newInstance();
+        sheet.setOnFilePickedListener(this::uploadAttachmentFile);
+        sheet.show(getChildFragmentManager(), "PickAssignmentAttachmentSheet");
+    }
+
+    private void uploadAttachmentFile(@NonNull Uri uri, @NonNull String fileName) {
+        if (!isAdded() || getContext() == null || binding == null) return;
+        lastPickedFileName = fileName;
+        try {
+            MultipartBody.Part filePart = UriFileMultipartHelper.createMultipartPart(requireContext(), uri, "file");
+            RequestBody folderPart = UriFileMultipartHelper.createFolderRequestBody("assignments");
+            viewModel.uploadFile(filePart, folderPart);
+        } catch (Exception e) {
+            isUploadingAttachment = false;
+            binding.pbLoading.setVisibility(View.GONE);
+            binding.btnPickAssignmentFile.setEnabled(true);
+            binding.btnSubmitCreateAssignment.setEnabled(true);
+            if (getContext() != null) {
+                Toast.makeText(requireContext(), "Không thể đọc tệp đính kèm: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            }
+        }
     }
 
     private void setupTopBar() {
@@ -142,6 +173,52 @@ public class LecturerCreateAssignmentFragment extends Fragment {
     }
 
     private void observeViewModel() {
+        viewModel.getUploadFileState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    isUploadingAttachment = true;
+                    binding.pbLoading.setVisibility(View.VISIBLE);
+                    binding.btnPickAssignmentFile.setEnabled(false);
+                    binding.btnPickAssignmentFile.setText(R.string.msg_uploading_file);
+                    binding.btnSubmitCreateAssignment.setEnabled(false);
+                    break;
+                case SUCCESS:
+                    isUploadingAttachment = false;
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.btnPickAssignmentFile.setEnabled(true);
+                    binding.btnSubmitCreateAssignment.setEnabled(true);
+                    FileUploadResponse data = state.getData();
+                    if (data != null) {
+                        String fullUrl = UriFileMultipartHelper.resolveFullFileUrl(data.getFileUrl());
+                        binding.etAttachmentUrl.setText(fullUrl);
+                        String resolvedName = (data.getFileName() != null && !data.getFileName().trim().isEmpty())
+                                ? data.getFileName() : lastPickedFileName;
+                        binding.btnPickAssignmentFile.setText("Đã đính kèm: " + resolvedName);
+                    }
+                    viewModel.resetUploadFileState();
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), "Tải tệp đính kèm thành công", Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case ERROR:
+                    isUploadingAttachment = false;
+                    binding.pbLoading.setVisibility(View.GONE);
+                    binding.btnPickAssignmentFile.setEnabled(true);
+                    binding.btnPickAssignmentFile.setText("Chọn tệp đính kèm bài tập");
+                    binding.btnSubmitCreateAssignment.setEnabled(true);
+                    String msg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
+                            ? state.getMessage() : "Tải tệp đính kèm thất bại";
+                    viewModel.resetUploadFileState();
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
         viewModel.getCreateAssignmentState().observe(getViewLifecycleOwner(), state -> {
             if (state == null || binding == null) return;
             switch (state.getStatus()) {
@@ -169,12 +246,20 @@ public class LecturerCreateAssignmentFragment extends Fragment {
     }
 
     private void attemptCreateAssignment() {
+        if (isUploadingAttachment) {
+            Toast.makeText(requireContext(), "Đang tải tệp đính kèm lên máy chủ, vui lòng đợi giây lát", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         binding.tilAssignmentTitle.setError(null);
         binding.tilDueDate.setError(null);
 
         String title = binding.etAssignmentTitle.getText() != null ? binding.etAssignmentTitle.getText().toString().trim() : "";
         String description = binding.etAssignmentDescription.getText() != null ? binding.etAssignmentDescription.getText().toString().trim() : "";
         String attachmentUrl = binding.etAttachmentUrl.getText() != null ? binding.etAttachmentUrl.getText().toString().trim() : "";
+        if (!TextUtils.isEmpty(attachmentUrl)) {
+            attachmentUrl = UriFileMultipartHelper.resolveFullFileUrl(attachmentUrl);
+        }
         String dueDate = binding.etDueDate.getText() != null ? binding.etDueDate.getText().toString().trim() : "";
         String dueTime = binding.etDueTime.getText() != null ? binding.etDueTime.getText().toString().trim() : "23:59";
         boolean notifyStudents = binding.switchNotifyStudents.isChecked();

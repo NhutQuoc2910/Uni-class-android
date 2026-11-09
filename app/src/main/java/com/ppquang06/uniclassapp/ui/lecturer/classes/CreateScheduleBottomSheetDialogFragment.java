@@ -315,7 +315,7 @@ public class CreateScheduleBottomSheetDialogFragment extends BaseBottomSheetDial
                     binding.pbLoading.setVisibility(View.GONE);
                     binding.btnSubmitSchedule.setEnabled(true);
                     String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
-                            ? state.getMessage() : "Không thể lưu lịch học";
+                            ? state.getMessage() : "Không thể lưu lịch dạy";
                     if (getContext() != null) {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                     }

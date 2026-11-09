@@ -514,27 +514,27 @@
     <string name="filter_day_sun">Chủ nhật</string>
 
     <!-- Class Schedule & Exception Management -->
-    <string name="section_class_schedules">Lịch học định kỳ</string>
-    <string name="btn_add_schedule">+ Thêm lịch</string>
-    <string name="empty_class_schedules">Chưa có lịch học định kỳ nào</string>
-    <string name="section_class_exceptions">Thay đổi lịch học</string>
-    <string name="btn_create_schedule_exception">+ Báo nghỉ / Học bù</string>
+    <string name="section_class_schedules">Lịch dạy định kỳ</string>
+    <string name="btn_add_schedule">+ Thêm lịch dạy</string>
+    <string name="empty_class_schedules">Chưa có lịch dạy định kỳ nào</string>
+    <string name="section_class_exceptions">Thay đổi lịch dạy</string>
+    <string name="btn_create_schedule_exception">+ Báo nghỉ / Dạy bù</string>
     <string name="empty_class_exceptions">Chưa có thay đổi lịch nào</string>
-    <string name="bottom_sheet_create_schedule_title">Thêm lịch học định kỳ</string>
-    <string name="bottom_sheet_edit_schedule_title">Chỉnh sửa lịch định kỳ</string>
-    <string name="bottom_sheet_create_schedule_exception_title">Báo nghỉ / Học bù / Đổi lịch</string>
+    <string name="bottom_sheet_create_schedule_title">Thêm lịch dạy định kỳ</string>
+    <string name="bottom_sheet_edit_schedule_title">Chỉnh sửa lịch dạy định kỳ</string>
+    <string name="bottom_sheet_create_schedule_exception_title">Báo nghỉ / Dạy bù / Đổi lịch</string>
     <string name="label_day_of_week">Thứ trong tuần</string>
     <string name="label_start_time">Giờ bắt đầu</string>
     <string name="label_end_time">Giờ kết thúc</string>
     <string name="label_start_date">Ngày bắt đầu</string>
     <string name="label_end_date">Ngày kết thúc</string>
-    <string name="btn_save_schedule">Lưu lịch học</string>
+    <string name="btn_save_schedule">Lưu lịch dạy</string>
     <string name="rb_exception_cancelled">Báo nghỉ - CANCELLED</string>
     <string name="rb_exception_modified">Thay đổi giờ / phòng - MODIFIED</string>
-    <string name="rb_exception_makeup">Học bù - MAKEUP</string>
+    <string name="rb_exception_makeup">Dạy bù - MAKEUP</string>
     <string name="label_select_schedule">Lịch định kỳ áp dụng</string>
-    <string name="label_original_date">Ngày học gốc</string>
-    <string name="label_occurrence_date">Ngày học bù</string>
+    <string name="label_original_date">Ngày dạy gốc</string>
+    <string name="label_occurrence_date">Ngày dạy bù</string>
     <string name="label_exception_reason">Lý do thay đổi</string>
     <string name="switch_auto_publish">Công bố ngay cho sinh viên</string>
     <string name="btn_submit_exception">Tạo thay đổi lịch</string>
@@ -544,7 +544,7 @@
     <string name="dialog_revoke_exception_msg">Bạn có chắc chắn muốn thu hồi thay đổi lịch này không?</string>
     <string name="toast_publish_exception_success">Công bố thay đổi lịch thành công!</string>
     <string name="toast_revoke_exception_success">Thu hồi thay đổi lịch thành công!</string>
-    <string name="toast_create_schedule_success">Lưu lịch học thành công!</string>
+    <string name="toast_create_schedule_success">Lưu lịch dạy thành công!</string>
     <string name="toast_create_exception_success">Tạo thay đổi lịch thành công!</string>
 
     <!-- Weekly Timetable & Calendar Export -->

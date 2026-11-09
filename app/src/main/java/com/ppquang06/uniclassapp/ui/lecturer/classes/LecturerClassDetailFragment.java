@@ -170,7 +170,23 @@ public class LecturerClassDetailFragment extends Fragment {
         binding.rvAnnouncements.setAdapter(announcementAdapter);
 
         // Materials
-        materialAdapter = new MaterialAdapter();
+        materialAdapter = new MaterialAdapter(item -> {
+            if (item == null || item.getFileUrl() == null || item.getFileUrl().trim().isEmpty()) {
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Tệp không có đường dẫn hợp lệ", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+            try {
+                String fullUrl = com.ppquang06.uniclassapp.utils.UriFileMultipartHelper.resolveFullFileUrl(item.getFileUrl());
+                android.content.Intent intent = new android.content.Intent(android.content.Intent.ACTION_VIEW, android.net.Uri.parse(fullUrl));
+                startActivity(intent);
+            } catch (Exception e) {
+                if (getContext() != null) {
+                    Toast.makeText(requireContext(), "Không thể mở tệp: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
         materialAdapter.setOnDeleteMaterialListener(item -> {
             if (item == null || item.getId() == null) return;
             showDeleteConfirmDialog("Xác nhận xóa tài liệu", "Bạn có chắc chắn muốn xóa tài liệu này không?", () -> {
@@ -212,7 +228,7 @@ public class LecturerClassDetailFragment extends Fragment {
         });
         classScheduleAdapter.setOnDeleteScheduleListener(item -> {
             if (item == null || item.getId() == null) return;
-            showDeleteConfirmDialog("Xác nhận xóa lịch học", "Bạn có chắc chắn muốn xóa lịch học định kỳ này?", () -> {
+            showDeleteConfirmDialog("Xác nhận xóa lịch dạy", "Bạn có chắc chắn muốn xóa lịch dạy định kỳ này?", () -> {
                 viewModel.deleteClassSchedule(classId, item.getId());
             });
         });
@@ -651,6 +667,8 @@ public class LecturerClassDetailFragment extends Fragment {
         }
         if (detail.getRoom() != null && !detail.getRoom().isEmpty()) {
             room = detail.getRoom();
+        } else {
+            room = "";
         }
         if (detail.getInviteCode() != null && !detail.getInviteCode().isEmpty()) {
             inviteCode = detail.getInviteCode();

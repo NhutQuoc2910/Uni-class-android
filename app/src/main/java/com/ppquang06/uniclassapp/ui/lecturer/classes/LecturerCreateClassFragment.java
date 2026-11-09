@@ -88,7 +88,6 @@ public class LecturerCreateClassFragment extends Fragment {
         String name = binding.etClassName.getText() != null ? binding.etClassName.getText().toString().trim() : "";
         String code = binding.etClassCode.getText() != null ? binding.etClassCode.getText().toString().trim() : "";
         String semester = binding.etSemester.getText() != null ? binding.etSemester.getText().toString().trim() : "";
-        String room = binding.etRoom.getText() != null ? binding.etRoom.getText().toString().trim() : "";
 
         boolean hasError = false;
         if (TextUtils.isEmpty(name)) {
@@ -106,7 +105,7 @@ public class LecturerCreateClassFragment extends Fragment {
 
         if (hasError) return;
 
-        CreateClassRequest request = new CreateClassRequest(name, code, semester, room);
+        CreateClassRequest request = new CreateClassRequest(name, code, semester, "");
         viewModel.createClass(request);
     }
 
@@ -135,7 +134,6 @@ public class LecturerCreateClassFragment extends Fragment {
         binding.tilClassName.setError(null);
         binding.tilClassCode.setError(null);
         binding.tilSemester.setError(null);
-        binding.tilRoom.setError(null);
     }
 
     private void setLoading(boolean loading) {

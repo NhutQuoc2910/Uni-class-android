@@ -18,6 +18,7 @@ import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentClassMaterialsTabBinding;
 import com.ppquang06.uniclassapp.ui.common.adapter.MaterialAdapter;
+import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -63,7 +64,8 @@ public class ClassMaterialsTabFragment extends Fragment {
                 return;
             }
             try {
-                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(item.getFileUrl().trim()));
+                String fullUrl = UriFileMultipartHelper.resolveFullFileUrl(item.getFileUrl());
+                Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fullUrl));
                 startActivity(intent);
             } catch (Exception e) {
                 if (getContext() != null) {

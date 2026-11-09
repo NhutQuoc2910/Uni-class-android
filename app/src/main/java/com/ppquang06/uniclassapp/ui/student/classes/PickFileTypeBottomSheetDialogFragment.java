@@ -79,13 +79,15 @@ public class PickFileTypeBottomSheetDialogFragment extends BaseBottomSheetDialog
             if (getContext() != null) {
                 Toast.makeText(requireContext(), "Không thể mở bộ chọn tệp", Toast.LENGTH_SHORT).show();
             }
-            dismiss();
+            dismissAllowingStateLoss();
         }
     }
 
     private void handleFileUriSelected(Uri uri) {
         if (uri != null) {
-            String fileName = UriFileMultipartHelper.getFileName(getContext(), uri);
+            String rawFileName = UriFileMultipartHelper.getFileName(getContext(), uri);
+            String mimeType = UriFileMultipartHelper.getMimeType(getContext(), uri);
+            String fileName = UriFileMultipartHelper.ensureFileExtension(rawFileName, mimeType);
             String fileUrl = uri.toString();
 
             if (pickedListener != null) {
@@ -94,7 +96,7 @@ public class PickFileTypeBottomSheetDialogFragment extends BaseBottomSheetDialog
             if (selectedListener != null) {
                 selectedListener.onFileSelected(fileName, fileUrl);
             }
-            dismiss();
+            dismissAllowingStateLoss();
         }
     }
 

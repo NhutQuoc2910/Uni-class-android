@@ -213,7 +213,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.getClassSchedules(classId),
                 classSchedulesState,
-                "Không thể tải lịch học của lớp"
+                "Không thể tải lịch dạy của lớp"
         );
     }
 
@@ -221,7 +221,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.createClassSchedule(classId, request),
                 createScheduleState,
-                "Không thể tạo lịch học"
+                "Không thể tạo lịch dạy"
         );
     }
 
@@ -229,7 +229,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.updateClassSchedule(classId, scheduleId, request),
                 createScheduleState,
-                "Không thể cập nhật lịch học"
+                "Không thể cập nhật lịch dạy"
         );
     }
 
@@ -237,7 +237,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.getClassScheduleExceptions(classId),
                 classExceptionsState,
-                "Không thể tải danh sách ngoại lệ lịch học"
+                "Không thể tải danh sách thay đổi lịch dạy"
         );
     }
 
@@ -245,7 +245,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.createScheduleException(classId, request),
                 createExceptionState,
-                "Không thể tạo ngoại lệ lịch học"
+                "Không thể tạo thay đổi lịch dạy"
         );
     }
 
@@ -253,7 +253,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.publishScheduleException(classId, exceptionId),
                 exceptionActionState,
-                "Không thể công bố ngoại lệ lịch học"
+                "Không thể công bố thay đổi lịch dạy"
         );
     }
 
@@ -261,7 +261,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.revokeScheduleException(classId, exceptionId),
                 exceptionActionState,
-                "Không thể thu hồi ngoại lệ lịch học"
+                "Không thể thu hồi thay đổi lịch dạy"
         );
     }
 
@@ -285,7 +285,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
         executeCall(
                 classRepository.deleteClassSchedule(classId, scheduleId),
                 deleteItemState,
-                "Không thể xóa lịch học"
+                "Không thể xóa lịch dạy"
         );
     }
 

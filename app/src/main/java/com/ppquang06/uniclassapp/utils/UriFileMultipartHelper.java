@@ -13,6 +13,7 @@ import androidx.annotation.Nullable;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Locale;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -27,6 +28,49 @@ public final class UriFileMultipartHelper {
 
     private UriFileMultipartHelper() {
         // Utility class
+    }
+
+    /**
+     * Resolves a potentially relative file URL (such as "/api/v1/storage/files/...")
+     * against Constants.BASE_URL so Glide and Intent.ACTION_VIEW receive a valid HTTP(S) URL.
+     */
+    @NonNull
+    public static String resolveFullFileUrl(@Nullable String fileUrl) {
+        return resolveFullFileUrl(fileUrl, Constants.BASE_URL);
+    }
+
+    /**
+     * Resolves a potentially relative file URL against the provided baseUrl.
+     */
+    @NonNull
+    public static String resolveFullFileUrl(@Nullable String fileUrl, @Nullable String baseUrl) {
+        if (fileUrl == null || fileUrl.trim().isEmpty()) {
+            return "";
+        }
+        String cleanUrl = fileUrl.trim();
+        String lower = cleanUrl.toLowerCase(Locale.ROOT);
+        if (lower.startsWith("http://") || lower.startsWith("https://")
+                || lower.startsWith("content://") || lower.startsWith("file://")) {
+            return cleanUrl;
+        }
+
+        String base = (baseUrl != null && !baseUrl.trim().isEmpty())
+                ? baseUrl.trim()
+                : "http://70.153.85.133:8080/api/v1/";
+        while (base.endsWith("/")) {
+            base = base.substring(0, base.length() - 1);
+        }
+
+        String origin = base;
+        int apiIndex = base.indexOf("/api/");
+        if (apiIndex > 0) {
+            origin = base.substring(0, apiIndex);
+        }
+
+        if (cleanUrl.startsWith("/")) {
+            return origin + cleanUrl;
+        }
+        return base + "/" + cleanUrl;
     }
 
     /**
@@ -86,7 +130,11 @@ public final class UriFileMultipartHelper {
         }
 
         if (mimeType == null || mimeType.trim().isEmpty()) {
-            String extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+            String extension = null;
+            try {
+                extension = MimeTypeMap.getFileExtensionFromUrl(uri.toString());
+            } catch (Exception ignored) {
+            }
             if (extension == null || extension.isEmpty()) {
                 String fileName = getFileName(context, uri);
                 int dotIndex = fileName.lastIndexOf('.');
@@ -95,11 +143,160 @@ public final class UriFileMultipartHelper {
                 }
             }
             if (extension != null && !extension.isEmpty()) {
-                mimeType = MimeTypeMap.getSingleton().getMimeTypeFromExtension(extension.toLowerCase());
+                try {
+                    MimeTypeMap map = MimeTypeMap.getSingleton();
+                    if (map != null) {
+                        mimeType = map.getMimeTypeFromExtension(extension.toLowerCase(Locale.ROOT));
+                    }
+                } catch (Exception ignored) {
+                }
+                if (mimeType == null || mimeType.trim().isEmpty()) {
+                    mimeType = inferMimeTypeFromExtension(extension);
+                }
             }
         }
 
         return (mimeType != null && !mimeType.trim().isEmpty()) ? mimeType : DEFAULT_MIME_TYPE;
+    }
+
+    /**
+     * Ensures the file name has a valid extension matching its MIME type if the URI display name
+     * lacks an extension or defaulted to ".bin".
+     */
+    @NonNull
+    public static String ensureFileExtension(@NonNull String fileName, @Nullable String mimeType) {
+        String cleanName = fileName.trim();
+        if (cleanName.isEmpty()) {
+            cleanName = DEFAULT_FILE_NAME;
+        }
+        int dotIndex = cleanName.lastIndexOf('.');
+        boolean hasExtension = dotIndex > 0 && dotIndex < cleanName.length() - 1;
+        boolean isBinFallback = cleanName.toLowerCase(Locale.ROOT).endsWith(".bin");
+
+        if (hasExtension && !isBinFallback) {
+            return cleanName;
+        }
+
+        String ext = inferExtensionFromMimeType(mimeType);
+        if (ext.isEmpty()) {
+            return cleanName;
+        }
+
+        if (isBinFallback) {
+            return cleanName.substring(0, cleanName.length() - 4) + "." + ext;
+        }
+        return cleanName + "." + ext;
+    }
+
+    @NonNull
+    private static String inferExtensionFromMimeType(@Nullable String mimeType) {
+        if (mimeType == null || mimeType.trim().isEmpty()) {
+            return "";
+        }
+        String clean = mimeType.trim().toLowerCase(Locale.ROOT);
+        int semi = clean.indexOf(';');
+        if (semi != -1) {
+            clean = clean.substring(0, semi).trim();
+        }
+        switch (clean) {
+            case "application/pdf":
+                return "pdf";
+            case "application/msword":
+                return "doc";
+            case "application/vnd.openxmlformats-officedocument.wordprocessingml.document":
+                return "docx";
+            case "application/vnd.ms-excel":
+                return "xls";
+            case "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet":
+                return "xlsx";
+            case "application/vnd.ms-powerpoint":
+                return "ppt";
+            case "application/vnd.openxmlformats-officedocument.presentationml.presentation":
+                return "pptx";
+            case "application/zip":
+            case "application/x-zip-compressed":
+            case "application/x-zip":
+                return "zip";
+            case "application/vnd.rar":
+            case "application/x-rar-compressed":
+            case "application/x-rar":
+                return "rar";
+            case "application/x-7z-compressed":
+                return "7z";
+            case "text/plain":
+                return "txt";
+            case "image/jpeg":
+            case "image/jpg":
+                return "jpg";
+            case "image/png":
+                return "png";
+            case "image/webp":
+                return "webp";
+            case "image/gif":
+                return "gif";
+            case "image/heic":
+                return "heic";
+            case "image/heif":
+                return "heif";
+            default:
+                try {
+                    MimeTypeMap map = MimeTypeMap.getSingleton();
+                    if (map != null) {
+                        String mapped = map.getExtensionFromMimeType(clean);
+                        if (mapped != null) {
+                            return mapped;
+                        }
+                    }
+                } catch (Exception ignored) {
+                }
+                return "";
+        }
+    }
+
+    @NonNull
+    private static String inferMimeTypeFromExtension(@Nullable String extension) {
+        if (extension == null || extension.trim().isEmpty()) {
+            return DEFAULT_MIME_TYPE;
+        }
+        switch (extension.trim().toLowerCase(Locale.ROOT)) {
+            case "pdf":
+                return "application/pdf";
+            case "doc":
+                return "application/msword";
+            case "docx":
+                return "application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+            case "xls":
+                return "application/vnd.ms-excel";
+            case "xlsx":
+                return "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
+            case "ppt":
+                return "application/vnd.ms-powerpoint";
+            case "pptx":
+                return "application/vnd.openxmlformats-officedocument.presentationml.presentation";
+            case "zip":
+                return "application/zip";
+            case "rar":
+                return "application/vnd.rar";
+            case "7z":
+                return "application/x-7z-compressed";
+            case "txt":
+                return "text/plain";
+            case "jpg":
+            case "jpeg":
+                return "image/jpeg";
+            case "png":
+                return "image/png";
+            case "webp":
+                return "image/webp";
+            case "gif":
+                return "image/gif";
+            case "heic":
+                return "image/heic";
+            case "heif":
+                return "image/heif";
+            default:
+                return DEFAULT_MIME_TYPE;
+        }
     }
 
     /**
@@ -136,8 +333,9 @@ public final class UriFileMultipartHelper {
             @NonNull Uri uri,
             @NonNull String partName
     ) throws IOException {
-        String fileName = getFileName(context, uri);
+        String rawFileName = getFileName(context, uri);
         String mimeType = getMimeType(context, uri);
+        String fileName = ensureFileExtension(rawFileName, mimeType);
         byte[] bytes = readBytesFromUri(context, uri);
 
         MediaType mediaType = MediaType.parse(mimeType);

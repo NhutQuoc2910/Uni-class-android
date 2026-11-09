@@ -43,7 +43,7 @@ public class HomeActivity extends AppCompatActivity {
         UserResponse user = SessionManager.getInstance(this).getUser();
         if (user != null) {
             String name = !TextUtils.isEmpty(user.getFullName()) ? user.getFullName() : "Người dùng";
-            binding.tvGreetingUser.setText("Xin chào, " + name + " 👋");
+            binding.tvGreetingUser.setText("Xin chào,\n" + name + " 👋");
 
             String roleDisplay = "Sinh viên";
             if ("LECTURER".equalsIgnoreCase(user.getRole())) {

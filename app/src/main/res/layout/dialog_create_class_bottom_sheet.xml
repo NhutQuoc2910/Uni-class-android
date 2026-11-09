@@ -92,60 +92,29 @@
             android:textColor="@color/uc_text_primary" />
     </com.google.android.material.textfield.TextInputLayout>
 
-    <!-- Field 3: Học kỳ & Field 4: Phòng học Side by Side -->
-    <LinearLayout
+    <!-- Field 3: Học kỳ -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilSemester"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:orientation="horizontal">
+        android:hint="@string/label_semester"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxStrokeColor="@color/p2_teal"
+        app:errorEnabled="true">
 
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilSemester"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etSemester"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="6dp"
-            android:layout_weight="1"
-            android:hint="@string/label_semester"
-            app:boxCornerRadiusBottomEnd="16dp"
-            app:boxCornerRadiusBottomStart="16dp"
-            app:boxCornerRadiusTopEnd="16dp"
-            app:boxCornerRadiusTopStart="16dp"
-            app:boxStrokeColor="@color/p2_teal"
-            app:errorEnabled="true">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etSemester"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="text"
-                android:maxLines="1"
-                android:textColor="@color/uc_text_primary" />
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/tilRoom"
-            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="6dp"
-            android:layout_weight="1"
-            android:hint="@string/label_room"
-            app:boxCornerRadiusBottomEnd="16dp"
-            app:boxCornerRadiusBottomStart="16dp"
-            app:boxCornerRadiusTopEnd="16dp"
-            app:boxCornerRadiusTopStart="16dp"
-            app:boxStrokeColor="@color/p2_teal">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etRoom"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:inputType="textCapCharacters"
-                android:maxLines="1"
-                android:textColor="@color/uc_text_primary" />
-        </com.google.android.material.textfield.TextInputLayout>
-    </LinearLayout>
+            android:inputType="text"
+            android:maxLines="1"
+            android:textColor="@color/uc_text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
 
     <!-- Loading Indicator -->
     <ProgressBar

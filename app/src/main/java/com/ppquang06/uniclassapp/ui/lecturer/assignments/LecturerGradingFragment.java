@@ -329,8 +329,9 @@ public class LecturerGradingFragment extends Fragment {
         }
 
         try {
+            String fullUrl = com.ppquang06.uniclassapp.utils.UriFileMultipartHelper.resolveFullFileUrl(item.getFileUrl());
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(item.getFileUrl()));
+            intent.setData(Uri.parse(fullUrl));
             startActivity(intent);
         } catch (Exception e) {
             Toast.makeText(requireContext(), "Không tìm thấy ứng dụng mở tệp: " + item.getFileUrl(), Toast.LENGTH_SHORT).show();

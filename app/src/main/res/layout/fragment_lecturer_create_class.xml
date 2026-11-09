@@ -101,24 +101,6 @@
                         android:text="HK1 (2026-2027)" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <!-- Phòng học -->
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/tilRoom"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/space_12"
-                    android:hint="@string/label_room"
-                    app:boxStrokeColor="@color/color_primary">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/etRoom"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:inputType="textCapCharacters"
-                        android:maxLines="1" />
-                </com.google.android.material.textfield.TextInputLayout>
-
             </LinearLayout>
 
             <!-- Loading indicator -->

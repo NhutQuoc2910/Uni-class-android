@@ -17,6 +17,10 @@ public class CreateClassRequest {
 
     public CreateClassRequest() {}
 
+    public CreateClassRequest(String name, String code, String semester) {
+        this(name, code, semester, "");
+    }
+
     public CreateClassRequest(String name, String code, String semester, String room) {
         this.name = name;
         this.code = code;

@@ -13,7 +13,6 @@ import androidx.lifecycle.ViewModelProvider;
 
 import com.ppquang06.uniclassapp.R;
 import com.ppquang06.uniclassapp.data.model.request.CreateMaterialRequest;
-import com.ppquang06.uniclassapp.data.model.response.ClassDetailResponse;
 import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.databinding.DialogUploadMaterialBottomSheetBinding;
 import com.ppquang06.uniclassapp.ui.common.BaseBottomSheetDialogFragment;
@@ -91,13 +90,14 @@ public class UploadMaterialBottomSheetDialogFragment extends BaseBottomSheetDial
                     binding.btnPickMaterialFile.setEnabled(true);
                     FileUploadResponse data = state.getData();
                     if (data != null) {
-                        String fileUrl = data.getFileUrl();
+                        String fileUrl = UriFileMultipartHelper.resolveFullFileUrl(data.getFileUrl());
                         binding.etMaterialUrl.setText(fileUrl);
                         binding.tilMaterialUrl.setError(null);
                         String resolvedName = data.getFileName() != null && !data.getFileName().isEmpty()
                                 ? data.getFileName() : lastPickedFileName;
                         binding.tvUploadedFileName.setText("Đã tải lên: " + resolvedName);
                     }
+                    viewModel.resetUploadFileState();
                     if (getContext() != null) {
                         Toast.makeText(requireContext(), "Tải tệp lên thành công", Toast.LENGTH_SHORT).show();
                     }
@@ -109,6 +109,7 @@ public class UploadMaterialBottomSheetDialogFragment extends BaseBottomSheetDial
                     binding.tvUploadedFileName.setVisibility(View.GONE);
                     String msg = state.getMessage() != null && !state.getMessage().trim().isEmpty()
                             ? state.getMessage() : "Tải tệp lên thất bại";
+                    viewModel.resetUploadFileState();
                     if (getContext() != null) {
                         Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
                     }
@@ -206,6 +207,8 @@ public class UploadMaterialBottomSheetDialogFragment extends BaseBottomSheetDial
         }
 
         if (hasError || getContext() == null) return;
+
+        url = UriFileMultipartHelper.resolveFullFileUrl(url);
 
         String fileType = "PDF";
         int checkedId = binding.chipGroupFileType.getCheckedChipId();

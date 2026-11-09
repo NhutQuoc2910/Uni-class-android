@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_16"
         android:hint="@string/label_announcement_title"
+        app:placeholderText="@string/hint_announcement_title"
         app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
         app:boxCornerRadiusBottomStart="@dimen/radius_sm"
         app:boxCornerRadiusTopEnd="@dimen/radius_sm"
@@ -49,7 +50,6 @@
             android:id="@+id/etAnnouncementTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_announcement_title"
             android:inputType="textCapSentences"
             android:maxLines="2"
             android:textColor="@color/text_primary" />
@@ -63,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_12"
         android:hint="@string/label_announcement_content"
+        app:placeholderText="@string/hint_announcement_content"
         app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
         app:boxCornerRadiusBottomStart="@dimen/radius_sm"
         app:boxCornerRadiusTopEnd="@dimen/radius_sm"
@@ -74,7 +75,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="top|start"
-            android:hint="@string/hint_announcement_content"
             android:inputType="textMultiLine|textCapSentences"
             android:minLines="3"
             android:textColor="@color/text_primary" />

@@ -129,7 +129,7 @@ public class CreateScheduleExceptionBottomSheetDialogFragment extends BaseBottom
         }
 
         if (displayList.isEmpty()) {
-            displayList.add("Chưa có lịch học định kỳ");
+            displayList.add("Chưa có lịch dạy định kỳ");
         }
 
         ArrayAdapter<String> adapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_dropdown_item_1line, displayList);

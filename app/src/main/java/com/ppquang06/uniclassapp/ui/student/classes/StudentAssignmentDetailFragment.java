@@ -181,7 +181,7 @@ public class StudentAssignmentDetailFragment extends Fragment {
                     isUploadingFile = false;
                     FileUploadResponse data = state.getData();
                     if (data != null) {
-                        selectedFileUrl = data.getFileUrl();
+                        selectedFileUrl = UriFileMultipartHelper.resolveFullFileUrl(data.getFileUrl());
                         if (data.getFileName() != null && !data.getFileName().trim().isEmpty()) {
                             selectedFileName = data.getFileName();
                         }
@@ -345,6 +345,18 @@ public class StudentAssignmentDetailFragment extends Fragment {
         // 3. Submission Section
         boolean hasChosenFile = selectedFileName != null && !selectedFileName.trim().isEmpty();
 
+        if (isSubmitted && currentDetail.getSubmittedFileUrl() != null && !currentDetail.getSubmittedFileUrl().trim().isEmpty()) {
+            final String fullSubmittedUrl = UriFileMultipartHelper.resolveFullFileUrl(currentDetail.getSubmittedFileUrl());
+            binding.layoutSubmittedFile.setOnClickListener(v -> {
+                try {
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fullSubmittedUrl));
+                    startActivity(intent);
+                } catch (Exception e) {
+                    Toast.makeText(requireContext(), "Không thể mở tệp bài nộp", Toast.LENGTH_SHORT).show();
+                }
+            });
+        }
+
         if (isSubmitted && !hasChosenFile) {
             // State 5: Submitted
             binding.layoutDropzone.setVisibility(View.GONE);
@@ -436,9 +448,10 @@ public class StudentAssignmentDetailFragment extends Fragment {
             binding.layoutAttachment.setVisibility(View.VISIBLE);
             String attName = extractFileNameFromUrl(attachmentUrl);
             binding.tvAttachmentName.setText(attName != null && !attName.isEmpty() ? attName : getString(R.string.assignment_attachment_title));
+            final String fullAttachmentUrl = UriFileMultipartHelper.resolveFullFileUrl(attachmentUrl);
             binding.layoutAttachment.setOnClickListener(v -> {
                 try {
-                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(attachmentUrl));
+                    Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(fullAttachmentUrl));
                     startActivity(intent);
                 } catch (Exception e) {
                     Toast.makeText(requireContext(), "Không thể mở liên kết đính kèm", Toast.LENGTH_SHORT).show();

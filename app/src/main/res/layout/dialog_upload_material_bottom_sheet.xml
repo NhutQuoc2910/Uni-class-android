@@ -39,6 +39,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_16"
         android:hint="@string/label_material_title"
+        app:placeholderText="@string/hint_material_title"
         app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
         app:boxCornerRadiusBottomStart="@dimen/radius_sm"
         app:boxCornerRadiusTopEnd="@dimen/radius_sm"
@@ -49,7 +50,6 @@
             android:id="@+id/etMaterialTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_material_title"
             android:inputType="textCapSentences"
             android:maxLines="2"
             android:textColor="@color/text_primary" />
@@ -63,6 +63,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/space_12"
         android:hint="@string/label_material_url"
+        app:placeholderText="@string/hint_material_url"
         app:boxCornerRadiusBottomEnd="@dimen/radius_sm"
         app:boxCornerRadiusBottomStart="@dimen/radius_sm"
         app:boxCornerRadiusTopEnd="@dimen/radius_sm"
@@ -76,7 +77,6 @@
             android:id="@+id/etMaterialUrl"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/hint_material_url"
             android:inputType="textUri"
             android:maxLines="2"
             android:textColor="@color/text_primary" />
