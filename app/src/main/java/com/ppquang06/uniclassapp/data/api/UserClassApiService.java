@@ -116,6 +116,9 @@ public interface UserClassApiService {
     @PUT("classes/{classId}/archive")
     Call<ApiResponse<CourseClassItem>> archiveClass(@Path("classId") String classId);
 
+    @DELETE("classes/{classId}")
+    Call<ApiResponse<Void>> deleteClass(@Path("classId") String classId);
+
     @GET("classes/{classId}/members")
     Call<ApiResponse<List<ClassMemberItemResponse>>> getClassMembers(@Path("classId") String classId);
 

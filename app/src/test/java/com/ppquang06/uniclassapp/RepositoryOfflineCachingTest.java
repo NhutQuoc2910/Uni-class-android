@@ -278,6 +278,9 @@ public class RepositoryOfflineCachingTest {
         public Call<ApiResponse<CourseClassItem>> archiveClass(String classId) { return null; }
 
         @Override
+        public Call<ApiResponse<Void>> deleteClass(String classId) { return null; }
+
+        @Override
         public Call<ApiResponse<List<ClassMemberItemResponse>>> getClassMembers(String classId) { return null; }
 
         @Override

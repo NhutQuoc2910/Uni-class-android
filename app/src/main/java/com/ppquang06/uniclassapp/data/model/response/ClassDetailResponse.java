@@ -27,6 +27,9 @@ public class ClassDetailResponse {
     @SerializedName("inviteCode")
     private String inviteCode;
 
+    @SerializedName("status")
+    private String status;
+
     @SerializedName("enrolledCount")
     private int enrolledCount;
 
@@ -102,6 +105,14 @@ public class ClassDetailResponse {
 
     public void setLecturerName(String lecturerName) {
         this.lecturerName = lecturerName;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public String getInviteCode() {

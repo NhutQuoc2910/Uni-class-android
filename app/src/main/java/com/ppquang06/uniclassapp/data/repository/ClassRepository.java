@@ -106,6 +106,10 @@ public class ClassRepository extends BaseRepository {
         return apiService.archiveClass(classId);
     }
 
+    public Call<ApiResponse<Void>> deleteClass(String classId) {
+        return apiService.deleteClass(classId);
+    }
+
     public Call<ApiResponse<List<ClassMemberItemResponse>>> getClassMembers(String classId) {
         return apiService.getClassMembers(classId);
     }

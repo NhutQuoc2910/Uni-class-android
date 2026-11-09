@@ -528,6 +528,38 @@
                         android:text="@string/empty_class_exceptions"
                         android:textColor="@color/uc_text_secondary"
                         android:visibility="gone" />
+
+                    <!-- Class Lifecycle Action Button (Delete / Archive) -->
+                    <LinearLayout
+                        android:id="@+id/rowClassLifecycleAction"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="32dp"
+                        android:background="@drawable/bg_unified_logout_btn"
+                        android:clickable="true"
+                        android:focusable="true"
+                        android:gravity="center"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivClassLifecycleIcon"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_delete"
+                            app:tint="@color/color_error" />
+
+                        <TextView
+                            android:id="@+id/tvClassLifecycleText"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/btn_delete_class_permanently"
+                            android:textColor="@color/color_error"
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
+                    </LinearLayout>
                 </LinearLayout>
             </androidx.core.widget.NestedScrollView>
         </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

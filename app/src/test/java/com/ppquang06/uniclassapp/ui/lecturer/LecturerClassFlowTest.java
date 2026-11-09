@@ -270,6 +270,11 @@ public class LecturerClassFlowTest {
         String json = gson.toJson(response);
         ClassDetailResponse deserialized = gson.fromJson(json, ClassDetailResponse.class);
 
+        response.setStatus("ARCHIVED");
+        json = gson.toJson(response);
+        deserialized = gson.fromJson(json, ClassDetailResponse.class);
+        assertEquals("ARCHIVED", deserialized.getStatus());
+
         assertEquals(0, deserialized.getEnrolledCount());
         assertEquals(0, deserialized.getAttendanceRate());
         assertEquals(0, deserialized.getPresentCount());

@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import android.content.res.ColorStateList;
+import androidx.core.content.ContextCompat;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -352,6 +355,67 @@ public class LecturerClassDetailFragment extends Fragment {
             dialog.setOnExceptionSavedListener(() -> viewModel.loadClassExceptions(classId));
             dialog.show(getChildFragmentManager(), "CreateScheduleExceptionBottomSheet");
         });
+
+        setupClassLifecycleButton();
+    }
+
+    private void setupClassLifecycleButton() {
+        updateClassLifecycleButtonUi();
+        binding.rowClassLifecycleAction.setOnClickListener(v -> {
+            if ("ARCHIVED".equalsIgnoreCase(status)) {
+                return;
+            }
+            if (getContext() == null) return;
+            if (enrolledCount == 0) {
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.dialog_delete_class_title)
+                        .setMessage(R.string.dialog_delete_class_msg)
+                        .setNegativeButton(R.string.btn_cancel, null)
+                        .setPositiveButton(R.string.btn_confirm_delete_class, (dialog, which) -> {
+                            viewModel.deleteClass(classId);
+                        })
+                        .show();
+            } else {
+                new MaterialAlertDialogBuilder(requireContext())
+                        .setTitle(R.string.dialog_archive_class_with_students_title)
+                        .setMessage(getString(R.string.dialog_archive_class_with_students_msg, enrolledCount))
+                        .setNegativeButton(R.string.btn_cancel, null)
+                        .setPositiveButton(R.string.btn_confirm_archive_class, (dialog, which) -> {
+                            viewModel.archiveClass(classId);
+                        })
+                        .show();
+            }
+        });
+    }
+
+    private void updateClassLifecycleButtonUi() {
+        if (binding == null || getContext() == null) return;
+
+        if ("ARCHIVED".equalsIgnoreCase(status)) {
+            int secondaryColor = ContextCompat.getColor(requireContext(), R.color.uc_text_secondary);
+            binding.rowClassLifecycleAction.setEnabled(false);
+            binding.rowClassLifecycleAction.setAlpha(0.5f);
+            binding.ivClassLifecycleIcon.setImageResource(R.drawable.ic_check_circle);
+            binding.ivClassLifecycleIcon.setImageTintList(ColorStateList.valueOf(secondaryColor));
+            binding.tvClassLifecycleText.setText(R.string.status_class_archived_label);
+            binding.tvClassLifecycleText.setTextColor(secondaryColor);
+        } else if (enrolledCount == 0) {
+            int errorColor = ContextCompat.getColor(requireContext(), R.color.color_error);
+            binding.rowClassLifecycleAction.setEnabled(true);
+            binding.rowClassLifecycleAction.setAlpha(1.0f);
+            binding.ivClassLifecycleIcon.setImageResource(R.drawable.ic_delete);
+            binding.ivClassLifecycleIcon.setImageTintList(ColorStateList.valueOf(errorColor));
+            binding.tvClassLifecycleText.setText(R.string.btn_delete_class_permanently);
+            binding.tvClassLifecycleText.setTextColor(errorColor);
+        } else {
+            int tealColor = ContextCompat.getColor(requireContext(), R.color.p2_teal);
+            binding.rowClassLifecycleAction.setEnabled(true);
+            binding.rowClassLifecycleAction.setAlpha(1.0f);
+            binding.ivClassLifecycleIcon.setImageResource(R.drawable.ic_lock);
+            binding.ivClassLifecycleIcon.setImageTintList(ColorStateList.valueOf(tealColor));
+            binding.tvClassLifecycleText.setText(R.string.btn_archive_class);
+            binding.tvClassLifecycleText.setTextColor(tealColor);
+        }
     }
 
     private void setupSwipeRefresh() {
@@ -373,7 +437,11 @@ public class LecturerClassDetailFragment extends Fragment {
                     binding.pbLoading.setVisibility(View.GONE);
                     binding.swipeRefresh.setRefreshing(false);
                     if (state.getData() != null) {
-                        bindDetailData(state.getData());
+                        ClassDetailResponse data = state.getData();
+                        enrolledCount = data.getEnrolledCount();
+                        status = data.getStatus() != null ? data.getStatus() : (status != null ? status : "ACTIVE");
+                        bindDetailData(data);
+                        updateClassLifecycleButtonUi();
                     }
                     break;
                 case ERROR:
@@ -500,6 +568,65 @@ public class LecturerClassDetailFragment extends Fragment {
                     break;
             }
         });
+
+        viewModel.getDeleteClassState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbLoading.setVisibility(View.VISIBLE);
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), R.string.toast_class_deleted_success, Toast.LENGTH_SHORT).show();
+                    }
+                    viewModel.resetDeleteClassState();
+                    try {
+                        Navigation.findNavController(requireView()).navigateUp();
+                    } catch (Exception ignored) {}
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Xóa lớp học thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    viewModel.resetDeleteClassState();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
+
+        viewModel.getArchiveClassState().observe(getViewLifecycleOwner(), state -> {
+            if (state == null || binding == null) return;
+            switch (state.getStatus()) {
+                case LOADING:
+                    binding.pbLoading.setVisibility(View.VISIBLE);
+                    break;
+                case SUCCESS:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), R.string.toast_class_archived_success, Toast.LENGTH_SHORT).show();
+                    }
+                    status = "ARCHIVED";
+                    updateClassLifecycleButtonUi();
+                    viewModel.resetArchiveClassState();
+                    break;
+                case ERROR:
+                    binding.pbLoading.setVisibility(View.GONE);
+                    String msg = (state.getMessage() != null && !state.getMessage().trim().isEmpty())
+                            ? state.getMessage() : "Lưu trữ lớp thất bại";
+                    if (getContext() != null) {
+                        Toast.makeText(requireContext(), msg, Toast.LENGTH_SHORT).show();
+                    }
+                    viewModel.resetArchiveClassState();
+                    break;
+                case IDLE:
+                    break;
+            }
+        });
     }
 
     private void loadClassDetail() {
@@ -535,7 +662,11 @@ public class LecturerClassDetailFragment extends Fragment {
 
         // 3 Metric Cards
         enrolledCount = Math.max(0, detail.getEnrolledCount());
+        if (detail.getStatus() != null && !detail.getStatus().isEmpty()) {
+            status = detail.getStatus();
+        }
         binding.tvEnrolledCount.setText(String.valueOf(enrolledCount));
+        updateClassLifecycleButtonUi();
 
         int assignCount = (detail.getAssignments() != null) ? detail.getAssignments().size() : 0;
         binding.tvAssignmentCount.setText(String.valueOf(assignCount));

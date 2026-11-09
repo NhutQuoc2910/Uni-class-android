@@ -39,6 +39,7 @@ public class LecturerManagementViewModel extends BaseViewModel {
     private final MutableLiveData<UiState<CourseClassItem>> createClassState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<ClassDetailResponse>> classDetailState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<CourseClassItem>> archiveClassState = new MutableLiveData<>(UiState.idle());
+    private final MutableLiveData<UiState<Void>> deleteClassState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<List<ClassMemberItemResponse>>> membersState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<Void>> removeMemberState = new MutableLiveData<>(UiState.idle());
     private final MutableLiveData<UiState<ClassDetailResponse.MaterialItem>> createMaterialState = new MutableLiveData<>(UiState.idle());
@@ -79,6 +80,10 @@ public class LecturerManagementViewModel extends BaseViewModel {
 
     public LiveData<UiState<CourseClassItem>> getArchiveClassState() {
         return archiveClassState;
+    }
+
+    public LiveData<UiState<Void>> getDeleteClassState() {
+        return deleteClassState;
     }
 
     public LiveData<UiState<List<ClassMemberItemResponse>>> getMembersState() {
@@ -153,6 +158,14 @@ public class LecturerManagementViewModel extends BaseViewModel {
                 classRepository.archiveClass(classId),
                 archiveClassState,
                 "Không thể lưu trữ lớp học"
+        );
+    }
+
+    public void deleteClass(@NonNull String classId) {
+        executeCall(
+                classRepository.deleteClass(classId),
+                deleteClassState,
+                "Xóa lớp học thất bại"
         );
     }
 
@@ -282,6 +295,10 @@ public class LecturerManagementViewModel extends BaseViewModel {
 
     public void resetArchiveClassState() {
         dispatchState(archiveClassState, UiState.idle());
+    }
+
+    public void resetDeleteClassState() {
+        dispatchState(deleteClassState, UiState.idle());
     }
 
     public void resetRemoveMemberState() {

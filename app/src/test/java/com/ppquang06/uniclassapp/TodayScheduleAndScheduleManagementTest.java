@@ -442,6 +442,28 @@ public class TodayScheduleAndScheduleManagementTest {
     }
 
     @Test
+    public void deleteClass_dispatchesSuccessState() {
+        UserClassApiService mockApi = createMockUserClassApi((proxy, method, args) -> {
+            String name = method.getName();
+            if ("deleteClass".equals(name)) {
+                return new ImmediateCall<>(createSuccess(null));
+            }
+            return null;
+        });
+
+        ClassRepository classRepository = new ClassRepository(mockApi);
+        LecturerManagementViewModel viewModel = new LecturerManagementViewModel(classRepository);
+
+        viewModel.deleteClass("class-123");
+        UiState<Void> state = viewModel.getDeleteClassState().getValue();
+        assertNotNull(state);
+        assertTrue(state.isSuccess());
+
+        viewModel.resetDeleteClassState();
+        assertTrue(viewModel.getDeleteClassState().getValue().isIdle());
+    }
+
+    @Test
     public void testAdapters_deleteListeners() {
         final boolean[] notifDeleted = {false};
         com.ppquang06.uniclassapp.ui.common.adapter.NotificationAdapter notifAdapter =
