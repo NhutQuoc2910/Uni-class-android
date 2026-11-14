@@ -157,18 +157,22 @@
 
                         <com.google.android.material.button.MaterialButton
                             android:id="@+id/btnScanHero"
+                            style="@style/Widget.EduLens.Button.Filled"
                             android:layout_width="match_parent"
-                            android:layout_height="44dp"
+                            android:layout_height="wrap_content"
                             android:layout_marginTop="12dp"
-                            android:backgroundTint="#C5BAC4"
+                            android:minHeight="44dp"
+                            android:paddingHorizontal="12dp"
+                            android:paddingVertical="8dp"
                             android:text="@string/btn_scan_now"
                             android:textColor="#191D23"
                             android:textSize="13sp"
-                            android:textStyle="bold"
+                            app:backgroundTint="#C5BAC4"
                             app:cornerRadius="12dp"
                             app:icon="@drawable/ic_qr_code"
                             app:iconGravity="textStart"
                             app:iconPadding="8dp"
+                            app:iconSize="16dp"
                             app:iconTint="#191D23" />
                     </LinearLayout>
                 </LinearLayout>

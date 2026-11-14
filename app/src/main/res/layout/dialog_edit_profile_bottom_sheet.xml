@@ -93,6 +93,193 @@
             android:textColor="@color/uc_text_primary" />
     </com.google.android.material.textfield.TextInputLayout>
 
+    <!-- Section Divider: Thông tin học vụ & định danh -->
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:letterSpacing="0.04"
+        android:text="THÔNG TIN ĐỊNH DANH &amp; HỌC VỤ"
+        android:textColor="@color/uc_text_secondary"
+        android:textSize="11sp"
+        android:textStyle="bold" />
+
+    <!-- Input MSSV / MSGV -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilAcademicId"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:hint="Mã số sinh viên (MSSV)"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxStrokeColor="@color/p2_teal">
+
+        <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/etAcademicId"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="textNoSuggestions"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:textColor="@color/uc_text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Dropdown Khoa / Bộ môn -->
+    <com.google.android.material.textfield.TextInputLayout
+        android:id="@+id/tilFaculty"
+        style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:hint="Khoa / Bộ môn"
+        app:boxCornerRadiusBottomEnd="16dp"
+        app:boxCornerRadiusBottomStart="16dp"
+        app:boxCornerRadiusTopEnd="16dp"
+        app:boxCornerRadiusTopStart="16dp"
+        app:boxStrokeColor="@color/p2_teal">
+
+        <AutoCompleteTextView
+            android:id="@+id/actvFaculty"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="none"
+            android:textColor="@color/uc_text_primary" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+    <!-- Student Specific Academic Fields -->
+    <LinearLayout
+        android:id="@+id/layoutStudentFields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <!-- Dropdown Hệ đào tạo -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilEducationProgram"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Hệ đào tạo"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/p2_teal">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvEducationProgram"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/uc_text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Input Niên khóa -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilCohort"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Niên khóa (VD: Khóa K22 (2022 - 2026))"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/p2_teal">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/etCohort"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:maxLines="1"
+                android:singleLine="true"
+                android:textColor="@color/uc_text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
+    <!-- Lecturer Specific Academic Fields -->
+    <LinearLayout
+        android:id="@+id/layoutLecturerFields"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:visibility="gone">
+
+        <!-- Dropdown Học vị -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAcademicDegree"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Học vị"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/p2_teal">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvAcademicDegree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/uc_text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dropdown Học hàm -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilAcademicRank"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Học hàm (Có thể để trống)"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/p2_teal">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvAcademicRank"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/uc_text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <!-- Dropdown Chức vụ -->
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/tilPosition"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:hint="Chức vụ"
+            app:boxCornerRadiusBottomEnd="16dp"
+            app:boxCornerRadiusBottomStart="16dp"
+            app:boxCornerRadiusTopEnd="16dp"
+            app:boxCornerRadiusTopStart="16dp"
+            app:boxStrokeColor="@color/p2_teal">
+
+            <AutoCompleteTextView
+                android:id="@+id/actvPosition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="none"
+                android:textColor="@color/uc_text_primary" />
+        </com.google.android.material.textfield.TextInputLayout>
+    </LinearLayout>
+
     <!-- Loading Indicator -->
     <ProgressBar
         android:id="@+id/pbLoading"

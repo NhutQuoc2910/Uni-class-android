@@ -25,8 +25,10 @@ import com.ppquang06.uniclassapp.data.model.response.FileUploadResponse;
 import com.ppquang06.uniclassapp.data.model.response.UserResponse;
 import com.ppquang06.uniclassapp.databinding.FragmentLecturerProfileBinding;
 import com.ppquang06.uniclassapp.ui.common.profile.ChangePasswordBottomSheetDialogFragment;
+import com.ppquang06.uniclassapp.ui.common.profile.DigitalIdCardBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.ui.common.profile.EditProfileBottomSheetDialogFragment;
 import com.ppquang06.uniclassapp.ui.common.profile.ProfileViewModel;
+import com.ppquang06.uniclassapp.utils.AcademicProfileHelper;
 import com.ppquang06.uniclassapp.utils.SessionManager;
 import com.ppquang06.uniclassapp.utils.ThemeHelper;
 import com.ppquang06.uniclassapp.utils.UriFileMultipartHelper;
@@ -88,7 +90,9 @@ public class LecturerProfileFragment extends Fragment {
             if (state.isSuccess() && state.getData() != null) {
                 UserResponse liveUser = state.getData();
                 if (getContext() != null) {
-                    SessionManager.getInstance(requireContext()).saveUser(liveUser);
+                    SessionManager sm = SessionManager.getInstance(requireContext());
+                    AcademicProfileHelper.mergeCachedAcademicFieldsIfNull(sm.getUser(), liveUser);
+                    sm.saveUser(liveUser);
                 }
                 bindUserData(liveUser);
             }
@@ -132,7 +136,9 @@ public class LecturerProfileFragment extends Fragment {
                 UserResponse updated = state.getData();
                 profileViewModel.resetUpdateProfileState();
                 if (updated != null && getContext() != null) {
-                    SessionManager.getInstance(requireContext()).saveUser(updated);
+                    SessionManager sm = SessionManager.getInstance(requireContext());
+                    AcademicProfileHelper.mergeCachedAcademicFieldsIfNull(sm.getUser(), updated);
+                    sm.saveUser(updated);
                     bindUserData(updated);
                     Toast.makeText(requireContext(), "Cập nhật ảnh đại diện thành công!", Toast.LENGTH_SHORT).show();
                 }
@@ -177,12 +183,17 @@ public class LecturerProfileFragment extends Fragment {
                 binding.tvAvatarInitial.setText(initial);
             }
 
-            String roleName = getString(R.string.role_badge_lecturer);
-            String idStr = !TextUtils.isEmpty(user.getLecturerId()) ? ("MSGV: " + user.getLecturerId())
-                    : (!TextUtils.isEmpty(user.getEmail()) ? user.getEmail() : roleName);
+            String lecturerId = AcademicProfileHelper.resolveLecturerId(user);
+            String idStr = !AcademicProfileHelper.NOT_SET_LABEL.equals(lecturerId)
+                    ? ("MSGV: " + lecturerId)
+                    : (!TextUtils.isEmpty(user.getEmail()) ? user.getEmail() : getString(R.string.role_badge_lecturer));
             binding.tvUserSubtitle.setText(idStr);
 
             binding.tvRoleBadge.setText(R.string.role_badge_lecturer);
+            binding.tvFaculty.setText(AcademicProfileHelper.resolveFaculty(user));
+            binding.tvPosition.setText(AcademicProfileHelper.resolvePosition(user));
+            binding.tvDegree.setText(AcademicProfileHelper.formatAcademicTitle(user));
+            binding.tvAcademicStatus.setText(AcademicProfileHelper.resolveLecturerStatus(user));
 
             binding.tvContactFullName.setText(!TextUtils.isEmpty(user.getFullName())
                     ? user.getFullName() : getString(R.string.profile_not_set));
@@ -208,6 +219,9 @@ public class LecturerProfileFragment extends Fragment {
 
     private void setupActions() {
         binding.layoutAvatarContainer.setOnClickListener(v -> pickAvatarLauncher.launch("image/*"));
+        binding.btnViewCardQr.setOnClickListener(v -> openDigitalIdCard());
+        binding.btnTapCardForQrPrompt.setOnClickListener(v -> openDigitalIdCard());
+        binding.cardDigitalLecturerId.setOnClickListener(v -> openDigitalIdCard());
         binding.rowEditProfile.setOnClickListener(v -> openEditProfile());
         binding.rowChangePassword.setOnClickListener(v -> openChangePassword());
         binding.rowLogout.setOnClickListener(v -> showLogoutDialog());
@@ -249,6 +263,11 @@ public class LecturerProfileFragment extends Fragment {
         EditProfileBottomSheetDialogFragment sheet = EditProfileBottomSheetDialogFragment.newInstance();
         sheet.setOnProfileUpdatedListener(this::bindUserData);
         sheet.show(getChildFragmentManager(), "edit_profile");
+    }
+
+    private void openDigitalIdCard() {
+        DigitalIdCardBottomSheetDialogFragment sheet = DigitalIdCardBottomSheetDialogFragment.newInstance(true);
+        sheet.show(getChildFragmentManager(), "digital_id_card");
     }
 
     private void openChangePassword() {

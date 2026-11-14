@@ -107,8 +107,7 @@ public interface UserClassApiService {
     Call<ApiResponse<ClassGradesResponse>> getClassGrades(@Path("id") String classId);
 
     // ==========================================
-    // Lecturer Management Endpoints (Phase 4)
-    // ==========================================
+    // Lecturer Management Endpoints
 
     @POST("classes")
     Call<ApiResponse<CourseClassItem>> createClass(@Body CreateClassRequest request);

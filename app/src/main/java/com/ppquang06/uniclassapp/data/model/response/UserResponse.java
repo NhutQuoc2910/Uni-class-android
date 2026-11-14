@@ -27,6 +27,24 @@ public class UserResponse {
     @SerializedName("lecturerId")
     private String lecturerId;
 
+    @SerializedName("faculty")
+    private String faculty;
+
+    @SerializedName("cohort")
+    private String cohort;
+
+    @SerializedName("educationProgram")
+    private String educationProgram;
+
+    @SerializedName("academicDegree")
+    private String academicDegree;
+
+    @SerializedName("academicRank")
+    private String academicRank;
+
+    @SerializedName("position")
+    private String position;
+
     @SerializedName("isActive")
     private Boolean isActive;
 
@@ -94,6 +112,54 @@ public class UserResponse {
 
     public void setLecturerId(String lecturerId) {
         this.lecturerId = lecturerId;
+    }
+
+    public String getFaculty() {
+        return faculty;
+    }
+
+    public void setFaculty(String faculty) {
+        this.faculty = faculty;
+    }
+
+    public String getCohort() {
+        return cohort;
+    }
+
+    public void setCohort(String cohort) {
+        this.cohort = cohort;
+    }
+
+    public String getEducationProgram() {
+        return educationProgram;
+    }
+
+    public void setEducationProgram(String educationProgram) {
+        this.educationProgram = educationProgram;
+    }
+
+    public String getAcademicDegree() {
+        return academicDegree;
+    }
+
+    public void setAcademicDegree(String academicDegree) {
+        this.academicDegree = academicDegree;
+    }
+
+    public String getAcademicRank() {
+        return academicRank;
+    }
+
+    public void setAcademicRank(String academicRank) {
+        this.academicRank = academicRank;
+    }
+
+    public String getPosition() {
+        return position;
+    }
+
+    public void setPosition(String position) {
+        this.position = position;
     }
 
     public Boolean getActive() {
